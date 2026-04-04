@@ -1,5 +1,5 @@
 
-# AI Systems Engineering Portfolio
+# AI Software Engineering Portfolio
 
 A collection of production-style AI systems demonstrating real-world architecture patterns used in modern machine learning and AI platforms.
 
