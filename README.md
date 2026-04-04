@@ -1,7 +1,7 @@
 
-# AI Software Engineering Portfolio
+# Adityansh Chand's AI Software Engineering Portfolio
 
-A collection of production-style AI systems demonstrating real-world architecture patterns used in modern machine learning and AI platforms.
+A collection of production-style AI systems made by Adityansh Chand demonstrating real-world architecture patterns used in modern machine learning and AI platforms.
 
 This portfolio focuses on applied system design rather than isolated models, showing how AI components integrate into scalable software systems.
 
@@ -9,14 +9,14 @@ This portfolio focuses on applied system design rather than isolated models, sho
 
 # Systems Overview
 
-| System | Category | Core Capability |
-|--------|----------|----------------|
-| enterprise-rag-knowledge-system | Retrieval Engineering | Hybrid RAG pipeline with evaluation metrics |
-| ai-proactive-customer-operations | Multi-Agent Systems | Orchestrated AI decision workflows |
-| ai-incident-detection-platform | ML Monitoring | Anomaly detection pipeline |
-| ai-sales-intelligence-engine | Predictive ML | Feature engineering + scoring API |
-| autonomous-meeting-intelligence | LLM Processing | Transcript understanding pipeline |
-| ADAAS | Production RAG Application | Mobile HR assistant with hybrid retrieval + API routing |
+| System | Category | Repository |
+|--------|----------|-----------|
+| enterprise-rag-knowledge-system | Retrieval Engineering | https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system |
+| ai-proactive-customer-operations | Multi-Agent Systems | https://github.com/Adityansh-Chand/ai-proactive-customer-operations |
+| ai-incident-detection-platform | ML Monitoring | https://github.com/Adityansh-Chand/ai-incident-detection-platform |
+| ai-sales-intelligence-engine | Predictive ML | https://github.com/Adityansh-Chand/ai-sales-intelligence-engine |
+| autonomous-meeting-intelligence | LLM Processing | https://github.com/Adityansh-Chand/autonomous-meeting-intelligence |
+| ADAAS | Production RAG Application | https://github.com/Adityansh-Chand/ADAAS |
 
 ---
 
@@ -54,7 +54,10 @@ MEETING --> OPS
 
 # Projects
 
+  
 ## 1. enterprise-rag-knowledge-system
+https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system
+
 Production Retrieval-Augmented Generation system demonstrating hybrid retrieval, semantic chunking, reranking, and evaluation-aware pipeline design.
 
 Key engineering signals:
@@ -66,9 +69,12 @@ Key engineering signals:
 - modular embedding layer
 - structured outputs
 
+
 ---
 
 ## 2. ai-proactive-customer-operations
+https://github.com/Adityansh-Chand/ai-proactive-customer-operations
+
 Multi-agent orchestration system modeling enterprise decision workflows for proactive customer experience automation.
 
 Key engineering signals:
@@ -77,11 +83,13 @@ Key engineering signals:
 - reasoning engine
 - policy decision layer
 - orchestration pipeline
-- observable decision outputs
+
 
 ---
 
 ## 3. ai-incident-detection-platform
+https://github.com/Adityansh-Chand/ai-incident-detection-platform
+
 Machine learning pipeline for anomaly detection in operational logs using structured feature extraction and scoring abstractions.
 
 Key engineering signals:
@@ -89,11 +97,13 @@ Key engineering signals:
 - feature pipeline design
 - anomaly scoring abstraction
 - monitoring architecture
-- evaluation dataset structure
+
 
 ---
 
 ## 4. ai-sales-intelligence-engine
+https://github.com/Adityansh-Chand/ai-sales-intelligence-engine
+
 Predictive ML pipeline modeling customer scoring and revenue intelligence workflows.
 
 Key engineering signals:
@@ -101,11 +111,13 @@ Key engineering signals:
 - feature engineering layer
 - scoring model abstraction
 - prediction pipeline structure
-- evaluation dataset scaffold
+
 
 ---
 
 ## 5. autonomous-meeting-intelligence
+https://github.com/Adityansh-Chand/autonomous-meeting-intelligence
+
 LLM-powered transcript understanding system for extracting structured insights from conversational data.
 
 Key engineering signals:
@@ -113,19 +125,20 @@ Key engineering signals:
 - transcript chunking pipeline
 - structured extraction logic
 - summarization architecture
-- modular NLP components
+
 
 ---
 
-## 6. ADAAS (Artificially Driven Assistant for Automated Solutions)
-Mobile-first HR AI assistant integrating Retrieval-Augmented Generation with real-time database queries.
+## 6. ADAAS
+https://github.com/Adityansh-Chand/ADAAS
+
+Mobile-first HR AI assistant integrating Retrieval-Augmented Generation with real-time employee database queries.
 
 Key engineering signals:
 
 - hybrid RAG + API routing
 - intent classification logic
 - structured UI rendering
-- production mobile architecture
 - real-time database integration
 
 ---
