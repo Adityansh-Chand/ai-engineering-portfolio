@@ -29,12 +29,12 @@ flowchart LR
 
 | Project | Role | Current runnable surface | Verification |
 |---|---|---|---|
-| `enterprise-rag-knowledge-system` | Retrieval and grounded answer pipeline | FastAPI `/query`, local hybrid retrieval, eval script | `python -m pytest -q`, `python evaluation/run_eval.py` |
-| `ai-proactive-customer-operations` | Multi-agent customer decision workflow | FastAPI `/decide`, route/sentiment/policy/action trace | `python -m pytest -q`, `python evaluation/evaluate.py` |
-| `ai-incident-detection-platform` | Operational anomaly scoring | FastAPI `/score`, telemetry feature extraction, anomaly model | `python -m pytest -q`, `python evaluation/evaluate.py` |
-| `ai-sales-intelligence-engine` | Account propensity scoring | FastAPI `/score`, segment, feature explanation | `python -m pytest -q`, `python evaluation/evaluate.py` |
-| `autonomous-meeting-intelligence` | Transcript structuring | FastAPI `/analyze`, schema-validated summary/actions/decisions | `python -m pytest -q`, `python evaluation/evaluate.py` |
-| `ADAAS` | Flutter HR assistant and Node HR backend | Flutter app, backend `/chat`, `/leave-balance`, `/leave-application` | `flutter test`, `flutter analyze`, `npm test` |
+| `enterprise-rag-knowledge-system` | Retrieval and grounded answer pipeline | FastAPI `/query`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/run_eval.py` |
+| `ai-proactive-customer-operations` | Multi-agent customer decision workflow | FastAPI `/decide`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/evaluate.py` |
+| `ai-incident-detection-platform` | Operational anomaly scoring | FastAPI `/score`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/evaluate.py` |
+| `ai-sales-intelligence-engine` | Account propensity scoring | FastAPI `/score`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/evaluate.py` |
+| `autonomous-meeting-intelligence` | Transcript structuring | FastAPI `/analyze`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/evaluate.py` |
+| `ADAAS` | Flutter HR assistant and Node HR backend | Flutter app, secured backend, Mongo persistence, K8s/Compose | `flutter test`, `flutter analyze`, `npm test` |
 
 ## Runbook
 
@@ -100,14 +100,17 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 - Lightweight evaluation scripts with explicit accuracy or structure metrics.
 - Docker entrypoints that run FastAPI services through `uvicorn`.
 - Deterministic local fallbacks where external providers are optional.
+- Optional `X-API-Key` auth on non-health data endpoints.
+- Request IDs, safe error responses, and JSON metrics endpoints.
+- SQLite event persistence for Python services; MongoDB persistence for ADAAS.
+- GitHub Actions CI across tests, evals, and container builds.
 
 ## Next Portfolio-Level Improvements
 
-- Add CI to run each project verification command.
 - Add demo screenshots or short recordings per system.
 - Add a shared API contract document for common request tracing.
 - Add common logging and metric naming conventions.
-- Add maturity tags such as `prototype`, `demo-ready`, and `production-hardening`.
+- Add managed cloud deployment targets and release environments.
 
 ## Author
 
