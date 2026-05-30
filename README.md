@@ -1,83 +1,72 @@
-
 # AI Engineering Portfolio
 
-Production-style AI portfolio demonstrating Multi-agent workflows, Retrieval-Augmented Generation (RAG), and Machine learning pipelines.
+Production-style AI systems portfolio covering retrieval, multi-agent workflows,
+predictive scoring, anomaly detection, meeting intelligence, and an HR assistant
+application.
 
----
-
-# Unified AI Platform Architecture
+## System Map
 
 ```mermaid
 flowchart LR
+  User[Users / Applications]
+  OPS[AI Proactive Customer Operations]
+  MEETING[Autonomous Meeting Intelligence]
+  RAG[Enterprise RAG Knowledge System]
+  ADAAS[ADAAS HR Assistant]
+  SALES[AI Sales Intelligence Engine]
+  INCIDENT[AI Incident Detection Platform]
 
-subgraph Interaction Layer
-User[Users / Applications]
-end
-
-subgraph Decision Layer
-OPS[Multi-Agent Customer Operations]
-MEETING[Meeting Intelligence Agents]
-end
-
-subgraph Knowledge Layer
-RAG[Enterprise RAG System]
-ADAAS[ADAAS HR Assistant]
-end
-
-subgraph ML Intelligence Layer
-SALES[Sales Intelligence Engine]
-INCIDENT[Incident Detection Platform]
-end
-
-User --> OPS
-User --> ADAAS
-User --> MEETING
-
-OPS --> RAG
-ADAAS --> RAG
-MEETING --> RAG
-
-OPS --> SALES
-OPS --> INCIDENT
-
-SALES --> OPS
-INCIDENT --> OPS
-
-RAG --> OPS
-RAG --> ADAAS
+  User --> OPS
+  User --> ADAAS
+  User --> MEETING
+  ADAAS --> RAG
+  OPS --> SALES
+  OPS --> INCIDENT
+  MEETING --> RAG
 ```
 
----
+## Project Status
 
-# Shared Component Dependencies
+| Project | Role | Current runnable surface | Verification |
+|---|---|---|---|
+| `enterprise-rag-knowledge-system` | Retrieval and grounded answer pipeline | FastAPI `/query`, local hybrid retrieval, eval script | `python -m pytest -q`, `python evaluation/run_eval.py` |
+| `ai-proactive-customer-operations` | Multi-agent customer decision workflow | FastAPI `/decide`, route/sentiment/policy/action trace | `python -m pytest -q`, `python evaluation/evaluate.py` |
+| `ai-incident-detection-platform` | Operational anomaly scoring | FastAPI `/score`, telemetry feature extraction, anomaly model | `python -m pytest -q`, `python evaluation/evaluate.py` |
+| `ai-sales-intelligence-engine` | Account propensity scoring | FastAPI `/score`, segment, feature explanation | `python -m pytest -q`, `python evaluation/evaluate.py` |
+| `autonomous-meeting-intelligence` | Transcript structuring | FastAPI `/analyze`, schema-validated summary/actions/decisions | `python -m pytest -q`, `python evaluation/evaluate.py` |
+| `ADAAS` | Flutter HR assistant and Node HR backend | Flutter app, backend `/chat`, `/leave-balance`, `/leave-application` | `flutter test`, `flutter analyze`, `npm test` |
 
-```mermaid
-flowchart TD
+## Runbook
 
-Embeddings[Embedding Layer]
-Chunking[Semantic Chunking]
-Evaluation[Evaluation Framework]
-Routing[Decision Routing Logic]
+Python service pattern:
 
-RAG --> Embeddings
-RAG --> Chunking
-RAG --> Evaluation
-
-ADAAS --> Embeddings
-
-OPS --> Routing
-OPS --> Evaluation
-
-MEETING --> Chunking
-
-SALES --> Evaluation
-
-INCIDENT --> Evaluation
+```bash
+cd <project>
+python -m pytest -q
+python evaluation/evaluate.py
+uvicorn api.server:app --reload --port 8000
 ```
 
----
+Enterprise RAG uses a named eval runner:
 
-# Systems
+```bash
+cd enterprise-rag-knowledge-system
+python evaluation/run_eval.py
+```
+
+ADAAS:
+
+```bash
+cd ADAAS/hr-backend
+npm test
+npm start
+
+cd ..
+flutter test
+flutter analyze
+flutter run -d chrome --dart-define=HR_API_BASE_URL=http://localhost:3000
+```
+## Projects
 
 ## 1. enterprise-rag-knowledge-system
 Core retrieval reasoning backbone using semantic chunking, reranking, and confidence scoring.
@@ -103,27 +92,26 @@ https://github.com/Adityansh-Chand/ai-incident-detection-platform.git
 LLM-powered structured transcript understanding pipeline.
 https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 
----
+## Shared Engineering Themes
 
-# Architectural Themes
+- Typed request/response boundaries for APIs.
+- Domain-specific sample data instead of generic placeholder CSVs.
+- Focused tests that assert real system behavior.
+- Lightweight evaluation scripts with explicit accuracy or structure metrics.
+- Docker entrypoints that run FastAPI services through `uvicorn`.
+- Deterministic local fallbacks where external providers are optional.
 
-• Multi-agent orchestration
-• DAG reasoning graphs
-• Retrieval engineering
-• Modular ML pipelines
-• Evaluation-aware design
-• Observable decision logic
+## Next Portfolio-Level Improvements
 
----
+- Add CI to run each project verification command.
+- Add demo screenshots or short recordings per system.
+- Add a shared API contract document for common request tracing.
+- Add common logging and metric naming conventions.
+- Add maturity tags such as `prototype`, `demo-ready`, and `production-hardening`.
 
-# Author
+## Author
 
 Adityansh Chand
 
-AI Software Engineer specializing in:
-
-multi-agent systems, 
-retrieval engineering, 
-LLM architecture, 
-machine learning pipelines.
-
+AI Software Engineer specializing in multi-agent systems, retrieval engineering,
+LLM architecture, and machine learning pipelines.
