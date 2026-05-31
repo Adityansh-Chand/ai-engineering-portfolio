@@ -1,0 +1,32 @@
+[
+  {
+    "project": "enterprise-rag-knowledge-system",
+    "demo": "RAG query with source-backed answer",
+    "endpoint": "POST /query"
+  },
+  {
+    "project": "ai-proactive-customer-operations",
+    "demo": "Customer decision trace",
+    "endpoint": "POST /decide"
+  },
+  {
+    "project": "ai-incident-detection-platform",
+    "demo": "Telemetry anomaly score",
+    "endpoint": "POST /score"
+  },
+  {
+    "project": "ai-sales-intelligence-engine",
+    "demo": "Account propensity score",
+    "endpoint": "POST /score"
+  },
+  {
+    "project": "autonomous-meeting-intelligence",
+    "demo": "Transcript structure extraction",
+    "endpoint": "POST /analyze"
+  },
+  {
+    "project": "ADAAS",
+    "demo": "HR assistant backend and Flutter app walkthrough",
+    "endpoint": "POST /chat"
+  }
+]
