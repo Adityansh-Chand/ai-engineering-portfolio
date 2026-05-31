@@ -25,6 +25,15 @@ flowchart LR
   MEETING --> RAG
 ```
 
+## Portfolio Documentation
+
+- [Architecture diagrams](docs/ARCHITECTURE.md)
+- [API flow diagrams](docs/API_FLOWS.md)
+- [Demo capture guide](docs/DEMO_CAPTURE.md)
+- [Project comparison table](docs/PROJECT_COMPARISON.md)
+- [Recruiter and interviewer walkthrough](docs/WALKTHROUGH.md)
+- [Technical tradeoff notes](docs/TRADEOFFS.md)
+
 ## Project Status
 
 | Project | Role | Current runnable surface | Verification |
@@ -78,6 +87,8 @@ flutter run -d chrome \
 
 ## Portfolio Readiness Checklist
 
+For demo paths and sample assets, see `DEMO.md`.
+
 | Project | README | API docs | Env example | Tests and eval | Docker/Compose | Kubernetes | CI |
 |---|---|---|---|---|---|---|---|
 | [`enterprise-rag-knowledge-system`](https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
@@ -86,6 +97,38 @@ flutter run -d chrome \
 | [`ai-sales-intelligence-engine`](https://github.com/Adityansh-Chand/ai-sales-intelligence-engine) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
 | [`autonomous-meeting-intelligence`](https://github.com/Adityansh-Chand/autonomous-meeting-intelligence) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
 | [`ADAAS`](https://github.com/Adityansh-Chand/ADAAS) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+
+## 5-Minute Review Path
+
+1. Open `DEMO.md` and choose one service from the demo matrix.
+2. For the fastest API review, start `enterprise-rag-knowledge-system`:
+
+```bash
+cd enterprise-rag-knowledge-system
+pip install -r requirements.txt
+python -m pytest -q
+uvicorn api.server:app --reload --port 8000
+```
+
+3. In a second terminal, run:
+
+```bash
+python scripts/smoke_test.py
+```
+
+4. Inspect `examples/requests/query.json` and `examples/responses/query.json`.
+5. Repeat the same pattern for any scoring, orchestration, transcript, or HR assistant repo of interest.
+
+## Maturity Matrix
+
+| Project | Status Labels |
+|---|---|
+| `enterprise-rag-knowledge-system` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
+| `ai-proactive-customer-operations` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
+| `ai-incident-detection-platform` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
+| `ai-sales-intelligence-engine` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
+| `autonomous-meeting-intelligence` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
+| `ADAAS` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
 
 ## Projects
 
@@ -134,7 +177,7 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 
 ## Remaining Portfolio-Level Improvements
 
-- Add demo screenshots or short recordings per system.
+- Capture and link final screenshots or short recordings per system.
 - Add a shared API contract document for common request tracing.
 - Add common logging and metric naming conventions.
 - Add managed cloud deployment targets and release environments.
