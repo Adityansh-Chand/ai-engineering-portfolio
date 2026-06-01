@@ -124,6 +124,15 @@ For demo paths and sample assets, see `DEMO.md`.
 | [`autonomous-meeting-intelligence`](https://github.com/Adityansh-Chand/autonomous-meeting-intelligence) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
 | [`ADAAS`](https://github.com/Adityansh-Chand/ADAAS) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
 
+## Final Reviewer Checklist
+
+- Start at `index.html` or the GitHub Pages site for the 3-minute overview.
+- Use `DEMO.md` to pick one runnable service and follow its exact smoke path.
+- Open each target repo README for purpose, quickstart, API surface, deployment status, and remaining gaps.
+- Inspect `docs/ARCHITECTURE.md`, `docs/API_FLOWS.md`, and `docs/TRADEOFFS.md` for system-level reasoning.
+- Treat this repository as the portfolio index only; the six linked repos are the runnable projects.
+- Expect local demos, tests/evals, static deployment config validation, and CI Docker image builds; cloud deployment and production data remain pending.
+
 ## 5-Minute Review Path
 
 1. Open `DEMO.md` and choose one service from the demo matrix.

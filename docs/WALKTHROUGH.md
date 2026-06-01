@@ -11,8 +11,9 @@ role focus.
 3. Open `docs/PROJECT_COMPARISON.md` to compare scope across projects.
 4. Open one project repository and inspect its `README.md`, `DEMO.md`, and
    `examples/` directory.
-5. Confirm the maturity labels: runnable demo, deployable baseline, needs cloud
-   deployment, needs production data.
+5. Confirm the maturity labels: locally tested, smoke-tested, Docker config
+   statically validated, Docker image build validated in CI, cloud deployment
+   pending, needs production data.
 
 Best first repository: `enterprise-rag-knowledge-system`, because it has the
 most direct API demo path and a clear retrieval result.
