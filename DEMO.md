@@ -51,12 +51,12 @@ use the matrix above to choose a second service if time remains.
 
 | Project | Status Labels |
 |---|---|
-| `enterprise-rag-knowledge-system` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
-| `ai-proactive-customer-operations` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
-| `ai-incident-detection-platform` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
-| `ai-sales-intelligence-engine` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
-| `autonomous-meeting-intelligence` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
-| `ADAAS` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `enterprise-rag-knowledge-system` | locally tested, smoke-tested, Docker config statically validated, Docker image build validated in CI, cloud deployment pending, needs production data |
+| `ai-proactive-customer-operations` | locally tested, smoke-tested, Docker config statically validated, Docker image build validated in CI, cloud deployment pending, needs production data |
+| `ai-incident-detection-platform` | locally tested, smoke-tested, Docker config statically validated, Docker image build validated in CI, cloud deployment pending, needs production data |
+| `ai-sales-intelligence-engine` | locally tested, smoke-tested, Docker config statically validated, Docker image build validated in CI, cloud deployment pending, needs production data |
+| `autonomous-meeting-intelligence` | locally tested, smoke-tested, Docker config statically validated, Docker image build validated in CI, cloud deployment pending, needs production data |
+| `ADAAS` | locally tested, smoke-tested, Docker config statically validated, Docker image build validated in CI, cloud deployment pending, needs production data |
 
 ## Common Demo Commands
 

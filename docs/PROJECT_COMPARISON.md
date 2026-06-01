@@ -33,7 +33,7 @@ All runnable repositories currently share these labels:
 - `smoke-tested`: local API smoke tests pass against running services.
 - `Docker config statically validated`: Dockerfile, Compose, and Kubernetes YAML
   are inspected/parsed without starting containers or clusters.
-- `Docker runtime validation pending`: local Docker Desktop runtime validation is
-  not part of this workspace pass.
+- `Docker image build validated in CI`: GitHub Actions builds service images on
+  push and pull requests without pushing to a registry.
 - `cloud deployment pending`: no live managed environment is included.
 - `needs production data`: datasets are intentionally local demo/sample data.
