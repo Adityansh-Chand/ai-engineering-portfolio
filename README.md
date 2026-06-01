@@ -7,6 +7,20 @@ application.
 This repository is an index and review guide for the six runnable projects. It
 is not a seventh standalone application.
 
+## Static Landing Site
+
+Open [`index.html`](index.html) for a portfolio-facing landing page designed for
+GitHub Pages. It summarizes the six runnable projects, links to each repo and
+demo guide, and gives 3-minute, 15-minute, and 30-minute reviewer paths.
+
+GitHub Pages setup:
+
+1. Open this repository on GitHub.
+2. Go to Settings > Pages.
+3. Set source to "Deploy from a branch".
+4. Select branch `main` and folder `/ (root)`.
+5. Save and open the generated Pages URL after deployment finishes.
+
 ## System Map
 
 ```mermaid

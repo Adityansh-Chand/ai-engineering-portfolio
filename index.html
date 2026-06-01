@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="A static reviewer guide for six runnable engineering portfolio projects covering retrieval, workflow orchestration, scoring, incident detection, meeting intelligence, and an HR assistant."
+    >
+    <title>AI Engineering Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header" id="top">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="AI Engineering Portfolio home">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <span>AI Engineering Portfolio</span>
+        </a>
+        <div class="nav-links">
+          <a href="#matrix">Matrix</a>
+          <a href="#projects">Projects</a>
+          <a href="#review-path">Review path</a>
+          <a href="#docs">Docs</a>
+          <a href="#pages">Deploy</a>
+        </div>
+      </nav>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">Public index for six runnable project repositories</p>
+        <h1 id="hero-title">Six applied systems, one fast review path.</h1>
+        <p class="hero-copy">
+          This static site presents the portfolio as an external reviewer would
+          see it: project purpose, API surface, tests, evaluation evidence,
+          deployment validation, and the quickest paths to inspect or run the
+          systems locally.
+        </p>
+        <div class="hero-actions" aria-label="Primary links">
+          <a class="button primary" href="#matrix">View project matrix</a>
+          <a class="button" href="DEMO.md">Open demo matrix</a>
+          <a class="button" href="docs/WALKTHROUGH.md">Interviewer walkthrough</a>
+        </div>
+        <dl class="signal-strip" aria-label="Portfolio highlights">
+          <div>
+            <dt>6</dt>
+            <dd>Runnable repositories</dd>
+          </div>
+          <div>
+            <dt>5</dt>
+            <dd>FastAPI services</dd>
+          </div>
+          <div>
+            <dt>1</dt>
+            <dd>Flutter + Node app</dd>
+          </div>
+          <div>
+            <dt>CI</dt>
+            <dd>Tests, evals, Docker builds</dd>
+          </div>
+        </dl>
+      </section>
+    </header>
+
+    <main>
+      <section class="section" id="review-path" aria-labelledby="review-path-title">
+        <div class="section-heading">
+          <p class="eyebrow">Reviewer path</p>
+          <h2 id="review-path-title">Understand it in 3 minutes, go deep in 15.</h2>
+        </div>
+        <div class="path-grid">
+          <article class="path-card">
+            <h3>3-minute overview</h3>
+            <ol>
+              <li>Scan the project matrix and CI badges.</li>
+              <li>Read the maturity labels and deployment status.</li>
+              <li>Open the architecture and tradeoff notes.</li>
+            </ol>
+          </article>
+          <article class="path-card">
+            <h3>15-minute technical review</h3>
+            <ol>
+              <li>Start with Enterprise RAG or Customer Operations.</li>
+              <li>Compare API flow diagrams with each project README.</li>
+              <li>Inspect tests, eval scripts, and sample responses.</li>
+            </ol>
+          </article>
+          <article class="path-card">
+            <h3>30-minute local run</h3>
+            <ol>
+              <li>Clone one target repo and install dependencies.</li>
+              <li>Run tests/evals, start the API, then run smoke tests.</li>
+              <li>Repeat with a scoring service or ADAAS backend.</li>
+            </ol>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="badge-title">
+        <div class="section-heading">
+          <p class="eyebrow">CI evidence</p>
+          <h2 id="badge-title">Build and test signal from each repo.</h2>
+        </div>
+        <div class="badge-grid" aria-label="GitHub Actions status badges">
+          <a href="https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system/actions/workflows/ci.yml">
+            <span>Enterprise RAG</span>
+            <img src="https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system/actions/workflows/ci.yml/badge.svg" alt="Enterprise RAG CI status">
+          </a>
+          <a href="https://github.com/Adityansh-Chand/ai-proactive-customer-operations/actions/workflows/ci.yml">
+            <span>Customer Ops</span>
+            <img src="https://github.com/Adityansh-Chand/ai-proactive-customer-operations/actions/workflows/ci.yml/badge.svg" alt="Customer Ops CI status">
+          </a>
+          <a href="https://github.com/Adityansh-Chand/ai-incident-detection-platform/actions/workflows/ci.yml">
+            <span>Incident Detection</span>
+            <img src="https://github.com/Adityansh-Chand/ai-incident-detection-platform/actions/workflows/ci.yml/badge.svg" alt="Incident Detection CI status">
+          </a>
+          <a href="https://github.com/Adityansh-Chand/ai-sales-intelligence-engine/actions/workflows/ci.yml">
+            <span>Sales Intelligence</span>
+            <img src="https://github.com/Adityansh-Chand/ai-sales-intelligence-engine/actions/workflows/ci.yml/badge.svg" alt="Sales Intelligence CI status">
+          </a>
+          <a href="https://github.com/Adityansh-Chand/autonomous-meeting-intelligence/actions/workflows/ci.yml">
+            <span>Meeting Intelligence</span>
+            <img src="https://github.com/Adityansh-Chand/autonomous-meeting-intelligence/actions/workflows/ci.yml/badge.svg" alt="Meeting Intelligence CI status">
+          </a>
+          <a href="https://github.com/Adityansh-Chand/ADAAS/actions/workflows/ci.yml">
+            <span>ADAAS</span>
+            <img src="https://github.com/Adityansh-Chand/ADAAS/actions/workflows/ci.yml/badge.svg" alt="ADAAS CI status">
+          </a>
+        </div>
+      </section>
+
+      <section class="section" id="matrix" aria-labelledby="matrix-title">
+        <div class="section-heading">
+          <p class="eyebrow">Project matrix</p>
+          <h2 id="matrix-title">What each system proves.</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Project</th>
+                <th scope="col">Problem solved</th>
+                <th scope="col">Stack</th>
+                <th scope="col">Demo command</th>
+                <th scope="col">Status</th>
+                <th scope="col">Tests/evals</th>
+                <th scope="col">Deployment validation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system">Enterprise RAG</a>
+                </th>
+                <td>Source-backed retrieval and grounded HR policy answers.</td>
+                <td>Python, FastAPI, local embeddings, SQLite, Docker, Kubernetes, CI.</td>
+                <td><code>uvicorn api.server:app --reload --port 8000</code><br><code>python scripts/smoke_test.py</code></td>
+                <td>Locally tested, smoke-tested, needs production data.</td>
+                <td>9 tests passed; retrieval eval accuracy 1.0.</td>
+                <td>Compose/K8s statically validated; image build validated in CI.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/Adityansh-Chand/ai-proactive-customer-operations">Customer Ops</a>
+                </th>
+                <td>Multi-step customer message routing with an inspectable decision trace.</td>
+                <td>Python, FastAPI, workflow agents, SQLite, Docker, Kubernetes, CI.</td>
+                <td><code>uvicorn api.server:app --reload --port 8000</code><br><code>python scripts/smoke_test.py</code></td>
+                <td>Locally tested, smoke-tested, needs production data.</td>
+                <td>8 tests passed; policy/action accuracy 1.0.</td>
+                <td>Compose/K8s statically validated; image build validated in CI.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/Adityansh-Chand/ai-incident-detection-platform">Incident Detection</a>
+                </th>
+                <td>Telemetry scoring for latency, errors, timeouts, and traffic anomalies.</td>
+                <td>Python, FastAPI, z-score model, SQLite, Docker, Kubernetes, CI.</td>
+                <td><code>uvicorn api.server:app --reload --port 8000</code><br><code>python scripts/smoke_test.py</code></td>
+                <td>Locally tested, smoke-tested, needs production data.</td>
+                <td>7 tests passed; scoring eval accuracy 1.0.</td>
+                <td>Compose/K8s statically validated; image build validated in CI.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/Adityansh-Chand/ai-sales-intelligence-engine">Sales Intelligence</a>
+                </th>
+                <td>Account propensity scoring with ranked feature explanations.</td>
+                <td>Python, FastAPI, deterministic scoring, SQLite, Docker, Kubernetes, CI.</td>
+                <td><code>uvicorn api.server:app --reload --port 8000</code><br><code>python scripts/smoke_test.py</code></td>
+                <td>Locally tested, smoke-tested, needs production data.</td>
+                <td>7 tests passed; scoring eval accuracy 1.0.</td>
+                <td>Compose/K8s statically validated; image build validated in CI.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/Adityansh-Chand/autonomous-meeting-intelligence">Meeting Intelligence</a>
+                </th>
+                <td>Transcript analysis for summaries, decisions, and action items.</td>
+                <td>Python, FastAPI, Pydantic schemas, SQLite, Docker, Kubernetes, CI.</td>
+                <td><code>uvicorn api.server:app --reload --port 8000</code><br><code>python scripts/smoke_test.py</code></td>
+                <td>Locally tested, smoke-tested, needs production data.</td>
+                <td>8 tests passed; structure accuracy 1.0.</td>
+                <td>Compose/K8s statically validated; image build validated in CI.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <a href="https://github.com/Adityansh-Chand/ADAAS">ADAAS</a>
+                </th>
+                <td>HR assistant application with leave workflows and policy chat.</td>
+                <td>Flutter, Dart, Node, Express, optional MongoDB, Docker, Kubernetes, CI.</td>
+                <td><code>cd hr-backend &amp;&amp; npm start</code><br><code>npm run smoke</code></td>
+                <td>Locally tested, smoke-tested, needs production data.</td>
+                <td>10 backend tests passed; Flutter analyze clean; 17 Flutter tests passed.</td>
+                <td>Backend Compose/K8s statically validated; backend image build validated in CI.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="map-title">
+        <div class="section-heading">
+          <p class="eyebrow">System map</p>
+          <h2 id="map-title">A portfolio index, not a seventh product.</h2>
+        </div>
+        <div class="topology" aria-label="Portfolio system map">
+          <div class="topology-node index-node">Portfolio landing site</div>
+          <div class="topology-rail">
+            <a href="#rag">Retrieval</a>
+            <a href="#customer-ops">Workflow orchestration</a>
+            <a href="#incident">Anomaly scoring</a>
+            <a href="#sales">Propensity scoring</a>
+            <a href="#meeting">Transcript intelligence</a>
+            <a href="#adaas">Full-stack HR assistant</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="projects" aria-labelledby="projects-title">
+        <div class="section-heading">
+          <p class="eyebrow">Deep dives</p>
+          <h2 id="projects-title">One page per project, linked to the runnable repo.</h2>
+        </div>
+
+        <article class="project-detail" id="rag">
+          <div class="project-title-row">
+            <h3>Enterprise RAG Knowledge System</h3>
+            <a href="https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system">Repository</a>
+          </div>
+          <dl>
+            <div><dt>What it does</dt><dd>Retrieves policy context, ranks evidence, and returns source-backed answers through `/query`.</dd></div>
+            <div><dt>Architecture summary</dt><dd>FastAPI route, deterministic local embeddings, hybrid retrieval, reranking, SQLite event store, metrics, and safe JSON errors.</dd></div>
+            <div><dt>API/demo surface</dt><dd>`GET /health`, `GET /metrics`, `GET /events`, `GET /query`, `POST /query`; see <a href="https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system/blob/main/DEMO.md">DEMO.md</a>.</dd></div>
+            <div><dt>Tests/evals</dt><dd>`python -m pytest -q` and `python evaluation/run_eval.py`; last local validation: 9 tests passed, eval accuracy 1.0.</dd></div>
+            <div><dt>Deployment readiness</dt><dd>Dockerfile, Compose, Kubernetes, CI tests/eval, and CI Docker image build validation are present.</dd></div>
+            <div><dt>Remaining gaps</dt><dd>Production corpus, managed retrieval infrastructure, managed observability, cloud deployment, and production data controls.</dd></div>
+          </dl>
+        </article>
+
+        <article class="project-detail" id="customer-ops">
+          <div class="project-title-row">
+            <h3>AI Proactive Customer Operations</h3>
+            <a href="https://github.com/Adityansh-Chand/ai-proactive-customer-operations">Repository</a>
+          </div>
+          <dl>
+            <div><dt>What it does</dt><dd>Routes customer messages through planner, policy, and action steps with a visible decision trace.</dd></div>
+            <div><dt>Architecture summary</dt><dd>FastAPI orchestration service with domain policy data, action selection, SQLite event persistence, metrics, and request IDs.</dd></div>
+            <div><dt>API/demo surface</dt><dd>`GET /health`, `GET /metrics`, `GET /events`, `POST /decide`; see <a href="https://github.com/Adityansh-Chand/ai-proactive-customer-operations/blob/main/DEMO.md">DEMO.md</a>.</dd></div>
+            <div><dt>Tests/evals</dt><dd>`python -m pytest -q` and `python evaluation/evaluate.py`; last local validation: 8 tests passed, policy/action accuracy 1.0.</dd></div>
+            <div><dt>Deployment readiness</dt><dd>Dockerfile, Compose, Kubernetes, CI tests/eval, and CI Docker image build validation are present.</dd></div>
+            <div><dt>Remaining gaps</dt><dd>Live CRM integration, production policy sources, rate limits, managed observability, cloud deployment, and production data.</dd></div>
+          </dl>
+        </article>
+
+        <article class="project-detail" id="incident">
+          <div class="project-title-row">
+            <h3>AI Incident Detection Platform</h3>
+            <a href="https://github.com/Adityansh-Chand/ai-incident-detection-platform">Repository</a>
+          </div>
+          <dl>
+            <div><dt>What it does</dt><dd>Scores operational telemetry to identify anomalous service behavior and explain the signal.</dd></div>
+            <div><dt>Architecture summary</dt><dd>FastAPI scoring endpoint, feature extraction, z-score anomaly model, SQLite audit trail, metrics, request IDs, and safe errors.</dd></div>
+            <div><dt>API/demo surface</dt><dd>`GET /health`, `GET /metrics`, `GET /events`, `POST /score`; see <a href="https://github.com/Adityansh-Chand/ai-incident-detection-platform/blob/main/DEMO.md">DEMO.md</a>.</dd></div>
+            <div><dt>Tests/evals</dt><dd>`python -m pytest -q` and `python evaluation/evaluate.py`; last local validation: 7 tests passed, eval accuracy 1.0.</dd></div>
+            <div><dt>Deployment readiness</dt><dd>Dockerfile, Compose, Kubernetes, CI tests/eval, and CI Docker image build validation are present.</dd></div>
+            <div><dt>Remaining gaps</dt><dd>Production telemetry ingestion, alert routing, incident workflow integrations, cloud deployment, and long-term metrics storage.</dd></div>
+          </dl>
+        </article>
+
+        <article class="project-detail" id="sales">
+          <div class="project-title-row">
+            <h3>AI Sales Intelligence Engine</h3>
+            <a href="https://github.com/Adityansh-Chand/ai-sales-intelligence-engine">Repository</a>
+          </div>
+          <dl>
+            <div><dt>What it does</dt><dd>Scores accounts for propensity and returns ranked feature explanations through a simple API.</dd></div>
+            <div><dt>Architecture summary</dt><dd>FastAPI scoring service, deterministic feature model, explanation ranking, SQLite events, metrics, request IDs, and safe JSON errors.</dd></div>
+            <div><dt>API/demo surface</dt><dd>`GET /health`, `GET /metrics`, `GET /events`, `POST /score`; see <a href="https://github.com/Adityansh-Chand/ai-sales-intelligence-engine/blob/main/DEMO.md">DEMO.md</a>.</dd></div>
+            <div><dt>Tests/evals</dt><dd>`python -m pytest -q` and `python evaluation/evaluate.py`; last local validation: 7 tests passed, eval accuracy 1.0.</dd></div>
+            <div><dt>Deployment readiness</dt><dd>Dockerfile, Compose, Kubernetes, CI tests/eval, and CI Docker image build validation are present.</dd></div>
+            <div><dt>Remaining gaps</dt><dd>Real CRM feeds, model monitoring, retraining workflow, cloud deployment, and production data governance.</dd></div>
+          </dl>
+        </article>
+
+        <article class="project-detail" id="meeting">
+          <div class="project-title-row">
+            <h3>Autonomous Meeting Intelligence</h3>
+            <a href="https://github.com/Adityansh-Chand/autonomous-meeting-intelligence">Repository</a>
+          </div>
+          <dl>
+            <div><dt>What it does</dt><dd>Turns meeting transcripts into summaries, decisions, and action items with structured output.</dd></div>
+            <div><dt>Architecture summary</dt><dd>FastAPI analysis endpoint, transcript parser, structured extractor, Pydantic schema validation, SQLite events, and metrics.</dd></div>
+            <div><dt>API/demo surface</dt><dd>`GET /health`, `GET /metrics`, `GET /events`, `POST /analyze`; see <a href="https://github.com/Adityansh-Chand/autonomous-meeting-intelligence/blob/main/DEMO.md">DEMO.md</a>.</dd></div>
+            <div><dt>Tests/evals</dt><dd>`python -m pytest -q` and `python evaluation/evaluate.py`; last local validation: 8 tests passed, structure accuracy 1.0.</dd></div>
+            <div><dt>Deployment readiness</dt><dd>Dockerfile, Compose, Kubernetes, CI tests/eval, and CI Docker image build validation are present.</dd></div>
+            <div><dt>Remaining gaps</dt><dd>Calendar/transcript integrations, identity controls, cloud deployment, production data, and human review workflow.</dd></div>
+          </dl>
+        </article>
+
+        <article class="project-detail" id="adaas">
+          <div class="project-title-row">
+            <h3>ADAAS HR Assistant</h3>
+            <a href="https://github.com/Adityansh-Chand/ADAAS">Repository</a>
+          </div>
+          <dl>
+            <div><dt>What it does</dt><dd>Combines a Flutter HR assistant with a Node backend for leave balances, leave applications, and policy chat.</dd></div>
+            <div><dt>Architecture summary</dt><dd>Flutter UI, intent routing, Express API, optional MongoDB persistence, seeded fallback data, optional provider-backed chat, metrics, and API key support.</dd></div>
+            <div><dt>API/demo surface</dt><dd>`GET /health`, `GET /metrics`, `GET /leave-balance`, `POST /leave-application`, `GET /leave-applications`, `POST /chat`; see <a href="https://github.com/Adityansh-Chand/ADAAS/blob/main/DEMO.md">DEMO.md</a>.</dd></div>
+            <div><dt>Tests/evals</dt><dd>`npm test`, `flutter analyze`, and `flutter test`; last local validation: 10 backend tests, clean analyze, 17 Flutter tests.</dd></div>
+            <div><dt>Deployment readiness</dt><dd>Backend Dockerfile, Compose, Kubernetes, CI backend tests, CI backend image build, and Flutter CI are present.</dd></div>
+            <div><dt>Remaining gaps</dt><dd>Production HR data integration, identity provider, managed MongoDB, cloud deployment, and policy data governance.</dd></div>
+          </dl>
+        </article>
+      </section>
+
+      <section class="section" id="docs" aria-labelledby="docs-title">
+        <div class="section-heading">
+          <p class="eyebrow">Documentation map</p>
+          <h2 id="docs-title">Go from overview to evidence.</h2>
+        </div>
+        <div class="docs-grid">
+          <a href="README.md"><strong>Portfolio README</strong><span>Index, runbook, readiness checklist.</span></a>
+          <a href="DEMO.md"><strong>Demo matrix</strong><span>Fastest demo route and sample assets.</span></a>
+          <a href="docs/ARCHITECTURE.md"><strong>Architecture docs</strong><span>System landscape and shared service baseline.</span></a>
+          <a href="docs/API_FLOWS.md"><strong>API flow docs</strong><span>Sequence diagrams for each API path.</span></a>
+          <a href="docs/PROJECT_COMPARISON.md"><strong>Project comparison</strong><span>Side-by-side reviewer signal.</span></a>
+          <a href="docs/WALKTHROUGH.md"><strong>Interviewer walkthrough</strong><span>Recruiter and technical review script.</span></a>
+          <a href="docs/TRADEOFFS.md"><strong>Tradeoff notes</strong><span>Local-first decisions and production next steps.</span></a>
+          <a href="docs/DEMO_CAPTURE.md"><strong>Demo capture guide</strong><span>How to record real screenshots or terminal GIFs.</span></a>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="media-title">
+        <div class="section-heading">
+          <p class="eyebrow">Screenshots and GIFs</p>
+          <h2 id="media-title">Capture real demos, do not fake assets.</h2>
+        </div>
+        <div class="notice">
+          <p>
+            No screenshots or GIFs are committed yet. Use
+            <a href="docs/DEMO_CAPTURE.md">docs/DEMO_CAPTURE.md</a> to capture
+            real terminal runs or UI screenshots, then place final assets under
+            <code>docs/assets/</code> and link them from this page.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="pages" aria-labelledby="pages-title">
+        <div class="section-heading">
+          <p class="eyebrow">GitHub Pages</p>
+          <h2 id="pages-title">Deploy this static site without a build step.</h2>
+        </div>
+        <div class="deploy-panel">
+          <ol>
+            <li>Open the portfolio repository settings on GitHub.</li>
+            <li>Go to <strong>Pages</strong>.</li>
+            <li>Set source to <strong>Deploy from a branch</strong>.</li>
+            <li>Select branch <strong>main</strong> and folder <strong>/ (root)</strong>.</li>
+            <li>Save, then open the generated Pages URL after the workflow finishes.</li>
+          </ol>
+          <p>
+            This site is plain HTML and CSS. It does not require Node, package
+            installation, a frontend build, secrets, registries, or service
+            runtime credentials.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Portfolio index for six runnable engineering projects. Cloud deployment and production datasets remain pending by design.</p>
+      <a href="#top">Back to top</a>
+    </footer>
+  </body>
+</html>
