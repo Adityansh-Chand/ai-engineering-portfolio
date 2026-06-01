@@ -4,6 +4,9 @@ Production-style AI systems portfolio covering retrieval, multi-agent workflows,
 predictive scoring, anomaly detection, meeting intelligence, and an HR assistant
 application.
 
+This repository is an index and review guide for the six runnable projects. It
+is not a seventh standalone application.
+
 ## System Map
 
 ```mermaid
@@ -38,12 +41,15 @@ flowchart LR
 
 | Project | Role | Current runnable surface | Verification |
 |---|---|---|---|
-| `enterprise-rag-knowledge-system` | Retrieval and grounded answer pipeline | FastAPI `/query`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/run_eval.py` |
-| `ai-proactive-customer-operations` | Multi-agent customer decision workflow | FastAPI `/decide`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/evaluate.py` |
-| `ai-incident-detection-platform` | Operational anomaly scoring | FastAPI `/score`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/evaluate.py` |
-| `ai-sales-intelligence-engine` | Account propensity scoring | FastAPI `/score`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/evaluate.py` |
-| `autonomous-meeting-intelligence` | Transcript structuring | FastAPI `/analyze`, `/metrics`, SQLite event store, K8s/Compose | `python -m pytest -q`, `python evaluation/evaluate.py` |
-| `ADAAS` | Flutter HR assistant and Node HR backend | Flutter app, secured backend, Mongo persistence, K8s/Compose | `flutter test`, `flutter analyze`, `npm test` |
+| `enterprise-rag-knowledge-system` | Retrieval and grounded answer pipeline | FastAPI `/query`, `/metrics`, SQLite event store, Compose/K8s config | Locally tested, smoke-tested, Docker/K8s config statically validated |
+| `ai-proactive-customer-operations` | Multi-agent customer decision workflow | FastAPI `/decide`, `/metrics`, SQLite event store, Compose/K8s config | Locally tested, smoke-tested, Docker/K8s config statically validated |
+| `ai-incident-detection-platform` | Operational anomaly scoring | FastAPI `/score`, `/metrics`, SQLite event store, Compose/K8s config | Locally tested, smoke-tested, Docker/K8s config statically validated |
+| `ai-sales-intelligence-engine` | Account propensity scoring | FastAPI `/score`, `/metrics`, SQLite event store, Compose/K8s config | Locally tested, smoke-tested, Docker/K8s config statically validated |
+| `autonomous-meeting-intelligence` | Transcript structuring | FastAPI `/analyze`, `/metrics`, SQLite event store, Compose/K8s config | Locally tested, smoke-tested, Docker/K8s config statically validated |
+| `ADAAS` | Flutter HR assistant and Node HR backend | Flutter app, secured backend, Mongo persistence, Compose/K8s config | Locally tested, smoke-tested, Docker/K8s config statically validated |
+
+Docker runtime validation and cluster deployment are pending environment-backed
+CI/cloud verification for all six runnable projects.
 
 ## Runbook
 
@@ -123,12 +129,12 @@ python scripts/smoke_test.py
 
 | Project | Status Labels |
 |---|---|
-| `enterprise-rag-knowledge-system` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `ai-proactive-customer-operations` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `ai-incident-detection-platform` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `ai-sales-intelligence-engine` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `autonomous-meeting-intelligence` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `ADAAS` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
+| `enterprise-rag-knowledge-system` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `ai-proactive-customer-operations` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `ai-incident-detection-platform` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `ai-sales-intelligence-engine` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `autonomous-meeting-intelligence` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `ADAAS` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
 
 ## Projects
 
