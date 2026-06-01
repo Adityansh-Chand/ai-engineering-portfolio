@@ -29,7 +29,8 @@ For polished screenshots or terminal recordings, use
 
 ## 5-Minute Review Path
 
-For a quick external review, run one API service end to end:
+For a quick external review, run one API service end to end from the Workspace
+folder or from a clone of the target repo:
 
 ```bash
 cd enterprise-rag-knowledge-system

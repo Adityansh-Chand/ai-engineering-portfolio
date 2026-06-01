@@ -13,6 +13,8 @@ Open [`index.html`](index.html) for a portfolio-facing landing page designed for
 GitHub Pages. It summarizes the six runnable projects, links to each repo and
 demo guide, and gives 3-minute, 15-minute, and 30-minute reviewer paths.
 
+Live site: <https://adityansh-chand.github.io/ai-engineering-portfolio/>
+
 GitHub Pages setup:
 
 1. Open this repository on GitHub.
@@ -136,7 +138,8 @@ For demo paths and sample assets, see `DEMO.md`.
 ## 5-Minute Review Path
 
 1. Open `DEMO.md` and choose one service from the demo matrix.
-2. For the fastest API review, start `enterprise-rag-knowledge-system`:
+2. From the Workspace folder or a clone of the target repo, start
+   `enterprise-rag-knowledge-system`:
 
 ```bash
 cd enterprise-rag-knowledge-system

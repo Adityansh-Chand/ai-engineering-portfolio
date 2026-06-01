@@ -11,7 +11,6 @@ across the repositories.
 | `ai-sales-intelligence-engine` | Predictive scoring and explanation | FastAPI `/score` | Account sample data and SQLite event store | Optional API key, request IDs, safe errors, `/metrics`, events | Tests, scoring eval, smoke test |
 | `autonomous-meeting-intelligence` | Transcript structuring | FastAPI `/analyze` | Transcript sample data and SQLite event store | Optional API key, request IDs, safe errors, `/metrics`, events | Tests, structure eval, smoke test |
 | `ADAAS` | Full-stack HR assistant integration | Flutter app and Node REST backend | MongoDB when configured, seeded local data otherwise | Optional API key, metrics, health checks, safe API responses | Backend tests, smoke test, Flutter tests/analyze |
-| `ai-systems-portfolio` | Portfolio index and review path | Markdown docs and demo matrix | JSON demo matrix | Consistent reviewer guidance | Link and JSON validation |
 
 ## What Each Repository Proves
 
@@ -23,7 +22,13 @@ across the repositories.
 | `ai-sales-intelligence-engine` | Can expose scoring models through a clean API contract. |
 | `autonomous-meeting-intelligence` | Can convert unstructured meeting text into structured records. |
 | `ADAAS` | Can connect backend services to a user-facing application workflow. |
-| `ai-systems-portfolio` | Can package multiple systems into a coherent external review experience. |
+
+## Portfolio Index
+
+`ai-engineering-portfolio` is the presentation and navigation layer for the six
+runnable project repositories. It provides the landing page, reviewer paths,
+architecture docs, API flow docs, tradeoff notes, and demo matrix. It is not a
+seventh runnable product.
 
 ## Maturity Labels
 
