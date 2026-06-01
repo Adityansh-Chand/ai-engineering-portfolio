@@ -4,6 +4,9 @@ This portfolio is best demoed from the individual project repositories. Each
 project includes a `DEMO.md`, terminal demo steps, curl commands, and sample
 request/response files where applicable.
 
+This repository is an index and demo guide for the six runnable projects, not a
+standalone application.
+
 For polished screenshots or terminal recordings, use
 [`docs/DEMO_CAPTURE.md`](docs/DEMO_CAPTURE.md).
 
@@ -48,12 +51,12 @@ use the matrix above to choose a second service if time remains.
 
 | Project | Status Labels |
 |---|---|
-| `enterprise-rag-knowledge-system` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `ai-proactive-customer-operations` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `ai-incident-detection-platform` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `ai-sales-intelligence-engine` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `autonomous-meeting-intelligence` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
-| `ADAAS` | runnable demo, deployable baseline, needs cloud deployment, needs production data |
+| `enterprise-rag-knowledge-system` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `ai-proactive-customer-operations` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `ai-incident-detection-platform` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `ai-sales-intelligence-engine` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `autonomous-meeting-intelligence` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
+| `ADAAS` | locally tested, smoke-tested, Docker config statically validated, Docker runtime validation pending, cloud deployment pending, needs production data |
 
 ## Common Demo Commands
 

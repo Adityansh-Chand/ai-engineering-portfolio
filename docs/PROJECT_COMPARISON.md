@@ -11,7 +11,7 @@ across the repositories.
 | `ai-sales-intelligence-engine` | Predictive scoring and explanation | FastAPI `/score` | Account sample data and SQLite event store | Optional API key, request IDs, safe errors, `/metrics`, events | Tests, scoring eval, smoke test |
 | `autonomous-meeting-intelligence` | Transcript structuring | FastAPI `/analyze` | Transcript sample data and SQLite event store | Optional API key, request IDs, safe errors, `/metrics`, events | Tests, structure eval, smoke test |
 | `ADAAS` | Full-stack HR assistant integration | Flutter app and Node REST backend | MongoDB when configured, seeded local data otherwise | Optional API key, metrics, health checks, safe API responses | Backend tests, smoke test, Flutter tests/analyze |
-| `ai-systems-portfolio` | Portfolio packaging and review path | Markdown docs and demo matrix | JSON demo matrix | Consistent reviewer guidance | Link and JSON validation |
+| `ai-systems-portfolio` | Portfolio index and review path | Markdown docs and demo matrix | JSON demo matrix | Consistent reviewer guidance | Link and JSON validation |
 
 ## What Each Repository Proves
 
@@ -29,7 +29,11 @@ across the repositories.
 
 All runnable repositories currently share these labels:
 
-- `runnable demo`: local setup, tests, sample data, and smoke tests are present.
-- `deployable baseline`: Docker, Compose, Kubernetes manifests, and CI exist.
-- `needs cloud deployment`: no live managed environment is included.
+- `locally tested`: unit tests and evals run without Docker.
+- `smoke-tested`: local API smoke tests pass against running services.
+- `Docker config statically validated`: Dockerfile, Compose, and Kubernetes YAML
+  are inspected/parsed without starting containers or clusters.
+- `Docker runtime validation pending`: local Docker Desktop runtime validation is
+  not part of this workspace pass.
+- `cloud deployment pending`: no live managed environment is included.
 - `needs production data`: datasets are intentionally local demo/sample data.
