@@ -80,8 +80,8 @@ Good discussion prompts:
 
 ## Suggested Interview Narrative
 
-Start with the portfolio as a coherent system rather than seven disconnected
-repositories:
+Start with the portfolio as a coherent review experience rather than six
+disconnected project demos:
 
 > This portfolio demonstrates a set of local-first systems that share a common
 > operational baseline: tests, API contracts, metrics, request tracing, optional
