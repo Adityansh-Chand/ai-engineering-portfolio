@@ -1,0 +1,91 @@
+{
+  "note": "Consumer-driven contracts. Each entry records what a CONSUMER actually reads from a PROVIDER's response. If a provider changes shape, verify_contracts.py fails here instead of the consumer failing silently at runtime.",
+  "delivery": "Verified against live services by scripts/verify_contracts.py. Fields not listed are not depended on and providers may change them freely.",
+  "contracts": [
+    {
+      "id": "ops-reads-sales-account-score",
+      "consumer": "ai-proactive-customer-operations",
+      "provider": "ai-sales-intelligence-engine",
+      "consumer_code": "integrations/services.py:fetch_account_propensity",
+      "request": {"method": "GET", "path": "/accounts/{account_id}/score"},
+      "required_fields": {
+        "score": "number",
+        "segment": "string",
+        "industry": "string"
+      },
+      "why": "Drives the high_value_account_at_risk policy rule."
+    },
+    {
+      "id": "ops-reads-incident-active",
+      "consumer": "ai-proactive-customer-operations",
+      "provider": "ai-incident-detection-platform",
+      "consumer_code": "integrations/services.py:fetch_incident_status",
+      "request": {"method": "GET", "path": "/incidents/active", "query": {"service": "checkout"}},
+      "required_fields": {
+        "service": "string",
+        "active": "boolean"
+      },
+      "optional_fields": {"incident": "object_or_null"},
+      "why": "Drives the known_incident_on_the_service_complained_about rule, which suppresses individual refunds during a known fault."
+    },
+    {
+      "id": "ops-reads-rag-query",
+      "consumer": "ai-proactive-customer-operations",
+      "provider": "enterprise-rag-knowledge-system",
+      "consumer_code": "integrations/services.py:fetch_grounding",
+      "request": {"method": "GET", "path": "/query", "query": {"q": "refund policy"}},
+      "required_fields": {
+        "response.answer": "string",
+        "response.groundedness": "number",
+        "response.sources": "array",
+        "response.retriever": "string"
+      },
+      "why": "Grounds the customer reply and reports how much of it is traceable to retrieved text."
+    },
+    {
+      "id": "meeting-writes-rag-documents",
+      "consumer": "autonomous-meeting-intelligence",
+      "provider": "enterprise-rag-knowledge-system",
+      "consumer_code": "integrations/knowledge.py:publish",
+      "request": {
+        "method": "POST",
+        "path": "/documents",
+        "body": {
+          "doc_id": "contract:probe",
+          "title": "Contract probe",
+          "text": "Decision: the contract verifier ran. Action item (verifier, due now): confirm the shape.",
+          "source": "contract-verifier"
+        }
+      },
+      "required_fields": {
+        "doc_id": "string",
+        "chunks_added": "number"
+      },
+      "why": "Meeting outcomes are indexed so they become searchable."
+    },
+    {
+      "id": "incident-pushes-ops-events",
+      "consumer": "ai-proactive-customer-operations",
+      "provider": "ai-incident-detection-platform",
+      "consumer_code": "api/server.py:receive_incident_event",
+      "direction": "provider pushes to consumer",
+      "request": {
+        "method": "POST",
+        "path": "/events/incident",
+        "target": "consumer",
+        "body": {
+          "event_id": "contract-probe-1",
+          "type": "incident.opened",
+          "source": "contract-verifier",
+          "payload": {"service": "checkout", "incident": {"anomaly_count": 5}}
+        }
+      },
+      "required_fields": {
+        "event_type": "string",
+        "service": "string",
+        "outreach": "array"
+      },
+      "why": "The event envelope the bus emits must be accepted by the receiver. This is the one contract where the provider calls the consumer."
+    }
+  ]
+}

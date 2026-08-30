@@ -4,7 +4,7 @@ This portfolio is best demoed from the individual project repositories. Each
 project includes a `DEMO.md`, terminal demo steps, curl commands, and sample
 request/response files where applicable.
 
-This repository is an index and demo guide for the six runnable projects, not a
+This repository is an index and demo guide for five interconnected services, not a
 standalone application.
 
 For polished screenshots or terminal recordings, use
@@ -17,7 +17,6 @@ For polished screenshots or terminal recordings, use
 | [`ai-incident-detection-platform`](https://github.com/Adityansh-Chand/ai-incident-detection-platform) | Telemetry anomaly score from a fitted IsolationForest | FastAPI `/score` | `examples/requests/score.json`, `examples/responses/score.json` |
 | [`ai-sales-intelligence-engine`](https://github.com/Adityansh-Chand/ai-sales-intelligence-engine) | Propensity score with exact per-feature attribution | FastAPI `/score` | `examples/requests/score.json`, `examples/responses/score.json` |
 | [`autonomous-meeting-intelligence`](https://github.com/Adityansh-Chand/autonomous-meeting-intelligence) | Decisions and action items from a fitted sentence classifier | FastAPI `/analyze` | `examples/requests/analyze.json`, `examples/responses/analyze.json` |
-| [`ADAAS`](https://github.com/Adityansh-Chand/ADAAS) | HR assistant backend and Flutter app walkthrough | Node backend + Flutter app | `examples/requests/chat.json`, `examples/responses/chat.json` |
 
 ## Recommended Review Order
 
@@ -26,7 +25,6 @@ For polished screenshots or terminal recordings, use
 2. Run `ai-proactive-customer-operations` to show a decision trace.
 3. Run `ai-incident-detection-platform` and `ai-sales-intelligence-engine` to show scoring services.
 4. Run `autonomous-meeting-intelligence` to show structured extraction.
-5. Finish with `ADAAS` to show the HR assistant application tying API-backed workflows into a user experience.
 
 ## 5-Minute Review Path
 
@@ -58,7 +56,6 @@ use the matrix above to choose a second service if time remains.
 | `ai-incident-detection-platform` | fitted model, synthetic training data, held-out evaluation, reproducible artifacts, locally tested, smoke-tested, Docker config statically validated, image build validated in CI, cloud deployment pending |
 | `ai-sales-intelligence-engine` | fitted model, synthetic training data, held-out evaluation, reproducible artifacts, locally tested, smoke-tested, Docker config statically validated, image build validated in CI, cloud deployment pending |
 | `autonomous-meeting-intelligence` | fitted model, synthetic training data, held-out evaluation, reproducible artifacts, locally tested, smoke-tested, Docker config statically validated, image build validated in CI, cloud deployment pending |
-| `ADAAS` | locally tested, smoke-tested, Docker config statically validated, Docker image build validated in CI, cloud deployment pending, needs production data |
 
 ## Common Demo Commands
 
@@ -69,16 +66,6 @@ pip install -r requirements.txt
 python -m pytest -q
 uvicorn api.server:app --reload --port 8000
 python scripts/smoke_test.py
-```
-
-ADAAS backend:
-
-```bash
-cd hr-backend
-npm install
-npm test
-npm start
-npm run smoke
 ```
 
 ## What to check if you only have five minutes

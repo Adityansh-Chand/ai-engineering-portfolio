@@ -91,28 +91,6 @@ sequenceDiagram
   API-->>C: Analysis JSON with request_id
 ```
 
-## ADAAS HR Assistant
-
-Repository: `ADAAS`
-
-```mermaid
-sequenceDiagram
-  participant U as User
-  participant UI as Flutter App
-  participant API as Node HR Backend
-  participant Data as MongoDB or Seeded Data
-  participant Provider as Optional Assistant Provider
-
-  U->>UI: Ask HR question or submit leave action
-  UI->>API: REST request with optional X-API-Key
-  API->>Data: Read or write HR records
-  API->>Provider: Use provider only when configured
-  Provider-->>API: Assistant response
-  Data-->>API: HR data
-  API-->>UI: JSON response
-  UI-->>U: Render answer or workflow result
-```
-
 ## Common Error Path
 
 ```mermaid
