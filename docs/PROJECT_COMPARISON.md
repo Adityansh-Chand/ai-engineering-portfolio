@@ -75,8 +75,10 @@ These are reported as measured:
 - **LSA scores below BM25 overall** (0.6544 vs 0.6820). Genuinely semantic,
   genuinely fitted, and on a 108-document corpus not enough to beat a good
   lexical baseline.
-- **Reranking changes nDCG@10 by −0.0003.** A measured null result; first-stage
-  retrieval was already near-optimal at depth 20.
+- **Reranking changes nDCG@10 by +0.0000.** A measured null result — the fitted
+  reranker reorders nothing, because first-stage retrieval at depth 20 already
+  reaches 0.8889 and leaves no mistakes to correct. Its learned weights are
+  sensible; it simply had no work to do.
 - **The incident z-score baseline beats the fitted model on PR-AUC** (0.8597 vs
   0.8523) and catches the same 17/17 incidents. The fitted model's advantage is
   32% fewer false alerts, and that narrower claim is the one made.
