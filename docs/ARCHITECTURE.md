@@ -12,46 +12,36 @@ flowchart LR
   Reviewer[Reviewer / Hiring Team]
   Portfolio[AI Engineering Portfolio]
 
-  subgraph Apps[Application Layer]
-    ADAAS[ADAAS\nFlutter HR Assistant]
-  end
-
-  subgraph APIs[Runnable Service Layer]
-    RAG[Enterprise RAG\nKnowledge System]
-    OPS[Proactive Customer\nOperations]
-    INCIDENT[Incident Detection\nPlatform]
-    SALES[Sales Intelligence\nEngine]
+  subgraph Services[Five interconnected services]
+    RAG[Enterprise RAG
+Knowledge System]
+    OPS[Proactive Customer
+Operations]
+    INCIDENT[Incident Detection
+Platform]
+    SALES[Sales Intelligence
+Engine]
     MEETING[Meeting Intelligence]
   end
 
   subgraph Evidence[Evidence Layer]
-    Tests[Unit and API Tests]
-    Evals[Evaluation Scripts]
-    Samples[Sample Requests and Responses]
-    Smoke[Smoke Tests]
-    Deploy[Docker, Compose, Kubernetes, CI]
+    Tests[Unit, API and integration tests]
+    Evals[Evaluation scripts and model cards]
+    Contracts[Consumer-driven contract checks]
   end
 
   Reviewer --> Portfolio
-  Portfolio --> ADAAS
-  Portfolio --> RAG
-  Portfolio --> OPS
-  Portfolio --> INCIDENT
-  Portfolio --> SALES
-  Portfolio --> MEETING
+  Portfolio --> Services
 
+  OPS -->|propensity| SALES
+  OPS -->|incident status| INCIDENT
+  OPS -->|grounding| RAG
+  MEETING -->|index outcomes| RAG
+  INCIDENT -.->|pushes incident.opened| OPS
 
-  RAG --> Tests
-  OPS --> Tests
-  INCIDENT --> Tests
-  SALES --> Tests
-  MEETING --> Tests
-  ADAAS --> Tests
-
-  Tests --> Evals
-  Tests --> Samples
-  Tests --> Smoke
-  Tests --> Deploy
+  Services --> Tests
+  Services --> Evals
+  Services --> Contracts
 ```
 
 ## Shared Service Architecture
@@ -76,28 +66,6 @@ flowchart TD
   Domain --> Store
   Route --> Metrics
   Route -. exceptions .-> Error --> Response
-```
-
-## ADAAS Architecture
-
-ADAAS adds a user-facing Flutter layer and a Node backend. The backend keeps the
-same reviewer-friendly operational baseline: health checks, metrics, API key
-support, smoke tests, Docker Compose, Kubernetes manifests, and CI.
-
-```mermaid
-flowchart LR
-  Browser[Reviewer Browser]
-  Flutter[Flutter Web App]
-  Backend[Node HR Backend]
-  Mongo[(MongoDB when configured)]
-  Memory[(Seeded in-memory demo data)]
-  Assistant[Optional assistant provider]
-
-  Browser --> Flutter
-  Flutter --> Backend
-  Backend --> Mongo
-  Backend --> Memory
-  Backend --> Assistant
 ```
 
 ## Deployment Baseline

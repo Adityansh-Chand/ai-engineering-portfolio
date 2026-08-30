@@ -27,3 +27,9 @@ jobs:
       # Each service's own CI builds its image.
       - name: Validate compose structure and integration wiring
         run: python scripts/validate_compose.py
+
+      # Verifying contracts against live services needs all five repos checked
+      # out, so that runs locally (scripts/verify_contracts.py --local). This
+      # checks the definitions themselves stay well-formed.
+      - name: Contract definitions are well-formed
+        run: python scripts/check_contracts_wellformed.py

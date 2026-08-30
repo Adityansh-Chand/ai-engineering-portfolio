@@ -23,6 +23,8 @@
 #   ops     -> incident   is the service they are complaining about degraded?
 #   ops     -> rag        a grounding passage for the reply
 #   meeting -> rag        index decisions and action items so they are searchable
+#   incident => ops       PUSH: a service becoming degraded triggers unprompted
+#                         outreach to customers who recently complained about it
 #
 # Every one of those is an environment variable. Remove it and that service goes
 # back to running exactly as it does standalone.
@@ -69,7 +71,15 @@ services:
       # trailing window. Short window here so the demo is watchable.
       INCIDENT_WINDOW_SECONDS: "900"
       INCIDENT_MIN_ANOMALIES: "3"
+      # The push edge: incident delivers incident.opened / incident.resolved to
+      # operations. Delivery is at-least-once, so the receiver deduplicates by
+      # event_id. Remove this and detection simply stops publishing.
+      EVENT_SUBSCRIBERS: http://ops:8000
     volumes: ["incident-data:/data"]
+    # Deliberately no depends_on: ops -> incident (pull) and incident -> ops
+    # (push) form a cycle that compose cannot order. The bus retries with
+    # backoff, so incident starting first is fine -- early events simply
+    # redeliver once ops is up.
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health',timeout=5)"]
       interval: 10s

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="A static reviewer guide for six runnable engineering portfolio projects covering retrieval, workflow orchestration, scoring, incident detection, meeting intelligence, and an HR assistant."
+      content="A reviewer guide for five interconnected engineering services covering retrieval, workflow orchestration, predictive scoring, incident detection, and meeting intelligence."
     >
     <title>AI Engineering Portfolio</title>
     <link rel="stylesheet" href="styles.css">
@@ -27,8 +27,8 @@
       </nav>
 
       <section class="hero" aria-labelledby="hero-title">
-        <p class="eyebrow">Public index for six runnable project repositories</p>
-        <h1 id="hero-title">Six applied systems, one fast review path.</h1>
+        <p class="eyebrow">Five interconnected services, independently runnable</p>
+        <h1 id="hero-title">Five services. One system. Every number measured.</h1>
         <p class="hero-copy">
           This static site presents the portfolio as an external reviewer would
           see it: project purpose, API surface, tests, evaluation evidence,
@@ -89,7 +89,7 @@
             <ol>
               <li>Clone one target repo and install dependencies.</li>
               <li>Run tests/evals, start the API, then run smoke tests.</li>
-              <li>Repeat with a scoring service or ADAAS backend.</li>
+              <li>Repeat with another service, or bring the whole stack up with <code>docker compose up</code>.</li>
             </ol>
           </article>
         </div>
@@ -153,10 +153,6 @@
           <a href="https://github.com/Adityansh-Chand/autonomous-meeting-intelligence/actions/workflows/ci.yml">
             <span>Meeting Intelligence</span>
             <img src="https://github.com/Adityansh-Chand/autonomous-meeting-intelligence/actions/workflows/ci.yml/badge.svg" alt="Meeting Intelligence CI status">
-          </a>
-          <a href="https://github.com/Adityansh-Chand/ADAAS/actions/workflows/ci.yml">
-            <span>ADAAS</span>
-            <img src="https://github.com/Adityansh-Chand/ADAAS/actions/workflows/ci.yml/badge.svg" alt="ADAAS CI status">
           </a>
         </div>
       </section>
@@ -235,17 +231,6 @@
                 <td>8 tests passed; structure accuracy 1.0.</td>
                 <td>Compose/K8s statically validated; image build validated in CI.</td>
               </tr>
-              <tr>
-                <th scope="row">
-                  <a href="https://github.com/Adityansh-Chand/ADAAS">ADAAS</a>
-                </th>
-                <td>HR assistant application with leave workflows and policy chat.</td>
-                <td>Flutter, Dart, Node, Express, optional MongoDB, Docker, Kubernetes, CI.</td>
-                <td><code>cd hr-backend &amp;&amp; npm start</code><br><code>npm run smoke</code> in a second terminal</td>
-                <td>Locally tested, smoke-tested, cloud deployment pending, needs production data.</td>
-                <td>10 backend tests passed; Flutter analyze clean; 17 Flutter tests passed.</td>
-                <td>Backend Compose/K8s statically validated; backend image build validated in CI.</td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -264,7 +249,6 @@
             <a href="#incident">Anomaly scoring</a>
             <a href="#sales">Propensity scoring</a>
             <a href="#meeting">Transcript intelligence</a>
-            <a href="#adaas">Full-stack HR assistant</a>
           </div>
         </div>
       </section>
@@ -349,21 +333,6 @@
             <div><dt>Remaining gaps</dt><dd>Calendar/transcript integrations, identity controls, cloud deployment, production data, and human review workflow.</dd></div>
           </dl>
         </article>
-
-        <article class="project-detail" id="adaas">
-          <div class="project-title-row">
-            <h3>ADAAS HR Assistant</h3>
-            <a href="https://github.com/Adityansh-Chand/ADAAS">Repository</a>
-          </div>
-          <dl>
-            <div><dt>What it does</dt><dd>Combines a Flutter HR assistant with a Node backend for leave balances, leave applications, and policy chat.</dd></div>
-            <div><dt>Architecture summary</dt><dd>Flutter UI, intent routing, Express API, optional MongoDB persistence, seeded fallback data, optional provider-backed chat, metrics, and API key support.</dd></div>
-            <div><dt>API/demo surface</dt><dd>`GET /health`, `GET /metrics`, `GET /leave-balance`, `POST /leave-application`, `GET /leave-applications`, `POST /chat`; see <a href="https://github.com/Adityansh-Chand/ADAAS/blob/main/DEMO.md">DEMO.md</a>.</dd></div>
-            <div><dt>Tests/evals</dt><dd>`npm test`, `flutter analyze`, and `flutter test`; last local validation: 10 backend tests, clean analyze, 17 Flutter tests.</dd></div>
-            <div><dt>Deployment readiness</dt><dd>Backend Dockerfile, Compose, Kubernetes, CI backend tests, CI backend image build, and Flutter CI are present.</dd></div>
-            <div><dt>Remaining gaps</dt><dd>Production HR data integration, identity provider, managed MongoDB, cloud deployment, and policy data governance.</dd></div>
-          </dl>
-        </article>
       </section>
 
       <section class="section" id="docs" aria-labelledby="docs-title">
@@ -422,7 +391,7 @@
     </main>
 
     <footer class="site-footer">
-      <p>Portfolio index for six runnable engineering projects. Cloud deployment and production datasets remain pending by design.</p>
+      <p>Index for five interconnected engineering services. Training data is synthetic and disclosed; cloud deployment remains pending by design.</p>
       <a href="#top">Back to top</a>
     </footer>
   </body>
