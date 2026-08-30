@@ -109,3 +109,48 @@ Production next step:
 
 - Convert the strongest demos into deployed case studies with realistic traffic,
   monitoring, release processes, and operational ownership.
+
+## Synthetic Data Over No Data
+
+Decision:
+
+- Fit every model on generated data from a seeded, documented generator.
+- Say so prominently in every README, model card, and `/health` response.
+- Report results on real public benchmarks where they exist (BEIR, in the RAG repo).
+
+Why:
+
+- Real CRM records, production telemetry and meeting transcripts cannot be
+  published, and waiting for them would mean shipping no model at all.
+- A fitted model on disclosed synthetic data is an honest artifact. A hand-tuned
+  formula presented as a model is not.
+
+Cost, stated plainly:
+
+- These metrics measure how well each model recovers a generating process we
+  wrote. They are **not** evidence of real-world performance, and none of these
+  models has been validated against real outcomes.
+
+## Designing Evaluations That Can Fail
+
+Decision:
+
+- Split by time where data is temporal, and by template where data is generated
+  from phrasings.
+- Score the baseline being replaced on the same held-out data.
+- Report the ceiling alongside the metric where a ceiling exists.
+- Keep results that came out worse than hoped.
+
+Why:
+
+- An evaluation that cannot fail is not evidence. Every one of these repositories
+  previously reported a near-perfect score against data written to satisfy the
+  code being tested.
+- A held-out-template split dropped one classifier from 1.00 to 0.6476. The lower
+  number is the real one, and the inflated one is retained and labelled rather
+  than deleted, so the lesson survives.
+
+Cost:
+
+- The headline numbers are visibly lower than a portfolio usually advertises.
+  That is the intended outcome.
