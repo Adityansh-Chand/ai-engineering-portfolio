@@ -21,7 +21,7 @@ sequenceDiagram
   C->>API: POST /query
   API->>Auth: Validate X-API-Key when API_KEY is set
   API->>Search: Retrieve, rank, and compose answer
-  Search-->>API: Answer, confidence, sources
+  Search-->>API: Answer, retrieval_score, groundedness, sources
   API->>Store: Persist request event
   API->>Metrics: Increment counters
   API-->>C: JSON response with request_id
