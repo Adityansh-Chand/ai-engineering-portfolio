@@ -16,7 +16,6 @@ result and its limitations.
 | `ai-proactive-customer-operations` | 2 × TF-IDF → LogisticRegression | Synthetic, 2,400 messages | **Held-out templates** | Intent macro-F1 **0.6476**, sentiment 0.9121 |
 | `autonomous-meeting-intelligence` | TF-IDF → LogisticRegression, 3-class | Synthetic, 3,154 sentences | **Held-out templates** | Macro-F1 **0.5894** vs keyword gate 0.3235 |
 | `enterprise-rag-knowledge-system` | BM25 / LSA / dense bi-encoder / RRF | **Real BEIR benchmark** + synthetic demo corpus | Public test qrels | BEIR/NFCorpus nDCG@10 **0.3727** (dense) vs 0.2831 (bm25) |
-| `ADAAS` | Keyword intent routing + optional Gemini | Curated 26-entry policy KB | — | Flutter and backend test suites |
 
 ## Engineering surface
 
@@ -27,7 +26,6 @@ result and its limitations.
 | `ai-incident-detection-platform` | Time-series rare-event detection | FastAPI `/score` | Generated telemetry and SQLite events | Same | Tests, held-out window eval, smoke test |
 | `ai-sales-intelligence-engine` | Supervised scoring and attribution | FastAPI `/score` | Generated accounts and SQLite events | Same | Tests, held-out eval, smoke test |
 | `autonomous-meeting-intelligence` | Span classification and slot extraction | FastAPI `/analyze` | Generated transcripts and SQLite events | Same | Tests, per-class eval, smoke test |
-| `ADAAS` | Full-stack HR assistant integration | Flutter app and Node REST backend | MongoDB when configured, seeded local data otherwise | Optional API key, metrics, health checks, safe API responses | Backend tests, smoke test, Flutter tests/analyze |
 
 ## What each repository proves
 
@@ -38,7 +36,6 @@ result and its limitations.
 | `ai-incident-detection-platform` | Can handle time-series correctly — chronological splitting, rare-event metrics rather than accuracy, and a threshold calibrated to an operational precision target. |
 | `ai-sales-intelligence-engine` | Can ship a fitted model end to end with attribution that provably reconstructs its own output, and can report a metric alongside the ceiling that makes it interpretable. |
 | `autonomous-meeting-intelligence` | Can replace pattern matching with classification and prove the improvement by scoring the thing that was replaced on the same data. |
-| `ADAAS` | Can connect backend services to a user-facing application workflow. |
 
 ## Evaluation design — the thing these repos have in common
 
@@ -92,8 +89,8 @@ These are reported as measured:
 
 ## Portfolio index
 
-`ai-engineering-portfolio` is the presentation and navigation layer for the six
-runnable project repositories. It provides the landing page, reviewer paths,
+`ai-engineering-portfolio` is the presentation and navigation layer for the five
+interconnected service repositories. It provides the landing page, reviewer paths,
 architecture docs, API flow docs, tradeoff notes, and demo matrix. It is not a
 seventh runnable product.
 

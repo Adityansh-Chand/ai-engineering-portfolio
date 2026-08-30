@@ -28,7 +28,6 @@ Production next step:
 Decision:
 
 - Use SQLite event persistence for the Python services.
-- Use MongoDB in ADAAS when configured, with seeded local data as the fallback.
 
 Why:
 
