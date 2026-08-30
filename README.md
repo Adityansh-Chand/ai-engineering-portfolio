@@ -30,37 +30,59 @@ workflow does not require secrets or credentials.
 
 ## System Map
 
+The five Python services run **independently** and also compose into one system.
+Every edge below is optional: unset its environment variable and that service
+goes back to running exactly as it does alone.
+
 ```mermaid
 flowchart LR
-  User[Users / Reviewers]
+  User[Customer message]
+  Meeting[Meeting Intelligence<br/>fitted sentence classifier]
+  Ops[Customer Operations<br/>learned intent + rule policy]
+  Sales[Sales Intelligence<br/>fitted propensity model]
+  Incident[Incident Detection<br/>fitted anomaly detector]
+  RAG[RAG Knowledge System<br/>retrieval bench]
 
-  subgraph Services[Independently runnable services]
-    RAG[Enterprise RAG<br/>retrieval bench]
-    OPS[Proactive Customer Ops<br/>learned intent + rule policy]
-    SALES[Sales Intelligence<br/>fitted propensity model]
-    INCIDENT[Incident Detection<br/>fitted anomaly detector]
-    MEETING[Meeting Intelligence<br/>fitted sentence classifier]
-  end
-
-  subgraph App[Application]
-    ADAAS[ADAAS<br/>Flutter + Node HR assistant]
-  end
-
-  User --> RAG
-  User --> OPS
-  User --> SALES
-  User --> INCIDENT
-  User --> MEETING
-  User --> ADAAS
+  User --> Ops
+  Ops -->|account propensity| Sales
+  Ops -->|is this service degraded?| Incident
+  Ops -->|grounding passage| RAG
+  Meeting -->|index decisions + action items| RAG
 ```
 
-These services are **independent**. They share a common service template for HTTP
-hardening, event storage and metrics, but none calls another at runtime.
+| Edge | What it changes |
+|---|---|
+| `ops → sales` | A high-propensity account writing in unhappy escalates for retention |
+| `ops → incident` | A complaint about a service that is **currently degraded** becomes an incident response, not an individual refund |
+| `ops → rag` | The reply is grounded in a retrieved policy or runbook passage |
+| `meeting → rag` | *"What did we decide about the migration plan?"* becomes answerable |
 
-An earlier version of this diagram showed `OPS --> SALES`, `OPS --> INCIDENT` and
-`MEETING --> RAG`. Those calls did not exist in any codebase. The diagram now
-shows what is actually there; edges will be added if and when they are built.
+**The constraint the integration was built under: an enrichment may improve a
+decision, but it may never prevent one.** Every call has a short timeout, one
+bounded retry, and a circuit breaker; failures are recorded in the decision trace
+and the decision is made anyway. `tests/test_integration.py` in the operations
+and meeting repos asserts the degraded path against a real HTTP server, not a mock.
 
+Run the whole thing:
+
+```bash
+docker compose up --build
+python scripts/demo_end_to_end.py
+```
+
+Or without Docker:
+
+```bash
+python scripts/demo_end_to_end.py --local
+```
+
+The demo opens an incident, records a meeting decision and retrieves it back,
+shows the same complaint producing **different decisions** depending on whether
+the service is degraded, then kills a dependency to show the system degrade
+instead of fail. One request id flows through every hop.
+
+ADAAS is deliberately outside this system — it is separate work with its own
+capstone track.
 
 ## Portfolio Documentation
 
