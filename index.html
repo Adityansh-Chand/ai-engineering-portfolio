@@ -207,7 +207,7 @@
                   <a href="https://github.com/Adityansh-Chand/ai-incident-detection-platform">Incident Detection</a>
                 </th>
                 <td>Telemetry scoring for latency, errors, timeouts, and traffic anomalies.</td>
-                <td>Python, FastAPI, z-score model, SQLite, Docker, Kubernetes, CI.</td>
+                <td>Python, FastAPI, fitted IsolationForest anomaly detector, SQLite, Docker, Kubernetes, CI.</td>
                 <td><code>uvicorn api.server:app --reload --port 8000</code><br><code>python scripts/smoke_test.py</code></td>
                 <td>Locally tested, smoke-tested, cloud deployment pending, needs production data.</td>
                 <td>7 tests passed; scoring eval accuracy 1.0.</td>
@@ -218,7 +218,7 @@
                   <a href="https://github.com/Adityansh-Chand/ai-sales-intelligence-engine">Sales Intelligence</a>
                 </th>
                 <td>Account propensity scoring with ranked feature explanations.</td>
-                <td>Python, FastAPI, deterministic scoring, SQLite, Docker, Kubernetes, CI.</td>
+                <td>Python, FastAPI, fitted logistic regression, SQLite, Docker, Kubernetes, CI.</td>
                 <td><code>uvicorn api.server:app --reload --port 8000</code><br><code>python scripts/smoke_test.py</code></td>
                 <td>Locally tested, smoke-tested, cloud deployment pending, needs production data.</td>
                 <td>7 tests passed; scoring eval accuracy 1.0.</td>
@@ -312,7 +312,7 @@
           </div>
           <dl>
             <div><dt>What it does</dt><dd>Scores operational telemetry to identify anomalous service behavior and explain the signal.</dd></div>
-            <div><dt>Architecture summary</dt><dd>FastAPI scoring endpoint, feature extraction, z-score anomaly model, SQLite audit trail, metrics, request IDs, and safe errors.</dd></div>
+            <div><dt>Architecture summary</dt><dd>FastAPI scoring endpoint, per-service feature standardisation, IsolationForest fitted on normal traffic with a calibrated alert threshold, SQLite audit trail, metrics, request IDs, and safe errors.</dd></div>
             <div><dt>API/demo surface</dt><dd>`GET /health`, `GET /metrics`, `GET /events`, `POST /score`; see <a href="https://github.com/Adityansh-Chand/ai-incident-detection-platform/blob/main/DEMO.md">DEMO.md</a>.</dd></div>
             <div><dt>Tests/evals</dt><dd>`python -m pytest -q` and `python evaluation/evaluate.py`; last local validation: 7 tests passed, eval accuracy 1.0.</dd></div>
             <div><dt>Deployment readiness</dt><dd>Dockerfile, Compose, Kubernetes, CI tests/eval, and CI Docker image build validation are present.</dd></div>
