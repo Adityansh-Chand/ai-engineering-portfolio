@@ -11,3 +11,19 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify portfolio README
         run: test -s README.md
+
+  compose-config:
+    name: Multi-service compose is valid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install PyYAML
+        run: pip install pyyaml
+      # Build contexts point at sibling repos that are not checked out here, so
+      # this validates structure and wiring rather than building the images.
+      # Each service's own CI builds its image.
+      - name: Validate compose structure and integration wiring
+        run: python scripts/validate_compose.py
