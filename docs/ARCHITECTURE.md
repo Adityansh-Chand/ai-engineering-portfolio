@@ -40,10 +40,6 @@ flowchart LR
   Portfolio --> SALES
   Portfolio --> MEETING
 
-  ADAAS --> RAG
-  OPS --> SALES
-  OPS --> INCIDENT
-  MEETING --> RAG
 
   RAG --> Tests
   OPS --> Tests
@@ -124,3 +120,20 @@ flowchart LR
 
 These projects are intentionally local-first. They are credible deployable
 baselines, but they do not include live cloud environments or production data.
+
+## Evaluation Design
+
+The architectural decision that matters most across these repositories is not in
+any diagram: each evaluation is built so it can fail.
+
+| Repository | Split | Why that split |
+|---|---|---|
+| `ai-sales-intelligence-engine` | 75/25 stratified | Independent rows; the Bayes ceiling is reported so the metric is interpretable |
+| `ai-incident-detection-platform` | **Chronological per service** | Incidents span consecutive minutes; a random split leaks an episode's middle into training |
+| `ai-proactive-customer-operations` | **Held-out templates** | A row split lets the classifier memorise phrasings present on both sides (it scored 1.00) |
+| `autonomous-meeting-intelligence` | **Held-out templates** | Same reason |
+| `enterprise-rag-knowledge-system` | Public BEIR test qrels | Human relevance judgments, comparable to published results |
+
+Each repository also scores the thing it replaced — the keyword gate, the z-score
+baseline, the naive row split — on the same held-out data, so improvements are
+measured rather than asserted.
