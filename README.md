@@ -286,8 +286,9 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
   single largest gap: every model here is fitted on generated data.
 - Cloud deployment with a live managed environment; currently only static config
   validation and CI image builds exist.
-- Weighted rank fusion in the RAG repo — unweighted RRF currently underperforms
-  its own best component.
+- Per-query routing between lexical and dense retrieval in the RAG repo. Weighted
+  fusion is now implemented and the data chose "pure dense"; a single global weight
+  cannot exploit BM25 being better on identifier-shaped queries specifically.
 - A cross-encoder reranker to compare against the fitted pairwise reranker, which
   measured no improvement.
 - Improve owner extraction in the meeting service (recall 0.3484 — misses full

@@ -70,8 +70,12 @@ These are reported as measured:
 
 - **Hybrid retrieval is worse than dense alone** — on the synthetic corpus
   (0.7913 vs 0.8577) *and* on BEIR/NFCorpus (0.3423 vs 0.3727). Equal-weight rank
-  fusion can underperform its stronger component when the two are unequal. The
-  finding replicating on a public benchmark is what makes it worth stating.
+  fusion can underperform its stronger component when the two are unequal.
+  Following it up: the fusion weight was then selected from data on a dev split of
+  queries, and **both corpora chose "pure dense, no lexical"**. Weighting fixes the
+  underperformance and ties dense exactly, because the optimum is not to fuse. What
+  the result actually points at is per-query routing — BM25 scores 1.0 on identifier
+  queries and near-zero on paraphrase — which one global weight cannot express.
 - **LSA scores below BM25 overall** (0.6544 vs 0.6820). Genuinely semantic,
   genuinely fitted, and on a 108-document corpus not enough to beat a good
   lexical baseline.
