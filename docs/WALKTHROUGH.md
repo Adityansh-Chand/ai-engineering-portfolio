@@ -56,7 +56,6 @@ Recommended sequence:
 2. `ai-proactive-customer-operations`: orchestration and decision traces.
 3. `ai-incident-detection-platform` or `ai-sales-intelligence-engine`: scoring
    API design and explainability.
-4. `ADAAS`: full-stack integration and frontend/backend contract.
 5. `docs/TRADEOFFS.md`: maturity boundaries and production next steps.
 
 Good discussion prompts:
@@ -73,14 +72,12 @@ Good discussion prompts:
 
 | Role Focus | Best Repositories | Why |
 |---|---|---|
-| Backend/API engineering | Python services, ADAAS backend | Typed APIs, auth boundary, error handling, metrics, persistence |
 | Machine learning systems | Sales, incident, RAG | Scoring/eval loops, sample data, model-facing contracts |
-| Product engineering | ADAAS, meeting intelligence | User workflows, structured outputs, end-to-end demoability |
 | Platform readiness | All runnable repos | Docker, Compose, Kubernetes manifests, CI, smoke tests |
 
 ## Suggested Interview Narrative
 
-Start with the portfolio as a coherent review experience rather than six
+Start with the portfolio as a coherent review experience rather than five
 disconnected project demos:
 
 > This portfolio demonstrates a set of local-first systems that share a common

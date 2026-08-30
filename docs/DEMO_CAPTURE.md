@@ -13,8 +13,6 @@ evidence: setup, tests, one API request, one response, and metrics.
 | `incident-score.gif` | `ai-incident-detection-platform` | `/score` response with anomaly label and `/metrics` |
 | `sales-score.gif` | `ai-sales-intelligence-engine` | `/score` response with propensity explanation |
 | `meeting-analysis.gif` | `autonomous-meeting-intelligence` | `/analyze` response with summary, decisions, action items |
-| `adaas-backend.gif` | `ADAAS` | Backend smoke test, `/chat`, `/leave-balance`, `/metrics` |
-| `adaas-flutter.png` | `ADAAS` | Flutter web app running against local backend |
 
 Store final assets in `docs/assets/` in the portfolio repository, then link them
 from `README.md` or `DEMO.md` when they are available.
@@ -67,9 +65,6 @@ For API services, capture three images:
 2. A successful curl request using the sample request file.
 3. `/metrics` output after the request.
 
-For ADAAS, capture four images:
-
-1. `npm test` passing in `ADAAS/hr-backend`.
 2. `npm run smoke` passing while the backend is running.
 3. Flutter web app launched with `flutter run -d chrome`.
 4. A visible HR assistant or leave-balance interaction.
