@@ -1,0 +1,124 @@
+# The five services running together as one system.
+#
+# Each repository also ships its own docker-compose.yml and runs perfectly well
+# alone -- that is the point, and it is what the integration was built not to
+# break. This file is the other half of the story: the same five services with
+# their optional edges switched on.
+#
+# Build contexts point at sibling directories, so clone all five next to this one:
+#
+#   Workspace/
+#     ai-engineering-portfolio/     <- you are here
+#     enterprise-rag-knowledge-system/
+#     ai-sales-intelligence-engine/
+#     ai-incident-detection-platform/
+#     ai-proactive-customer-operations/
+#     autonomous-meeting-intelligence/
+#
+#   docker compose up --build
+#   python scripts/demo_end_to_end.py
+#
+# Wiring:
+#   ops     -> sales      account propensity for the customer who wrote in
+#   ops     -> incident   is the service they are complaining about degraded?
+#   ops     -> rag        a grounding passage for the reply
+#   meeting -> rag        index decisions and action items so they are searchable
+#   incident => ops       PUSH: a service becoming degraded triggers unprompted
+#                         outreach to customers who recently complained about it
+#
+# Every one of those is an environment variable. Remove it and that service goes
+# back to running exactly as it does standalone.
+
+services:
+  rag:
+    build:
+      context: ../enterprise-rag-knowledge-system
+    ports: ["8001:8000"]
+    environment:
+      # bm25 keeps startup instant and needs no model download. Set to
+      # hybrid or dense for the stronger retrieval measured in that repo's README.
+      RETRIEVER: bm25
+      APP_DB_PATH: /data/events.sqlite3
+    volumes: ["rag-data:/data"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health',timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  sales:
+    build:
+      context: ../ai-sales-intelligence-engine
+    ports: ["8002:8000"]
+    environment:
+      APP_DB_PATH: /data/events.sqlite3
+    volumes: ["sales-data:/data"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health',timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  incident:
+    build:
+      context: ../ai-incident-detection-platform
+    ports: ["8003:8000"]
+    environment:
+      APP_DB_PATH: /data/events.sqlite3
+      # A service is "in an incident" after this many anomalous minutes in the
+      # trailing window. Short window here so the demo is watchable.
+      INCIDENT_WINDOW_SECONDS: "900"
+      INCIDENT_MIN_ANOMALIES: "3"
+      # The push edge: incident delivers incident.opened / incident.resolved to
+      # operations. Delivery is at-least-once, so the receiver deduplicates by
+      # event_id. Remove this and detection simply stops publishing.
+      EVENT_SUBSCRIBERS: http://ops:8000
+    volumes: ["incident-data:/data"]
+    # Deliberately no depends_on: ops -> incident (pull) and incident -> ops
+    # (push) form a cycle that compose cannot order. The bus retries with
+    # backoff, so incident starting first is fine -- early events simply
+    # redeliver once ops is up.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health',timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  ops:
+    build:
+      context: ../ai-proactive-customer-operations
+    ports: ["8004:8000"]
+    environment:
+      APP_DB_PATH: /data/events.sqlite3
+      # The three edges. Delete these and ops runs standalone.
+      SALES_API_URL: http://sales:8000
+      INCIDENT_API_URL: http://incident:8000
+      RAG_API_URL: http://rag:8000
+      INTEGRATION_TIMEOUT_SECONDS: "2.0"
+    volumes: ["ops-data:/data"]
+    depends_on:
+      sales: {condition: service_healthy}
+      incident: {condition: service_healthy}
+      rag: {condition: service_healthy}
+
+  meeting:
+    build:
+      context: ../autonomous-meeting-intelligence
+    ports: ["8005:8000"]
+    environment:
+      APP_DB_PATH: /data/events.sqlite3
+      # The fourth edge: meeting outcomes become searchable knowledge.
+      RAG_API_URL: http://rag:8000
+    volumes: ["meeting-data:/data"]
+    depends_on:
+      rag: {condition: service_healthy}
+
+volumes:
+  rag-data:
+  sales-data:
+  incident-data:
+  ops-data:
+  meeting-data:

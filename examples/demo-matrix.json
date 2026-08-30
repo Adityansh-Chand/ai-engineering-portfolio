@@ -23,10 +23,5 @@
     "project": "autonomous-meeting-intelligence",
     "demo": "Transcript structure extraction",
     "endpoint": "POST /analyze"
-  },
-  {
-    "project": "ADAAS",
-    "demo": "HR assistant backend and Flutter app walkthrough",
-    "endpoint": "POST /chat"
   }
 ]
