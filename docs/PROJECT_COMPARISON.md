@@ -15,7 +15,7 @@ result and its limitations.
 | `ai-incident-detection-platform` | IsolationForest on normal traffic | Synthetic, 40,320 minutes | **Chronological** per service | Precision **0.7895**, F1 0.8077, 17/17 incidents caught |
 | `ai-proactive-customer-operations` | 2 × TF-IDF → LogisticRegression | Synthetic, 2,400 messages | **Held-out templates** | Intent macro-F1 **0.6476**, sentiment 0.9121 |
 | `autonomous-meeting-intelligence` | TF-IDF → LogisticRegression, 3-class | Synthetic, 3,154 sentences | **Held-out templates** | Macro-F1 **0.5894** vs keyword gate 0.3235 |
-| `enterprise-rag-knowledge-system` | BM25 / LSA / dense bi-encoder / RRF | **Real BEIR benchmarks** + synthetic demo corpus | Public test qrels | See the repo's bench table |
+| `enterprise-rag-knowledge-system` | BM25 / LSA / dense bi-encoder / RRF | **Real BEIR benchmark** + synthetic demo corpus | Public test qrels | BEIR/NFCorpus nDCG@10 **0.3727** (dense) vs 0.2831 (bm25) |
 | `ADAAS` | Keyword intent routing + optional Gemini | Curated 26-entry policy KB | — | Flutter and backend test suites |
 
 ## Engineering surface
@@ -68,9 +68,10 @@ What changed is mostly evaluation design, and three cases are worth reading:
 A portfolio where every number flatters the author is not evidence of anything.
 These are reported as measured:
 
-- **Hybrid retrieval is worse than dense alone** (0.7913 vs 0.8577). Equal-weight
-  rank fusion lets BM25's near-zero vocabulary-mismatch performance drag the
-  result down.
+- **Hybrid retrieval is worse than dense alone** — on the synthetic corpus
+  (0.7913 vs 0.8577) *and* on BEIR/NFCorpus (0.3423 vs 0.3727). Equal-weight rank
+  fusion can underperform its stronger component when the two are unequal. The
+  finding replicating on a public benchmark is what makes it worth stating.
 - **LSA scores below BM25 overall** (0.6544 vs 0.6820). Genuinely semantic,
   genuinely fitted, and on a 108-document corpus not enough to beat a good
   lexical baseline.
