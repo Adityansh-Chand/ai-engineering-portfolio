@@ -4,13 +4,13 @@ Production-style AI systems portfolio covering retrieval, multi-agent workflows,
 predictive scoring, anomaly detection, meeting intelligence, and an HR assistant
 application.
 
-This repository is an index and review guide for the six runnable projects. It
+This repository is an index and review guide for five interconnected services. It
 is not a seventh standalone application.
 
 ## Static Landing Site
 
 Open [`index.html`](index.html) for a portfolio-facing landing page designed for
-GitHub Pages. It summarizes the six runnable projects, links to each repo and
+GitHub Pages. It summarizes the five services, links to each repo and
 demo guide, and gives 3-minute, 15-minute, and 30-minute reviewer paths.
 
 Live site: <https://adityansh-chand.github.io/ai-engineering-portfolio/>
@@ -30,37 +30,98 @@ workflow does not require secrets or credentials.
 
 ## System Map
 
+The five Python services run **independently** and also compose into one system.
+Every edge below is optional: unset its environment variable and that service
+goes back to running exactly as it does alone.
+
 ```mermaid
 flowchart LR
-  User[Users / Reviewers]
+  User[Customer message]
+  Meeting[Meeting Intelligence<br/>fitted sentence classifier]
+  Ops[Customer Operations<br/>learned intent + rule policy]
+  Sales[Sales Intelligence<br/>fitted propensity model]
+  Incident[Incident Detection<br/>fitted anomaly detector]
+  RAG[RAG Knowledge System<br/>retrieval bench]
 
-  subgraph Services[Independently runnable services]
-    RAG[Enterprise RAG<br/>retrieval bench]
-    OPS[Proactive Customer Ops<br/>learned intent + rule policy]
-    SALES[Sales Intelligence<br/>fitted propensity model]
-    INCIDENT[Incident Detection<br/>fitted anomaly detector]
-    MEETING[Meeting Intelligence<br/>fitted sentence classifier]
-  end
-
-  subgraph App[Application]
-    ADAAS[ADAAS<br/>Flutter + Node HR assistant]
-  end
-
-  User --> RAG
-  User --> OPS
-  User --> SALES
-  User --> INCIDENT
-  User --> MEETING
-  User --> ADAAS
+  User --> Ops
+  Ops -->|account propensity| Sales
+  Ops -->|is this service degraded?| Incident
+  Ops -->|grounding passage| RAG
+  Meeting -->|index decisions + action items| RAG
+  Incident -.->|pushes incident.opened| Ops
 ```
 
-These services are **independent**. They share a common service template for HTTP
-hardening, event storage and metrics, but none calls another at runtime.
+Four **pull** edges and one **push** edge. The dotted line is what makes
+"proactive" literally true: when a service becomes degraded, the incident
+platform pushes an event and operations reaches out to customers who recently
+complained about that service -- without anyone asking.
 
-An earlier version of this diagram showed `OPS --> SALES`, `OPS --> INCIDENT` and
-`MEETING --> RAG`. Those calls did not exist in any codebase. The diagram now
-shows what is actually there; edges will be added if and when they are built.
+| Edge | What it changes |
+|---|---|
+| `ops → sales` | A high-propensity account writing in unhappy escalates for retention |
+| `ops → incident` | A complaint about a service that is **currently degraded** becomes an incident response, not an individual refund |
+| `ops → rag` | The reply is grounded in a retrieved policy or runbook passage |
+| `meeting → rag` | *"What did we decide about the migration plan?"* becomes answerable |
+| `incident ⇢ ops` | **Push.** A service becoming degraded triggers unprompted outreach to affected customers |
 
+**The constraint the integration was built under: an enrichment may improve a
+decision, but it may never prevent one.** Every call has a short timeout, one
+bounded retry, and a circuit breaker; failures are recorded in the decision trace
+and the decision is made anyway. `tests/test_integration.py` in the operations
+and meeting repos asserts the degraded path against a real HTTP server, not a mock.
+
+### The push edge, and what push costs
+
+Detection cannot block on delivery, so events go to an outbox and a background
+worker delivers them with exponential backoff. Delivery is therefore
+**at-least-once, not exactly-once** -- a delivery that succeeds and whose
+acknowledgement is lost is indistinguishable from one that failed, so claiming
+exactly-once would be a lie. The consequence is that **subscribers must be
+idempotent**: operations deduplicates by `event_id`, and a test asserts a
+redelivery does not message the same customers twice.
+
+Events that exhaust their retries land in a dead-letter queue at
+`GET /events/dlq` rather than vanishing. An event bus whose failures disappear is
+worse than none, because it looks like it is working.
+
+This is a webhook fan-out with the failure handling that makes push usable. It is
+**not a broker** -- no durable log, no partitioning, no consumer groups, and the
+outbox is lost on restart. The README of the incident repo says so too.
+
+### Contract checks
+
+Five services and five edges means a provider can change a response field, keep
+its own tests green because nothing in that repo reads it, and break its consumer
+at runtime. That is the most likely way this system rots.
+
+[`contracts/contracts.json`](contracts/contracts.json) records what each consumer
+**actually reads** from each provider. Fields not listed are not depended on and
+may change freely -- which is the useful half of writing them down.
+
+```bash
+python scripts/verify_contracts.py --local
+```
+
+It starts the services, calls each provider, and checks the shapes. I verified it
+fails correctly by injecting a field the provider does not return.
+
+Run the whole thing:
+
+```bash
+docker compose up --build
+python scripts/demo_end_to_end.py
+```
+
+Or without Docker:
+
+```bash
+python scripts/demo_end_to_end.py --local
+```
+
+The demo opens an incident, records a meeting decision and retrieves it back,
+shows the same complaint producing **different decisions** depending on whether
+the service is degraded, then kills a dependency to show the system degrade
+instead of fail. One request id flows through every hop.
 
 ## Portfolio Documentation
 
@@ -85,9 +146,8 @@ prove the committed artifacts are reproducible.
 | [`ai-incident-detection-platform`](https://github.com/Adityansh-Chand/ai-incident-detection-platform) | IsolationForest on normal traffic | Precision **0.7895**, 17/17 incidents caught, 32% fewer alerts than baseline | Synthetic, 40,320 minutes |
 | [`ai-proactive-customer-operations`](https://github.com/Adityansh-Chand/ai-proactive-customer-operations) | 2 × TF-IDF → LogisticRegression + rule policy | Intent macro-F1 **0.6476** on held-out phrasings; sentiment 0.9121 | Synthetic, 2,400 messages |
 | [`autonomous-meeting-intelligence`](https://github.com/Adityansh-Chand/autonomous-meeting-intelligence) | TF-IDF → LogisticRegression, 3-class | Macro-F1 **0.5894** vs 0.3235 for the keyword gate it replaced | Synthetic, 3,154 sentences |
-| [`ADAAS`](https://github.com/Adityansh-Chand/ADAAS) | Flutter HR assistant and Node HR backend | Flutter app, secured backend, Mongo persistence, Compose/K8s config | Curated 26-entry policy KB |
 
-All six: locally tested, smoke-tested, Docker/K8s config statically validated,
+All five: locally tested, smoke-tested, Docker/K8s config statically validated,
 Docker image builds validated in CI. **Cloud deployment is pending and unverified
 for all of them.**
 
@@ -143,22 +203,6 @@ cd enterprise-rag-knowledge-system
 python evaluation/run_eval.py
 ```
 
-ADAAS:
-
-```bash
-cd ADAAS/hr-backend
-npm test
-npm start
-npm run smoke
-
-cd ..
-flutter test
-flutter analyze
-flutter run -d chrome \
-  --dart-define=HR_API_BASE_URL=http://localhost:3000 \
-  --dart-define=HR_API_KEY=change-me
-```
-
 ## Portfolio Readiness Checklist
 
 For demo paths and sample assets, see `DEMO.md`.
@@ -174,7 +218,6 @@ means CI regenerates the data and retrains to prove the committed numbers.
 | [`ai-incident-detection-platform`](https://github.com/Adityansh-Chand/ai-incident-detection-platform) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
 | [`ai-sales-intelligence-engine`](https://github.com/Adityansh-Chand/ai-sales-intelligence-engine) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
 | [`autonomous-meeting-intelligence`](https://github.com/Adityansh-Chand/autonomous-meeting-intelligence) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
-| [`ADAAS`](https://github.com/Adityansh-Chand/ADAAS) | Yes | n/a | n/a | Yes | Yes | Yes | Yes |
 
 ## Final Reviewer Checklist
 
@@ -182,7 +225,7 @@ means CI regenerates the data and retrains to prove the committed numbers.
 - Use `DEMO.md` to pick one runnable service and follow its exact smoke path.
 - Open each target repo README for purpose, quickstart, API surface, deployment status, and remaining gaps.
 - Inspect `docs/ARCHITECTURE.md`, `docs/API_FLOWS.md`, and `docs/TRADEOFFS.md` for system-level reasoning.
-- Treat this repository as the portfolio index only; the six linked repos are the runnable projects.
+- Treat this repository as the portfolio index only; the five linked repos are the runnable services.
 - Expect local demos, tests/evals, static deployment config validation, and CI Docker image builds; cloud deployment and production data remain pending.
 - To check a claim rather than take it: run `python training/train.py --verify` in
   any service repo. It retrains from the committed generator and fails if the
@@ -222,7 +265,6 @@ python scripts/smoke_test.py
 | `ai-incident-detection-platform` | fitted detector, synthetic training data, chronological evaluation, reproducible artifacts, locally tested, smoke-tested, Docker config statically validated, image build validated in CI, cloud deployment pending |
 | `ai-sales-intelligence-engine` | fitted model, synthetic training data, held-out evaluation with reported ceiling, reproducible artifacts, locally tested, smoke-tested, Docker config statically validated, image build validated in CI, cloud deployment pending |
 | `autonomous-meeting-intelligence` | fitted classifier, synthetic training data, held-out-template evaluation, measured rule-based slots, reproducible artifacts, locally tested, smoke-tested, Docker config statically validated, image build validated in CI, cloud deployment pending |
-| `ADAAS` | locally tested, smoke-tested, Docker config statically validated, Docker image build validated in CI, cloud deployment pending, needs production data |
 
 `synthetic training data` means the model is fitted on generated data from a
 seeded, documented generator. The metrics are real measurements on held-out
@@ -242,11 +284,6 @@ https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system.git
 Multi-agent DAG with learned intent and sentiment classification in front of a
 deterministic, auditable policy layer. Every decision names the rule that fired.
 https://github.com/Adityansh-Chand/ai-proactive-customer-operations.git
-
-## 3. ADAAS
-
-Production HR assistant integrating RAG reasoning with real-time API data.
-https://github.com/Adityansh-Chand/ADAAS.git
 
 ## 4. ai-sales-intelligence-engine
 
@@ -277,7 +314,6 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 - Deterministic local fallbacks where external providers are optional.
 - Optional `X-API-Key` auth on non-health data endpoints.
 - Request IDs, safe error responses, and JSON metrics endpoints.
-- SQLite event persistence for Python services; MongoDB persistence for ADAAS.
 - GitHub Actions CI across tests, evals, and container builds.
 
 ## Remaining Portfolio-Level Improvements
