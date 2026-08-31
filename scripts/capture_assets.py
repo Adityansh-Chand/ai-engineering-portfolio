@@ -57,7 +57,47 @@ CHAR_WIDTH = 8.4
 PADDING = 18
 
 
+# Progress bars from model loading. Clutter in a published asset, and they carry a
+# throughput figure that differs on every run.
+PROGRESS = re.compile(r"^.*\d+%\|.*it/s\].*$", re.MULTILINE)
+
+# Environmental noise about the machine that ran the capture, not about the
+# code being captured. A reviewer does not need to know this laptop has no
+# Hugging Face token.
+NOISE = re.compile(r"^.*(unauthenticated requests to the HF Hub|Please set a HF_TOKEN).*$", re.MULTILINE)
+
+# The retrieval table's last two columns are wall-clock, measured on whoever ran
+# the capture. They churn every run while the metrics beside them do not, which
+# would make every regeneration a spurious diff and defeat the reason these are
+# text. The quality metrics are the point; the latency trade-off is discussed with
+# numbers in that repository's README.
+TIMING_COLUMNS = re.compile(
+    r"^(\S.*?\s+\d\.\d{4}\s+\d\.\d{4}\s+\d\.\d{4})\s+[\d.]+\s+[\d.]+\s*$",
+    re.MULTILINE,
+)
+
+
 def stabilise(text):
+    text = PROGRESS.sub("", text)
+    text = NOISE.sub("", text)
+    text = TIMING_COLUMNS.sub(r"\1", text)
+    # Collapse the blank runs left where progress bars were stripped, so the card
+    # does not carry gaps that only exist because something was removed.
+    collapsed, blanks = [], 0
+    for line in text.splitlines():
+        if line.strip():
+            blanks = 0
+            collapsed.append(line)
+        else:
+            blanks += 1
+            if blanks == 1:
+                collapsed.append(line)
+    text = "\n".join(collapsed)
+    # Drop the matching column headings and shorten the rule beneath them.
+    # Stripping the values alone would leave "idx(s)  q(ms)" labelling an empty
+    # column, which reads as a broken capture rather than an omitted one.
+    text = re.sub(r"(nDCG@10\s+Recall@10\s+MRR@10)\s+idx\(s\)\s+q\(ms\)", r"\1", text)
+    text = re.sub(r"^-{40,}$", "-" * 52, text, flags=re.MULTILINE)
     for pattern, replacement in VOLATILE:
         text = pattern.sub(replacement, text)
     # A published asset should not carry whoever-ran-it's home directory, and a
@@ -290,14 +330,12 @@ def run(command, cwd, timeout=900, env=None):
     return (result.stdout + result.stderr).strip()
 
 
+# The end-to-end demo used to be captured here as a terminal card. It was removed
+# once the run report existed: the card omitted 64 of its lines to fit, while the
+# report shows the same six acts complete, with the trace, and does not truncate.
+# Two artifacts of the same run, one strictly worse, is a maintenance cost with no
+# reader benefit.
 CAPTURES = [
-    {
-        "name": "end-to-end-demo",
-        "title": "Five services, one request id, six acts",
-        "display": "python scripts/demo_end_to_end.py --local",
-        "argv": [sys.executable, "scripts/demo_end_to_end.py", "--local"],
-        "cwd": ROOT,
-    },
     {
         "name": "contract-verification",
         "title": "Consumer-driven contracts, verified against live services",
