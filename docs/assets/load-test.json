@@ -1,0 +1,247 @@
+{
+  "levels": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "requests_per_level": 100,
+  "scenarios": {
+    "ops_decide": {
+      "label": "ops /v1/decide (fans out to sales, incident, rag)",
+      "rows": [
+        {
+          "concurrency": 1,
+          "requests": 100,
+          "p50_ms": 125.3,
+          "p95_ms": 141.4,
+          "p99_ms": 148.0,
+          "mean_ms": 119.9,
+          "throughput_rps": 8.3,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 2,
+          "requests": 100,
+          "p50_ms": 91.4,
+          "p95_ms": 136.3,
+          "p99_ms": 151.5,
+          "mean_ms": 95.1,
+          "throughput_rps": 21.0,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 4,
+          "requests": 100,
+          "p50_ms": 89.8,
+          "p95_ms": 196.7,
+          "p99_ms": 254.3,
+          "mean_ms": 104.2,
+          "throughput_rps": 37.1,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 8,
+          "requests": 100,
+          "p50_ms": 155.4,
+          "p95_ms": 242.3,
+          "p99_ms": 462.5,
+          "mean_ms": 160.8,
+          "throughput_rps": 48.5,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 16,
+          "requests": 100,
+          "p50_ms": 212.9,
+          "p95_ms": 1521.1,
+          "p99_ms": 2291.8,
+          "mean_ms": 374.5,
+          "throughput_rps": 35.3,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 32,
+          "requests": 100,
+          "p50_ms": 394.0,
+          "p95_ms": 2154.1,
+          "p99_ms": 2434.7,
+          "mean_ms": 669.6,
+          "throughput_rps": 36.7,
+          "errors": 0,
+          "error_kinds": []
+        }
+      ]
+    },
+    "rag_query": {
+      "label": "rag /v1/query (retrieval, CPU-bound)",
+      "rows": [
+        {
+          "concurrency": 1,
+          "requests": 100,
+          "p50_ms": 31.2,
+          "p95_ms": 35.0,
+          "p99_ms": 36.8,
+          "mean_ms": 27.4,
+          "throughput_rps": 36.5,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 2,
+          "requests": 100,
+          "p50_ms": 31.6,
+          "p95_ms": 45.5,
+          "p99_ms": 64.0,
+          "mean_ms": 31.9,
+          "throughput_rps": 62.4,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 4,
+          "requests": 100,
+          "p50_ms": 44.1,
+          "p95_ms": 119.2,
+          "p99_ms": 137.5,
+          "mean_ms": 55.2,
+          "throughput_rps": 71.8,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 8,
+          "requests": 100,
+          "p50_ms": 63.7,
+          "p95_ms": 343.8,
+          "p99_ms": 721.4,
+          "mean_ms": 116.0,
+          "throughput_rps": 66.3,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 16,
+          "requests": 100,
+          "p50_ms": 77.1,
+          "p95_ms": 1490.1,
+          "p99_ms": 1928.2,
+          "mean_ms": 240.1,
+          "throughput_rps": 49.1,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 32,
+          "requests": 100,
+          "p50_ms": 179.4,
+          "p95_ms": 2304.4,
+          "p99_ms": 3028.5,
+          "mean_ms": 630.3,
+          "throughput_rps": 31.7,
+          "errors": 0,
+          "error_kinds": []
+        }
+      ]
+    },
+    "sales_score": {
+      "label": "sales /v1/score (model inference)",
+      "rows": [
+        {
+          "concurrency": 1,
+          "requests": 100,
+          "p50_ms": 30.9,
+          "p95_ms": 32.7,
+          "p99_ms": 48.0,
+          "mean_ms": 27.6,
+          "throughput_rps": 36.2,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 2,
+          "requests": 100,
+          "p50_ms": 31.6,
+          "p95_ms": 43.9,
+          "p99_ms": 58.6,
+          "mean_ms": 30.6,
+          "throughput_rps": 64.9,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 4,
+          "requests": 100,
+          "p50_ms": 41.2,
+          "p95_ms": 97.5,
+          "p99_ms": 125.6,
+          "mean_ms": 50.9,
+          "throughput_rps": 77.4,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 8,
+          "requests": 100,
+          "p50_ms": 49.2,
+          "p95_ms": 311.0,
+          "p99_ms": 1136.2,
+          "mean_ms": 105.4,
+          "throughput_rps": 70.5,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 16,
+          "requests": 100,
+          "p50_ms": 82.5,
+          "p95_ms": 1051.4,
+          "p99_ms": 1358.9,
+          "mean_ms": 208.8,
+          "throughput_rps": 62.0,
+          "errors": 0,
+          "error_kinds": []
+        },
+        {
+          "concurrency": 32,
+          "requests": 100,
+          "p50_ms": 141.4,
+          "p95_ms": 1573.0,
+          "p99_ms": 1875.7,
+          "mean_ms": 416.1,
+          "throughput_rps": 48.5,
+          "errors": 0,
+          "error_kinds": []
+        }
+      ]
+    }
+  },
+  "circuit_breaker": {
+    "healthy": {
+      "p50_ms": 85.9,
+      "p95_ms": 145.3
+    },
+    "dependency_down_breaker_closed": {
+      "p50_ms": 81.8,
+      "p95_ms": 4243.0
+    },
+    "dependency_down_breaker_open": {
+      "p50_ms": 94.2,
+      "p95_ms": 145.2
+    },
+    "requests_still_succeeded": true,
+    "failed_request_count_while_open": 0,
+    "degraded_response_records_the_reason": {
+      "account": "circuit_open",
+      "incident": "ok",
+      "knowledge": "ok"
+    }
+  }
+}
