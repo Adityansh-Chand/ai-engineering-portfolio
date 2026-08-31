@@ -7,7 +7,10 @@
       "consumer": "ai-proactive-customer-operations",
       "provider": "ai-sales-intelligence-engine",
       "consumer_code": "integrations/services.py:fetch_account_propensity",
-      "request": {"method": "GET", "path": "/accounts/{account_id}/score"},
+      "request": {
+        "method": "GET",
+        "path": "/v1/accounts/{account_id}/score"
+      },
       "required_fields": {
         "score": "number",
         "segment": "string",
@@ -20,12 +23,20 @@
       "consumer": "ai-proactive-customer-operations",
       "provider": "ai-incident-detection-platform",
       "consumer_code": "integrations/services.py:fetch_incident_status",
-      "request": {"method": "GET", "path": "/incidents/active", "query": {"service": "checkout"}},
+      "request": {
+        "method": "GET",
+        "path": "/v1/incidents/active",
+        "query": {
+          "service": "checkout"
+        }
+      },
       "required_fields": {
         "service": "string",
         "active": "boolean"
       },
-      "optional_fields": {"incident": "object_or_null"},
+      "optional_fields": {
+        "incident": "object_or_null"
+      },
       "why": "Drives the known_incident_on_the_service_complained_about rule, which suppresses individual refunds during a known fault."
     },
     {
@@ -33,7 +44,13 @@
       "consumer": "ai-proactive-customer-operations",
       "provider": "enterprise-rag-knowledge-system",
       "consumer_code": "integrations/services.py:fetch_grounding",
-      "request": {"method": "GET", "path": "/query", "query": {"q": "refund policy"}},
+      "request": {
+        "method": "GET",
+        "path": "/v1/query",
+        "query": {
+          "q": "refund policy"
+        }
+      },
       "required_fields": {
         "response.answer": "string",
         "response.groundedness": "number",
@@ -49,7 +66,7 @@
       "consumer_code": "integrations/knowledge.py:publish",
       "request": {
         "method": "POST",
-        "path": "/documents",
+        "path": "/v1/documents",
         "body": {
           "doc_id": "contract:probe",
           "title": "Contract probe",
@@ -71,13 +88,18 @@
       "direction": "provider pushes to consumer",
       "request": {
         "method": "POST",
-        "path": "/events/incident",
+        "path": "/v1/events/incident",
         "target": "consumer",
         "body": {
           "event_id": "contract-probe-1",
           "type": "incident.opened",
           "source": "contract-verifier",
-          "payload": {"service": "checkout", "incident": {"anomaly_count": 5}}
+          "payload": {
+            "service": "checkout",
+            "incident": {
+              "anomaly_count": 5
+            }
+          }
         }
       },
       "required_fields": {
@@ -87,5 +109,6 @@
       },
       "why": "The event envelope the bus emits must be accepted by the receiver. This is the one contract where the provider calls the consumer."
     }
-  ]
+  ],
+  "versioning": "Paths are versioned. Providers also serve the same endpoints without the /v1 prefix as a deprecated alias for consumers that predate versioning, but the contract is the versioned path -- that is the one a provider promises not to break within a major version."
 }
