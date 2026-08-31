@@ -32,6 +32,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
 
+# The stack runs authenticated, so this demo has to authenticate too. This is a
+# demo key and not a secret: its purpose is to keep the auth path exercised
+# rather than switched off, which is how it silently rotted before. Override it
+# with PORTFOLIO_API_KEY to match a stack started with a different key.
+API_KEY = os.getenv("PORTFOLIO_API_KEY", "portfolio-demo-key")
+
 PORTS = {"rag": 8001, "sales": 8002, "incident": 8003, "ops": 8004, "meeting": 8005}
 REPOS = {
     "rag": "enterprise-rag-knowledge-system",
@@ -49,7 +55,7 @@ def url(service, path):
 
 def call(method, target, payload=None, request_id=None, timeout=30):
     body = None if payload is None else json.dumps(payload).encode()
-    headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json", "X-API-Key": API_KEY}
     if request_id:
         headers["X-Request-ID"] = request_id
     request = urllib.request.Request(target, data=body, headers=headers, method=method)
@@ -93,7 +99,11 @@ def start_local():
         if not path.exists():
             print(f"  missing repo: {path}")
             sys.exit(1)
+        # API_KEY makes each service demand the key; INTEGRATION_API_KEY makes it
+        # send the key on the calls it makes. A service needs both: every one of
+        # them is a provider to someone and a consumer of someone else.
         env = {**os.environ, **env_for[service],
+               "API_KEY": API_KEY, "INTEGRATION_API_KEY": API_KEY,
                "APP_DB_PATH": str(path / "data" / "demo.sqlite3")}
         processes.append(subprocess.Popen(
             [sys.executable, "-m", "uvicorn", "api.server:app", "--host", "127.0.0.1",

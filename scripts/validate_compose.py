@@ -52,13 +52,28 @@ def main():
             if target not in depends:
                 errors.append(f"{name} should depend_on {target}")
 
+    # Every service needs both halves: API_KEY to demand a key from its callers,
+    # INTEGRATION_API_KEY to send one to its dependencies. Setting only one is
+    # worse than setting neither -- the service refuses callers, or gets refused.
+    #
+    # This check exists because its absence is exactly how the stack shipped with
+    # authentication switched off: `require_api_key` returns immediately when
+    # API_KEY is unset, so every endpoint looked protected, passed its tests, and
+    # served anyone. An auth check that never runs cannot be distinguished from a
+    # broken one, so the wiring is asserted here rather than assumed.
+    for name in sorted(EXPECTED & set(services)):
+        env = services[name].get("environment", {}) or {}
+        for var in ("API_KEY", "INTEGRATION_API_KEY"):
+            if not env.get(var):
+                errors.append(f"{name} is missing {var} -- auth would be off")
+
     if errors:
         print("FAIL:")
         for error in errors:
             print(f"  - {error}")
         return 1
 
-    print(f"OK: {len(services)} services, wiring consistent")
+    print(f"OK: {len(services)} services, wiring consistent, auth on for all")
     for name, edges in EXPECTED_EDGES.items():
         print(f"  {name} -> {', '.join(sorted(set(edges.values())))}")
     return 0

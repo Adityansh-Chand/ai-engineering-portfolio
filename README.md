@@ -123,6 +123,15 @@ shows the same complaint producing **different decisions** depending on whether
 the service is degraded, then kills a dependency to show the system degrade
 instead of fail. One request id flows through every hop.
 
+Both commands run against an **authenticated** stack. `portfolio-demo-key` is the
+committed default -- a demo key, not a secret, chosen so a fresh clone exercises
+the auth path rather than leaving it switched off. Override it for anything real,
+and the scripts will follow:
+
+```bash
+PORTFOLIO_API_KEY=$(openssl rand -hex 24) docker compose up --build
+```
+
 ## Portfolio Documentation
 
 - [Architecture diagrams](docs/ARCHITECTURE.md)
@@ -285,19 +294,19 @@ Multi-agent DAG with learned intent and sentiment classification in front of a
 deterministic, auditable policy layer. Every decision names the rule that fired.
 https://github.com/Adityansh-Chand/ai-proactive-customer-operations.git
 
-## 4. ai-sales-intelligence-engine
+## 3. ai-sales-intelligence-engine
 
 Fitted logistic regression for account propensity, with attribution that provably
 reconstructs the model's own log-odds and a reported Bayes ceiling.
 https://github.com/Adityansh-Chand/ai-sales-intelligence-engine.git
 
-## 5. ai-incident-detection-platform
+## 4. ai-incident-detection-platform
 
 Time-series anomaly detection fitted on normal traffic, evaluated chronologically
 with rare-event metrics and a threshold calibrated to an operational precision target.
 https://github.com/Adityansh-Chand/ai-incident-detection-platform.git
 
-## 6. autonomous-meeting-intelligence
+## 5. autonomous-meeting-intelligence
 
 Fitted sentence classifier extracting decisions and action items, beating the
 keyword gate it replaced by a measured margin on held-out phrasings.
@@ -312,7 +321,11 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
   and baselines scored on the same data.
 - Docker entrypoints that run FastAPI services through `uvicorn`.
 - Deterministic local fallbacks where external providers are optional.
-- Optional `X-API-Key` auth on non-health data endpoints.
+- `X-API-Key` auth on non-health data endpoints: optional when a service runs
+  standalone, and **on by default in the integrated stack**, where every service
+  both demands a key from its callers and presents one to its dependencies.
+  `scripts/validate_compose.py` fails if a service is missing either half, because
+  an auth check that never runs looks exactly like one that works.
 - Request IDs, safe error responses, and JSON metrics endpoints.
 - GitHub Actions CI across tests, evals, and container builds.
 
@@ -329,6 +342,14 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
   measured no improvement.
 - Improve owner extraction in the meeting service (recall 0.3484 — misses full
   names, titles and team references).
+- Aggregated observability. Request IDs propagate correctly across every service
+  boundary, but nothing collects them: reconstructing one decision's path means
+  querying five separate `/events` endpoints and joining by hand. The identifier
+  is the hard half and it is done; the collector is not.
+- API versioning. Routes are unversioned (`/score`, `/query`), so there is no way
+  for a provider to change a response shape without breaking its consumers on the
+  same deploy. The contract checks in `contracts/` detect that breakage rather
+  than prevent it — they are a smoke alarm, not a sprinkler.
 - Drift detection and retraining triggers; no service monitors its live score
   distribution.
 - Capture and link final screenshots or short recordings per system.

@@ -28,6 +28,22 @@
 #
 # Every one of those is an environment variable. Remove it and that service goes
 # back to running exactly as it does standalone.
+#
+# The stack runs authenticated. Each service needs both halves of the pair: it is
+# a provider to someone (API_KEY -- reject callers without this key) and a
+# consumer of someone else (INTEGRATION_API_KEY -- send this key when calling).
+# Set only one and the service either refuses its callers or gets refused.
+#
+# The default below is a demo key, not a secret. It is committed deliberately so
+# that a fresh `docker compose up` exercises the auth path instead of leaving it
+# switched off -- an auth check that never runs is indistinguishable from one
+# that does not work. Override for anything real:
+#
+#   PORTFOLIO_API_KEY=$(openssl rand -hex 24) docker compose up --build
+
+x-auth: &auth
+  API_KEY: ${PORTFOLIO_API_KEY:-portfolio-demo-key}
+  INTEGRATION_API_KEY: ${PORTFOLIO_API_KEY:-portfolio-demo-key}
 
 services:
   rag:
@@ -35,6 +51,7 @@ services:
       context: ../enterprise-rag-knowledge-system
     ports: ["8001:8000"]
     environment:
+      <<: *auth
       # bm25 keeps startup instant and needs no model download. Set to
       # hybrid or dense for the stronger retrieval measured in that repo's README.
       RETRIEVER: bm25
@@ -52,6 +69,7 @@ services:
       context: ../ai-sales-intelligence-engine
     ports: ["8002:8000"]
     environment:
+      <<: *auth
       APP_DB_PATH: /data/events.sqlite3
     volumes: ["sales-data:/data"]
     healthcheck:
@@ -66,6 +84,7 @@ services:
       context: ../ai-incident-detection-platform
     ports: ["8003:8000"]
     environment:
+      <<: *auth
       APP_DB_PATH: /data/events.sqlite3
       # A service is "in an incident" after this many anomalous minutes in the
       # trailing window. Short window here so the demo is watchable.
@@ -92,6 +111,7 @@ services:
       context: ../ai-proactive-customer-operations
     ports: ["8004:8000"]
     environment:
+      <<: *auth
       APP_DB_PATH: /data/events.sqlite3
       # The three edges. Delete these and ops runs standalone.
       SALES_API_URL: http://sales:8000
@@ -109,6 +129,7 @@ services:
       context: ../autonomous-meeting-intelligence
     ports: ["8005:8000"]
     environment:
+      <<: *auth
       APP_DB_PATH: /data/events.sqlite3
       # The fourth edge: meeting outcomes become searchable knowledge.
       RAG_API_URL: http://rag:8000
