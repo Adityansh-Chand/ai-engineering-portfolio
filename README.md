@@ -196,13 +196,30 @@ PORTFOLIO_API_KEY=$(openssl rand -hex 24) docker compose up --build
 Everything below is produced by `scripts/capture_assets.py` from real runs.
 Nothing is typed by hand — an asset that can be hand-edited is not evidence.
 
+### The five services, live
+
+The landing site is one click away and needs no help. **These do**: seeing that
+five services actually expose the endpoints claimed for them otherwise means
+cloning five repositories, installing their dependencies and starting each one.
+
+Each service below was started for real, screenshotted, and stopped. Nothing is
+mocked, and the versioned routes, drift endpoints and event surfaces are the ones
+the code serves.
+
+| Service | API surface |
+|---|---|
+| ai-sales-intelligence-engine | ![sales API](docs/assets/api-sales.png) |
+| enterprise-rag-knowledge-system | ![rag API](docs/assets/api-rag.png) |
+| ai-incident-detection-platform | ![incident API](docs/assets/api-incident.png) |
+| ai-proactive-customer-operations | ![ops API](docs/assets/api-ops.png) |
+| autonomous-meeting-intelligence | ![meeting API](docs/assets/api-meeting.png) |
+
 ### The landing site
 
 ![landing site](docs/assets/landing-site.png)
 
-A real screenshot, because here the layout *is* the thing being shown; rendering
-it as text would be a description rather than a capture. The command output below
-is the opposite case, and gets SVG.
+A screenshot, because here the layout *is* the thing being shown. The command
+output below is the opposite case, and gets SVG.
 
 ### Five services, one request id, six acts
 
