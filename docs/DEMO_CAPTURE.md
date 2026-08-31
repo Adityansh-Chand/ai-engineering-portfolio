@@ -1,5 +1,22 @@
 # Demo Capture Guide
 
+> **Captures are now generated, not recorded by hand.**
+>
+> ```bash
+> python scripts/capture_assets.py
+> ```
+>
+> That runs each command for real and renders its output to an SVG terminal card
+> under `docs/assets/`, linked from the portfolio README. SVG rather than GIF
+> because it is text: it diffs in review, it regenerates from the commands so it
+> cannot drift from what the code prints, and it is kilobytes rather than
+> megabytes. Volatile values (request ids, timestamps, absolute paths) are
+> normalised so a capture changes only when the output does.
+>
+> The manual GIF workflow below is kept for anything needing timing or
+> interactivity, which a still cannot show.
+
+
 Use this guide to produce screenshots or short terminal recordings that match
 the existing `DEMO.md` files. Keep captures short, deterministic, and focused on
 evidence: setup, tests, one API request, one response, and metrics.
