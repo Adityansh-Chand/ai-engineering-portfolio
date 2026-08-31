@@ -49,8 +49,18 @@ def main():
         request = contract.get("request") or {}
         if request.get("method") not in {"GET", "POST"}:
             errors.append(f"{cid}: unsupported method {request.get('method')!r}")
-        if not str(request.get("path", "")).startswith("/"):
+        path = str(request.get("path", ""))
+        if not path.startswith("/"):
             errors.append(f"{cid}: path must start with '/'")
+        elif not path.startswith("/v1/"):
+            # Providers still serve the unversioned alias, so a contract written
+            # against a bare path would pass verification today and break the day
+            # that alias is removed. The contract has to name the versioned path,
+            # because that is the one a provider promises not to break.
+            errors.append(
+                f"{cid}: path '{path}' is unversioned -- contracts must target "
+                "/v1/... so the promise is tied to a version"
+            )
 
         fields = {
             **contract.get("required_fields", {}),

@@ -105,6 +105,11 @@ python scripts/verify_contracts.py --local
 It starts the services, calls each provider, and checks the shapes. I verified it
 fails correctly by injecting a field the provider does not return.
 
+Contracts target **versioned** paths (`/v1/...`). Providers still serve the bare
+paths as a deprecated alias, so a contract written against one would pass today
+and break the day that alias is removed — `scripts/check_contracts_wellformed.py`
+rejects unversioned contract paths for exactly that reason.
+
 Run the whole thing:
 
 ```bash
@@ -179,6 +184,38 @@ Results that came out worse than hoped are kept and stated — hybrid retrieval
 losing to dense alone, a reranker that improves nothing, a z-score baseline that
 beats the fitted detector on PR-AUC, an owner extractor recalling 0.35. See
 [`docs/PROJECT_COMPARISON.md`](docs/PROJECT_COMPARISON.md).
+
+### Validation on real data
+
+Every service is also evaluated on **real, public, human-labelled data**, not only
+on its own generated corpus. Where the two disagree, the real number is the one to
+believe.
+
+| Service | Real dataset | Result |
+|---|---|---|
+| retrieval | BEIR / NFCorpus (human qrels) | dense nDCG@10 **0.3727** vs BM25 0.2831 |
+| operations | BANKING77, 13k real customer messages | intent macro-F1 **0.9164** across 77 intents |
+| sales | UCI Bank Marketing, 41k real campaign outcomes | ROC-AUC **0.7090** chronological |
+| incident | Server Machine Dataset, operator-labelled | **loses to a z-score baseline**, 0.1897 vs 0.4348 PR-AUC |
+| meeting | AMI Meeting Corpus, 137 recorded meetings | positive-class macro-F1 **0.1799** |
+
+Three of the five score **worse** on real data than on synthetic, one of them
+dramatically. That gap is the most useful thing this portfolio measures: the
+synthetic numbers were never wrong, they were measuring easier problems, and these
+say by how much.
+
+Two findings worth reading in full:
+
+- **Sales** — the same model scores 0.7090 or 0.9364 depending only on whether the
+  split is chronological and whether a leaky feature is dropped. Evaluation design
+  is worth **0.2274** here, more than the leaky feature itself.
+- **Incident** — the fitted IsolationForest loses to three lines of arithmetic on
+  every machine tested, against every trivial statistic tried. On synthetic data
+  the two are indistinguishable. Published rather than tuned away, with a test
+  asserting the finding still holds.
+
+Datasets are fetched by script, checksummed and never committed; CI reproduces
+each track.
 
 ### Shared service template
 
@@ -331,12 +368,8 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 
 ## Remaining Portfolio-Level Improvements
 
-- Validate on real (non-synthetic) data for at least one service. This is the
-  single largest gap: every model here is fitted on generated data.
-- Cloud deployment with a live managed environment; currently only static config
-  validation and CI image builds exist.
 - Per-query routing between lexical and dense retrieval in the RAG repo. Weighted
-  fusion is now implemented and the data chose "pure dense"; a single global weight
+  fusion is implemented and the data chose "pure dense"; a single global weight
   cannot exploit BM25 being better on identifier-shaped queries specifically.
 - A cross-encoder reranker to compare against the fitted pairwise reranker, which
   measured no improvement.
@@ -346,13 +379,30 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
   boundary, but nothing collects them: reconstructing one decision's path means
   querying five separate `/events` endpoints and joining by hand. The identifier
   is the hard half and it is done; the collector is not.
-- API versioning. Routes are unversioned (`/score`, `/query`), so there is no way
-  for a provider to change a response shape without breaking its consumers on the
-  same deploy. The contract checks in `contracts/` detect that breakage rather
-  than prevent it — they are a smoke alarm, not a sprinkler.
 - Drift detection and retraining triggers; no service monitors its live score
-  distribution.
+  distribution. The incident service's real-data track makes the case concretely:
+  configured for a 3% alert budget, it fires on 21%, 6% and 52% of points across
+  three real machines.
 - Capture and link final screenshots or short recordings per system.
+
+### Out of scope by decision
+
+Not oversights. Each was considered and judged disproportionate to five services
+that run on one machine.
+
+- **Cloud deployment.** This is a portfolio, not a production system. Static
+  config validation and CI image builds are the right level; a live managed
+  environment would add cost and operational surface without demonstrating
+  anything the compose stack does not.
+- **A real message broker.** The event bus is an outbox with a delivery worker,
+  retries and a dead-letter queue. Kafka or RabbitMQ would replace ~200 readable
+  lines with an operational dependency, for one push edge.
+- **A service mesh, and distributed transactions.** Five services with optional,
+  degrading edges do not need either. The circuit breakers and idempotent
+  consumers already cover what a mesh would be bought for here.
+- **OpenTelemetry.** Worth it once traces span teams and tools. At this size the
+  `X-Request-ID` propagation carries the same information, and the missing piece
+  is a collector, listed above as an actual gap rather than hidden here.
 
 ## Author
 
