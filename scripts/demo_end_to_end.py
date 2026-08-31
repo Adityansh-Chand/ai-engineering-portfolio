@@ -170,6 +170,7 @@ def main():
 
     request_id = f"demo-{uuid.uuid4().hex[:8]}"
     print(f"\nrequest id for this run: {request_id}")
+    print(f"  reconstruct it later with: python scripts/trace.py {request_id}")
 
     # ---- Act 1 ---------------------------------------------------------------
     banner("ACT 1  a customer complains -- nothing is known to be wrong yet")
