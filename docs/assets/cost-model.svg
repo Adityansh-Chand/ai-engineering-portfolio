@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="649" height="758"
+     viewBox="0 0 649 758" role="img"
+     aria-label="Cost per million requests -- measured throughput, dated prices">
+  <rect width="100%" height="100%" rx="8" fill="#20242c"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13" xml:space="preserve">
+    <text x="18" y="31" fill="#6f7787" font-size="12">Cost per million requests -- measured throughput, dated prices</text>
+    <text x="18" y="56" fill="#8fbcbb">$ python scripts/cost_model.py</text>
+    <text x="18" y="75" fill="#d8dee9">basis: throughput measured on Intel Core i7-8650U @ 1.90GHz</text>
+    <text x="18" y="94" fill="#d8dee9">       prices dated 2026-08-31, 1.0 vCPU / 2.0 GB per service</text>
+    <text x="18" y="113" fill="#d8dee9"></text>
+    <text x="18" y="132" fill="#d8dee9">compute, USD per million requests, at each endpoint&#x27;s peak throughput</text>
+    <text x="18" y="151" fill="#d8dee9">endpoint        peak rps  conc       x86       arm</text>
+    <text x="18" y="170" fill="#d8dee9">ops_decide          48.5     8      0.28      0.23</text>
+    <text x="18" y="189" fill="#d8dee9">rag_query           71.8     4      0.19      0.15</text>
+    <text x="18" y="208" fill="#d8dee9">sales_score         77.4     4      0.18      0.14</text>
+    <text x="18" y="227" fill="#d8dee9"></text>
+    <text x="18" y="246" fill="#d8dee9">optional components: what the quality costs (x86)</text>
+    <text x="18" y="265" fill="#d8dee9">component               +ms/query   dNDCG@10    +USD/M  x retrieval</text>
+    <text x="18" y="284" fill="#d8dee9">cross_encoder_rerank       1116.4    +0.0011     15.31         80.2</text>
+    <text x="18" y="303" fill="#d8dee9">fitted_rerank                 4.5    -0.0063      0.06          0.3</text>
+    <text x="18" y="322" fill="#d8dee9"></text>
+    <text x="18" y="341" fill="#d8dee9">LLM generation, USD per million answers</text>
+    <text x="18" y="360" fill="#d8dee9">model                     standard  +cache 50%     batch</text>
+    <text x="18" y="379" fill="#d8dee9">claude-haiku-4-5           1100.00      830.00    550.00</text>
+    <text x="18" y="398" fill="#d8dee9">claude-sonnet-5            2200.00     1660.00   1100.00</text>
+    <text x="18" y="417" fill="#d8dee9">claude-opus-5              5500.00     4150.00   2750.00</text>
+    <text x="18" y="436" fill="#d8dee9"></text>
+    <text x="18" y="455" fill="#d8dee9">retrieval compute   $0.19 per million</text>
+    <text x="18" y="474" fill="#d8dee9">cheapest LLM answer $1100.00 per million</text>
+    <text x="18" y="493" fill="#d8dee9">the LLM path costs 5,759x the retrieval it sits on top of</text>
+    <text x="18" y="512" fill="#d8dee9"></text>
+    <text x="18" y="531" fill="#d8dee9">sensitivity, from a baseline of $1,100.19 per million</text>
+    <text x="18" y="550" fill="#d8dee9">(rag retrieval compute (x86) + Claude Haiku 4.5 generation)</text>
+    <text x="18" y="569" fill="#d8dee9">change one assumption                USD/M      effect</text>
+    <text x="18" y="588" fill="#d8dee9">arm_instead_of_x86                1,100.15     -0.004%</text>
+    <text x="18" y="607" fill="#d8dee9">double_retrieval_throughput       1,100.10     -0.009%</text>
+    <text x="18" y="626" fill="#d8dee9">opus_instead_of_haiku             5,500.19    399.931%</text>
+    <text x="18" y="645" fill="#d8dee9">batch_api                           550.19    -49.991%</text>
+    <text x="18" y="664" fill="#d8dee9">halve_answer_length                 850.19    -22.723%</text>
+    <text x="18" y="683" fill="#d8dee9">halve_retrieved_context             875.19    -20.451%</text>
+    <text x="18" y="702" fill="#d8dee9">no_llm_at_all                         0.19    -99.983%</text>
+  </g>
+</svg>

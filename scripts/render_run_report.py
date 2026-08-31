@@ -26,91 +26,40 @@ service to have indexed something into the same corpus.
 """
 import html
 import json
-import os
-import subprocess
 import sys
 import time
-import urllib.error
-import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-WORKSPACE = ROOT.parent
-OUTPUT = ROOT / "docs" / "assets" / "run-report.html"
+sys.path.insert(0, str(ROOT / "scripts"))
 
-KEY = "portfolio-demo-key"
+# Starting the stack is shared with the load test. Two copies of it is how two
+# harnesses end up disagreeing about what "the stack" means -- one with a fresh
+# event store and one without, and a trace that quietly counts hops from a
+# previous run.
+from service_harness import (  # noqa: E402
+    KEY,
+    PORTS,
+    REPOS,
+    base,
+    start,
+    stop,
+    wait_for_all,
+)
+from service_harness import call as _call  # noqa: E402
+
+OUTPUT = ROOT / "docs" / "assets" / "run-report.html"
 REQUEST_ID = "run-report-demo"
-PORTS = {"rag": 8821, "sales": 8822, "incident": 8823, "ops": 8824, "meeting": 8825}
-REPOS = {
-    "rag": "enterprise-rag-knowledge-system",
-    "sales": "ai-sales-intelligence-engine",
-    "incident": "ai-incident-detection-platform",
-    "ops": "ai-proactive-customer-operations",
-    "meeting": "autonomous-meeting-intelligence",
-}
 CUSTOMER = "acct_00001"
 
 
-def base(service):
-    return f"http://127.0.0.1:{PORTS[service]}"
-
-
 def call(method, url, payload=None, request_id=REQUEST_ID, timeout=40):
-    body = None if payload is None else json.dumps(payload).encode()
-    headers = {"Content-Type": "application/json", "X-API-Key": KEY}
-    if request_id:
-        headers["X-Request-ID"] = request_id
-    request = urllib.request.Request(url, data=body, headers=headers, method=method)
-    try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            return json.loads(response.read().decode()), None
-    except urllib.error.HTTPError as error:
-        return None, f"HTTP {error.code}"
-    except Exception as error:  # noqa: BLE001
-        return None, type(error).__name__
+    """Same call as the harness, defaulting to this report's fixed request id.
 
-
-def start():
-    environment = {
-        "rag": {"RETRIEVER": "bm25"},
-        "sales": {},
-        "incident": {"INCIDENT_MIN_ANOMALIES": "3", "EVENT_SUBSCRIBERS": base("ops"),
-                     "EVENT_BACKOFF_SECONDS": "0.5"},
-        "ops": {"SALES_API_URL": base("sales"), "INCIDENT_API_URL": base("incident"),
-                "RAG_API_URL": base("rag"), "INTEGRATION_TIMEOUT_SECONDS": "3.0"},
-        "meeting": {"RAG_API_URL": base("rag")},
-    }
-    processes = []
-    for service, repo in REPOS.items():
-        path = WORKSPACE / repo
-        if not path.exists():
-            raise SystemExit(f"missing repository: {path}")
-        # A fresh store per run. Without this a second run appends to the first
-        # and the report shows a hop count that never happened in one request --
-        # the trace doubled from 18 to 36 exactly this way.
-        database = path / "data" / "report.sqlite3"
-        database.unlink(missing_ok=True)
-        env = {**os.environ, **environment[service], "API_KEY": KEY,
-               "INTEGRATION_API_KEY": KEY,
-               "APP_DB_PATH": str(database)}
-        processes.append(subprocess.Popen(
-            [sys.executable, "-m", "uvicorn", "api.server:app", "--host", "127.0.0.1",
-             "--port", str(PORTS[service]), "--log-level", "warning"],
-            cwd=str(path), env=env,
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-        ))
-    return processes
-
-
-def wait_for_all():
-    for service in REPOS:
-        for _ in range(60):
-            data, _ = call("GET", base(service) + "/health", request_id=None, timeout=5)
-            if data:
-                break
-            time.sleep(2)
-        else:
-            raise SystemExit(f"{service} never became healthy")
+    The fixed id is the whole point of the report: every hop below carries it, so
+    the trace can be reassembled by joining on one value.
+    """
+    return _call(method, url, payload=payload, request_id=request_id, timeout=timeout)
 
 
 def run_scenario():
@@ -205,12 +154,7 @@ def run_degraded_act(processes):
     four services -- which happened, and looked like a smaller system rather than
     a stopped process.
     """
-    incident_process = processes[list(REPOS).index("incident")]
-    incident_process.terminate()
-    try:
-        incident_process.wait(timeout=15)
-    except subprocess.TimeoutExpired:
-        incident_process.kill()
+    stop({"incident": processes["incident"]})
     time.sleep(1)
 
     degraded, error = call("POST", base("ops") + "/v1/decide", {
@@ -435,7 +379,7 @@ def render(acts, hops, before, after):
 
 
 def main():
-    processes = start()
+    processes = start("report")
     try:
         wait_for_all()
         print("five services up")
@@ -449,13 +393,7 @@ def main():
         print(f"written: {OUTPUT.relative_to(ROOT)}")
         return 0
     finally:
-        for process in processes:
-            process.terminate()
-        for process in processes:
-            try:
-                process.wait(timeout=15)
-            except subprocess.TimeoutExpired:
-                process.kill()
+        stop(processes)
         print("services stopped")
 
 
