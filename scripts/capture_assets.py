@@ -167,6 +167,52 @@ def wait_for_health(port, attempts=60):
     return False
 
 
+def crop_trailing_space(path):
+    """Trim the empty canvas below the content.
+
+    Headless Chrome screenshots the window, not the document, so a page shorter
+    than the window leaves dead space. Walking up from the bottom until a row
+    differs from the background finds where the content actually ends.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        return  # cosmetic only; a taller image is not a wrong one
+    image = Image.open(path).convert("RGB")
+    width, height = image.size
+    background = image.getpixel((5, height - 5))
+    last = height
+    for y in range(height - 1, 0, -1):
+        if any(image.getpixel((x, y)) != background for x in range(0, width, 17)):
+            last = min(y + 40, height)
+            break
+    image.crop((0, 0, width, last)).save(path)
+
+
+def capture_run_report(browser):
+    """Drive one scenario through all five services, then screenshot the result.
+
+    This is the end-to-end evidence. It was a terminal card first, and that was
+    the weakest asset in the set: the one capture showing the whole system working
+    was also the one truncated hardest to fit -- 64 lines omitted.
+    """
+    report = ROOT / "docs" / "assets" / "run-report.html"
+    result = subprocess.run(
+        [sys.executable, "scripts/render_run_report.py"],
+        cwd=str(ROOT), capture_output=True, text=True, timeout=900,
+    )
+    if not report.exists():
+        print(f"  FAILED to render the run report: "
+              f"{(result.stdout + result.stderr).strip()[-200:]}")
+        return
+    path = ASSETS / "run-report.png"
+    if screenshot(browser, report.resolve().as_uri(), path, 1200, 3000):
+        crop_trailing_space(path)
+        print(f"  {path.relative_to(ROOT)}  ({path.stat().st_size / 1024:.1f} KB)")
+    else:
+        print(f"  FAILED to capture the run report")
+
+
 def capture_service(browser, service):
     """Start the service, screenshot its OpenAPI page, stop it.
 
@@ -296,6 +342,7 @@ def main():
             print(f"{shot['name']:24} screenshot {shot['width']}x{shot['height']}")
         for service in SERVICES:
             print(f"{service['name']:24} live API surface ({service['repo']})")
+        print(f"{'run-report':24} one scenario through all five services")
         return 0
 
     ASSETS.mkdir(parents=True, exist_ok=True)
@@ -341,6 +388,10 @@ def main():
             continue
         print(f"capturing {service['name']} ...", flush=True)
         capture_service(browser, service)
+
+    if not args.only or args.only == "run-report":
+        print("capturing run-report ...", flush=True)
+        capture_run_report(browser)
     return 0
 
 
