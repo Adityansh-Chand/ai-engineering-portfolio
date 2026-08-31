@@ -191,6 +191,46 @@ and the scripts will follow:
 PORTFOLIO_API_KEY=$(openssl rand -hex 24) docker compose up --build
 ```
 
+## Captured evidence
+
+Real output from real runs, rendered to SVG by `scripts/capture_assets.py`.
+Nothing below was typed by hand — an asset that can be hand-edited is not
+evidence.
+
+### Five services, one request id, six acts
+
+![end-to-end demo](docs/assets/end-to-end-demo.svg)
+
+### Consumer-driven contracts, verified against live services
+
+![contract verification](docs/assets/contract-verification.svg)
+
+### Retrieval on BEIR/NFCorpus, human relevance judgments
+
+![retrieval bench](docs/assets/retrieval-bench.svg)
+
+### Anomaly detection on real telemetry — the fitted model loses
+
+![incident real data](docs/assets/incident-real-data.svg)
+
+### Evaluation design worth more than the leaky feature
+
+![sales real data](docs/assets/sales-real-data.svg)
+
+```bash
+python scripts/capture_assets.py
+```
+
+**Why SVG rather than the GIFs the capture guide asked for.** An SVG is text, so
+it diffs in review and a reader can see the output was not edited; it regenerates
+from the commands, so it cannot drift from what the code prints — a stale GIF is
+indistinguishable from a current one; and it is a few KB rather than a few MB.
+The trade is that a still cannot show timing or interactivity, which matters for a
+UI demo and not for evidence that a pipeline produces a given result.
+
+Volatile values — request ids, timestamps, absolute paths — are normalised, so a
+capture changes only when the *output* changes.
+
 ## Portfolio Documentation
 
 - [Architecture diagrams](docs/ARCHITECTURE.md)
@@ -422,17 +462,24 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 
 ## Remaining Portfolio-Level Improvements
 
-- Per-query routing between lexical and dense retrieval in the RAG repo. Weighted
-  fusion is implemented and the data chose "pure dense"; a single global weight
-  cannot exploit BM25 being better on identifier-shaped queries specifically.
-- A cross-encoder reranker to compare against the fitted pairwise reranker, which
-  measured no improvement.
-- Improve owner extraction in the meeting service (recall 0.3484 — misses full
-  names, titles and team references).
-- Retraining triggers. Every service now reports drift, but nothing acts on it:
-  deciding to retrain stays a human judgement, and automating it without a
+Each of these is narrower than what it replaced, and every one came out of a
+measurement rather than a hunch.
+
+- **Retraining triggers.** Every service reports drift; nothing acts on it.
+  Deciding to retrain stays a human judgement, and automating it without a
   rollback story would be worse than not automating it.
-- Capture and link final screenshots or short recordings per system.
+- **Multi-owner action items.** The meeting extractor returns one owner, so
+  *"Chen and Maya will…"* yields *"Chen"* — a partial answer counted as wrong, and
+  the reason owner precision sits at 0.7465. Fixing it means changing the output
+  schema, which is a contract change rather than a pattern change.
+- **A learned query router.** The rule-based router beats every global choice
+  (0.9458 against dense's 0.9390) by recognising identifier-shaped queries. A
+  classifier could route more query types than one regex can describe — though on
+  this corpus there is little headroom left to win.
+- **Real slot labels.** AMI validates the meeting *classifier* on real
+  transcripts, but its summaries name owners in prose rather than in a structured
+  field, so owner and due-date extraction are still measured on synthetic data
+  alone. That gap is stated in the model card rather than papered over.
 
 ### Out of scope by decision
 
