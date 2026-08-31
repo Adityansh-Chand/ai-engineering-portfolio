@@ -88,6 +88,34 @@ This is a webhook fan-out with the failure handling that makes push usable. It i
 **not a broker** -- no durable log, no partitioning, no consumer groups, and the
 outbox is lost on restart. The README of the incident repo says so too.
 
+### Drift detection
+
+Every service compares the distribution it is producing now against a reference
+captured at training time, and reports a status at `/v1/drift`.
+
+| Service | Signal | In-distribution | Shifted |
+|---|---|---|---|
+| incident | anomaly score | stable, PSI 0.0434 | significant, PSI 11.3 |
+| operations | predicted intent mix | stable, PSI 0.0235 | significant, PSI 11.0 |
+| meeting | sentence class mix | stable, PSI 0.005 | significant, PSI 1.04 |
+| retrieval | top retrieval score | stable, PSI 0.0 | significant, PSI 1.37 |
+| sales | propensity score | — | flagged on skewed input |
+
+**Both directions are measured.** A monitor that only ever fires is not evidence
+of anything, and one that cries wolf teaches whoever reads it to ignore the
+signal — so the tests assert quiet on in-distribution data as well as loud on
+shifted data.
+
+Classifier confidence was the first signal tried and it failed exactly that way:
+on a template-generated corpus confidence is bimodal, so it reported significant
+drift on ordinary traffic. The classifier services monitor **predicted class mix**
+instead.
+
+The case for this existing is in the incident service's real-data track:
+configured for a 3% alert budget, that detector fires on 21%, 6% and 52% of points
+across three real machines, purely because the test period is not the training
+period.
+
 ### Following one request across five services
 
 Every service records the request id alongside each event, and `/v1/events`
@@ -401,10 +429,9 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
   measured no improvement.
 - Improve owner extraction in the meeting service (recall 0.3484 — misses full
   names, titles and team references).
-- Drift detection and retraining triggers; no service monitors its live score
-  distribution. The incident service's real-data track makes the case concretely:
-  configured for a 3% alert budget, it fires on 21%, 6% and 52% of points across
-  three real machines.
+- Retraining triggers. Every service now reports drift, but nothing acts on it:
+  deciding to retrain stays a human judgement, and automating it without a
+  rollback story would be worse than not automating it.
 - Capture and link final screenshots or short recordings per system.
 
 ### Out of scope by decision
