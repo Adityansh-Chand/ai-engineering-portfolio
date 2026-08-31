@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="682" height="321"
+     viewBox="0 0 682 321" role="img"
+     aria-label="Anomaly detection on real telemetry: the fitted model loses">
+  <rect width="100%" height="100%" rx="8" fill="#20242c"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13" xml:space="preserve">
+    <text x="18" y="31" fill="#6f7787" font-size="12">Anomaly detection on real telemetry: the fitted model loses</text>
+    <text x="18" y="56" fill="#8fbcbb">$ python training/train_real.py</text>
+    <text x="18" y="75" fill="#d8dee9">machines      : machine-1-1, machine-2-1, machine-3-1</text>
+    <text x="18" y="94" fill="#d8dee9">                  fitted   z-score</text>
+    <text x="18" y="113" fill="#d8dee9">precision         0.1481     0.134</text>
+    <text x="18" y="132" fill="#d8dee9">recall            0.4547    0.7196</text>
+    <text x="18" y="151" fill="#d8dee9">pr_auc            0.1897    0.4348</text>
+    <text x="18" y="170" fill="#d8dee9">alerts/hour      16.6572   18.2959</text>
+    <text x="18" y="189" fill="#d8dee9">episodes      : 21/25 (recall 0.84)</text>
+    <text x="18" y="208" fill="#d8dee9">  machine-1-1    P=0.2421 R=0.5397 PR-AUC=0.3796  (z-score PR-AUC 0.4451)</text>
+    <text x="18" y="227" fill="#d8dee9">  machine-2-1    P=0.2011 R=0.2504 PR-AUC=0.159   (z-score PR-AUC 0.1857)</text>
+    <text x="18" y="246" fill="#d8dee9">  machine-3-1    P=0.0111 R=0.539  PR-AUC=0.0266  (z-score PR-AUC 0.6301)</text>
+    <text x="18" y="265" fill="#d8dee9">artifacts     : models/artifacts/real</text>
+  </g>
+</svg>
