@@ -83,7 +83,6 @@ For API services, capture three images:
 3. `/metrics` output after the request.
 
 2. `npm run smoke` passing while the backend is running.
-3. Flutter web app launched with `flutter run -d chrome`.
 4. A visible HR assistant or leave-balance interaction.
 
 ## Capture Standards
