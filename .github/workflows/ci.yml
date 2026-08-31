@@ -33,3 +33,10 @@ jobs:
       # checks the definitions themselves stay well-formed.
       - name: Contract definitions are well-formed
         run: python scripts/check_contracts_wellformed.py
+
+      # The load test itself needs all five repos and several minutes, so it
+      # runs locally. The cost model is pure arithmetic over two committed
+      # files, so it does not -- and this catches a price being edited without
+      # the figures quoted in docs/COST_MODEL.md being recomputed.
+      - name: Cost model is reproducible from its inputs
+        run: python scripts/cost_model.py --verify

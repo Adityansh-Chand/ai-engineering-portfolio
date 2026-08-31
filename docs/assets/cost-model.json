@@ -1,0 +1,113 @@
+{
+  "as_of": "2026-08-31",
+  "basis": {
+    "throughput": "measured, docs/assets/load-test.json",
+    "prices": "dated inputs, scripts/pricing.json",
+    "hardware": "Intel Core i7-8650U @ 1.90GHz",
+    "task_shape": "1.0 vCPU / 2.0 GB per service"
+  },
+  "endpoints": {
+    "ops_decide": {
+      "label": "ops /v1/decide (fans out to sales, incident, rag)",
+      "peak_throughput_rps": 48.5,
+      "at_concurrency": 8,
+      "p95_ms_at_peak": 242.3,
+      "compute_usd_per_million": {
+        "fargate_linux_x86": 0.2828,
+        "fargate_linux_arm": 0.2262
+      }
+    },
+    "rag_query": {
+      "label": "rag /v1/query (retrieval, CPU-bound)",
+      "peak_throughput_rps": 71.8,
+      "at_concurrency": 4,
+      "p95_ms_at_peak": 119.2,
+      "compute_usd_per_million": {
+        "fargate_linux_x86": 0.191,
+        "fargate_linux_arm": 0.1528
+      }
+    },
+    "sales_score": {
+      "label": "sales /v1/score (model inference)",
+      "peak_throughput_rps": 77.4,
+      "at_concurrency": 4,
+      "p95_ms_at_peak": 97.5,
+      "compute_usd_per_million": {
+        "fargate_linux_x86": 0.1772,
+        "fargate_linux_arm": 0.1418
+      }
+    }
+  },
+  "optional_components": {
+    "cross_encoder_rerank": {
+      "added_ms_per_query": 1116.4,
+      "quality_delta_ndcg10": 0.0011,
+      "added_usd_per_million": 15.31,
+      "measured_on": "BEIR/NFCorpus, 323 queries",
+      "multiple_of_retrieval_compute": 80.2
+    },
+    "fitted_rerank": {
+      "added_ms_per_query": 4.5,
+      "quality_delta_ndcg10": -0.0063,
+      "added_usd_per_million": 0.06,
+      "measured_on": "BEIR/NFCorpus, 323 queries",
+      "multiple_of_retrieval_compute": 0.3
+    }
+  },
+  "llm_generation_usd_per_million": {
+    "claude-haiku-4-5": {
+      "standard": 1100.0,
+      "with_prompt_cache": 830.0,
+      "batch": 550.0
+    },
+    "claude-sonnet-5": {
+      "standard": 2200.0,
+      "with_prompt_cache": 1660.0,
+      "batch": 1100.0
+    },
+    "claude-opus-5": {
+      "standard": 5500.0,
+      "with_prompt_cache": 4150.0,
+      "batch": 2750.0
+    }
+  },
+  "sensitivity": {
+    "baseline_usd_per_million": 1100.19,
+    "baseline_note": "rag retrieval compute (x86) + Claude Haiku 4.5 generation",
+    "variants": {
+      "arm_instead_of_x86": {
+        "usd_per_million": 1100.15,
+        "change_pct": -0.0035
+      },
+      "double_retrieval_throughput": {
+        "usd_per_million": 1100.1,
+        "change_pct": -0.0087
+      },
+      "opus_instead_of_haiku": {
+        "usd_per_million": 5500.19,
+        "change_pct": 399.9306
+      },
+      "batch_api": {
+        "usd_per_million": 550.19,
+        "change_pct": -49.9913
+      },
+      "halve_answer_length": {
+        "usd_per_million": 850.19,
+        "change_pct": -22.7233
+      },
+      "halve_retrieved_context": {
+        "usd_per_million": 875.19,
+        "change_pct": -20.451
+      },
+      "no_llm_at_all": {
+        "usd_per_million": 0.19,
+        "change_pct": -99.9826
+      }
+    }
+  },
+  "headline": {
+    "retrieval_compute_usd_per_million": 0.191,
+    "cheapest_llm_usd_per_million": 1100.0,
+    "ratio": 5759.0
+  }
+}
