@@ -49,7 +49,19 @@ REPOS = {
 CUSTOMER = "acct_00001"
 
 
+# Data endpoints are versioned. The bare paths still work as a deprecated alias,
+# but the demo calls what a new consumer should call.
+API = "/v1"
+
+
 def url(service, path):
+    """Versioned data endpoint."""
+    return f"http://127.0.0.1:{PORTS[service]}{API}{path}"
+
+
+def infra_url(service, path):
+    """Unversioned: /health, /metrics and /version describe the process, not the
+    API, so they are deliberately not behind a version prefix."""
     return f"http://127.0.0.1:{PORTS[service]}{path}"
 
 
@@ -70,7 +82,7 @@ def call(method, target, payload=None, request_id=None, timeout=30):
 
 def wait_for(service, attempts=60):
     for _ in range(attempts):
-        data, _ = call("GET", url(service, "/health"), timeout=5)
+        data, _ = call("GET", infra_url(service, "/health"), timeout=5)
         if data:
             return True
         time.sleep(2)
@@ -183,7 +195,7 @@ def main():
             break
         print(f"  minute {index + 1}: score={data['score']:.4f} anomaly={data['is_anomaly']}")
 
-    health, _ = call("GET", url("incident", "/health"))
+    health, _ = call("GET", infra_url("incident", "/health"))
     if health:
         bus = health.get("event_bus", {})
         print(f"\n  event bus: subscribers={bus.get('subscribers')} "
