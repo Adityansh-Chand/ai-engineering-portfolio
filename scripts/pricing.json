@@ -1,0 +1,71 @@
+{
+  "note": "Dated price inputs to scripts/cost_model.py. These are INPUTS, not claims -- prices change, and a model that hardcodes them silently goes stale. Every entry carries the date it was read and the page it was read from. Re-read the sources before relying on any figure here.",
+  "as_of": "2026-08-31",
+  "currency": "USD",
+
+  "compute": {
+    "source": "https://aws.amazon.com/fargate/pricing/",
+    "read_on": "2026-08-31",
+    "region": "us-east-1",
+    "note": "Rates are quoted per second on the source page and converted to hours here. Fargate bills per second with a 1-minute minimum for Linux.",
+    "options": {
+      "fargate_linux_x86": {
+        "vcpu_second": 0.000011244,
+        "gb_second": 0.000001235
+      },
+      "fargate_linux_arm": {
+        "vcpu_second": 0.0000089944,
+        "gb_second": 0.0000009889
+      }
+    }
+  },
+
+  "llm": {
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "read_on": "2026-08-31",
+    "note": "Per million tokens. Batch API is 50% off both directions; a prompt-cache hit is 0.1x the base input rate.",
+    "models": {
+      "claude-haiku-4-5": {"input_per_mtok": 1.0, "output_per_mtok": 5.0},
+      "claude-sonnet-5": {"input_per_mtok": 2.0, "output_per_mtok": 10.0},
+      "claude-opus-5": {"input_per_mtok": 5.0, "output_per_mtok": 25.0}
+    },
+    "modifiers": {
+      "batch_discount": 0.5,
+      "cache_hit_input_multiplier": 0.1
+    }
+  },
+
+  "measurement_hardware": {
+    "note": "Where the latency and throughput in docs/assets/load-test.json were measured. Cost per request is derived from throughput, so it inherits this machine -- a cloud vCPU is not this CPU and the figures would need re-measuring on the target instance.",
+    "cpu": "Intel Core i7-8650U @ 1.90GHz",
+    "physical_cores": 4,
+    "logical_processors": 8,
+    "ram_gb": 7.9,
+    "os": "Windows 11 Pro"
+  },
+
+  "optional_components": {
+    "note": "Per-query added latency of components that are implemented, benchmarked, and NOT enabled by default. Latencies are measured in the repositories named; the cost of each is what this model adds. Quality deltas are copied here so the two sit next to each other, which is the only way the trade is visible.",
+    "cross_encoder_rerank": {
+      "added_ms_per_query": 1116.4,
+      "quality_delta_ndcg10": 0.0011,
+      "measured_on": "BEIR/NFCorpus, 323 queries",
+      "measured_in": "enterprise-rag-knowledge-system, models/artifacts/rerank_comparison.json"
+    },
+    "fitted_rerank": {
+      "added_ms_per_query": 4.5,
+      "quality_delta_ndcg10": -0.0063,
+      "measured_on": "BEIR/NFCorpus, 323 queries",
+      "measured_in": "enterprise-rag-knowledge-system, models/artifacts/rerank_comparison.json"
+    }
+  },
+
+  "assumptions": {
+    "task_vcpu": 1.0,
+    "task_memory_gb": 2.0,
+    "task_note": "One Fargate task per service at 1 vCPU / 2 GB. Fargate's smallest configuration is 0.25 vCPU / 0.5 GB; 1 vCPU is chosen because the load test measured one single-worker uvicorn process saturating one core.",
+    "llm_input_tokens_per_query": 600,
+    "llm_output_tokens_per_query": 100,
+    "llm_token_note": "A RAG generation call sends five retrieved chunks (~90 tokens each), a system prompt and the question, and gets back a short answer. Measured from the prompt the service actually builds in rag/generator.py, at the documented ~4 characters per token."
+  }
+}

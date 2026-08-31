@@ -262,8 +262,39 @@ output below is the opposite case, and gets SVG.
 
 ![sales real data](docs/assets/sales-real-data.svg)
 
+### Concurrency, and a dependency killed mid-run
+
+![load test](docs/assets/load-test.svg)
+
+Throughput on both CPU-bound endpoints **peaks at concurrency 4 and then falls** — past the
+peak, extra load costs throughput rather than queueing for it. And the median is blind to
+it: at concurrency 16 retrieval's p50 is 77 ms, a figure that would pass any dashboard,
+while its p95 is 1490 ms.
+
+The bottom block is the circuit breaker earning its place. With `sales` killed and the
+breaker still closed, p95 is **4243 ms** — every request pays a connection failure plus a
+retry before falling back. Once the breaker opens, p95 is **145.2 ms**, against 145.3 ms
+healthy. Every request returned 200 throughout, and the response body says
+`account: circuit_open` so a reader can tell the enrichment was skipped rather than absent.
+Full write-up: [`docs/LOAD_TEST.md`](docs/LOAD_TEST.md).
+
+### What it would cost to run
+
+![cost model](docs/assets/cost-model.svg)
+
+Cost per million requests, derived from the throughput measured above and from dated prices
+that cite their sources. Serving a million retrieval queries costs about **19 cents** of
+compute; the cheapest LLM answer on top of it costs **$1,100** — the generation step is
+**5,759×** everything underneath it.
+
+That number reorders the priorities the load test suggests: doubling retrieval throughput
+changes the bill by 0.009%, and changing model tier changes it by 400%. Neither measurement
+says that on its own. Full write-up: [`docs/COST_MODEL.md`](docs/COST_MODEL.md).
+
 ```bash
 python scripts/capture_assets.py
+python scripts/load_test.py
+python scripts/cost_model.py
 ```
 
 **Why SVG for terminal output, PNG for the page.** An SVG is text, so it diffs in
@@ -286,6 +317,12 @@ capture changes only when the *output* changes.
 
 ## Portfolio Documentation
 
+- [**Architecture decision records**](docs/adr/) — the eight contested choices, each with
+  the alternatives that were rejected and what would make it worth revisiting
+- [**Load and degradation**](docs/LOAD_TEST.md) — measured concurrency, and what the
+  circuit breaker does when a dependency is killed mid-run
+- [**Cost model**](docs/COST_MODEL.md) — cost per million requests from measured throughput
+  and dated prices
 - [Architecture diagrams](docs/ARCHITECTURE.md)
 - [API flow diagrams](docs/API_FLOWS.md)
 - [Demo capture guide](docs/DEMO_CAPTURE.md)
@@ -542,7 +579,10 @@ that run on one machine.
 - **Cloud deployment.** This is a portfolio, not a production system. Static
   config validation and CI image builds are the right level; a live managed
   environment would add cost and operational surface without demonstrating
-  anything the compose stack does not.
+  anything the compose stack does not. The two things a deployment was actually
+  wanted for — knowing what this costs and what it does under load — are now
+  [modelled](docs/COST_MODEL.md) and [measured](docs/LOAD_TEST.md) locally instead,
+  with the measured and modelled halves labelled separately.
 - **A real message broker.** The event bus is an outbox with a delivery worker,
   retries and a dead-letter queue. Kafka or RabbitMQ would replace ~200 readable
   lines with an operational dependency, for one push edge.
