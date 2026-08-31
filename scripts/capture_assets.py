@@ -25,9 +25,12 @@ them as text would be a description rather than a capture.
 import argparse
 import html
 import re
+import os
 import shutil
 import subprocess
 import sys
+import time
+import urllib.request
 import uuid
 from pathlib import Path
 
@@ -129,6 +132,82 @@ SCREENSHOTS = [
      "title": "The static landing site"},
 ]
 
+# The API surface of each service, from its live OpenAPI page.
+#
+# This is the evidence a reviewer cannot get cheaply. The landing site is one
+# click away and needs no help; seeing that five services actually expose the
+# endpoints claimed for them -- versioned routes, drift, events -- otherwise means
+# cloning five repositories, installing their dependencies and starting each one.
+#
+# Each is started for real, screenshotted, and stopped. Nothing is mocked.
+SERVICES = [
+    {"name": "api-sales", "repo": "ai-sales-intelligence-engine", "port": 8811,
+     "title": "ai-sales-intelligence-engine: live API surface"},
+    {"name": "api-rag", "repo": "enterprise-rag-knowledge-system", "port": 8812,
+     "title": "enterprise-rag-knowledge-system: live API surface"},
+    {"name": "api-incident", "repo": "ai-incident-detection-platform", "port": 8813,
+     "title": "ai-incident-detection-platform: live API surface"},
+    {"name": "api-ops", "repo": "ai-proactive-customer-operations", "port": 8814,
+     "title": "ai-proactive-customer-operations: live API surface"},
+    {"name": "api-meeting", "repo": "autonomous-meeting-intelligence", "port": 8815,
+     "title": "autonomous-meeting-intelligence: live API surface"},
+]
+
+
+def wait_for_health(port, attempts=60):
+    for _ in range(attempts):
+        try:
+            with urllib.request.urlopen(
+                f"http://127.0.0.1:{port}/health", timeout=3
+            ) as response:
+                if response.status == 200:
+                    return True
+        except Exception:  # noqa: BLE001 - not up yet is the normal case
+            time.sleep(2)
+    return False
+
+
+def capture_service(browser, service):
+    """Start the service, screenshot its OpenAPI page, stop it.
+
+    The process is terminated in a finally block: leaving uvicorn running after a
+    capture run has bitten this workspace before.
+    """
+    repo = WORKSPACE / service["repo"]
+    if not repo.exists():
+        print(f"SKIP {service['name']}: {repo} not present")
+        return
+
+    environment = {
+        **os.environ,
+        "API_KEY": "portfolio-demo-key",
+        "APP_DB_PATH": str(repo / "data" / "capture.sqlite3"),
+        "RETRIEVER": "bm25",
+    }
+    process = subprocess.Popen(
+        [sys.executable, "-m", "uvicorn", "api.server:app", "--host", "127.0.0.1",
+         "--port", str(service["port"]), "--log-level", "warning"],
+        cwd=str(repo), env=environment,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    try:
+        if not wait_for_health(service["port"]):
+            print(f"  {service['name']}: never became healthy, SKIPPED")
+            return
+        path = ASSETS / f"{service['name']}.png"
+        url = f"http://127.0.0.1:{service['port']}/docs"
+        if screenshot(browser, url, path, 1280, 1000):
+            print(f"  {path.relative_to(ROOT)}  "
+                  f"({path.stat().st_size / 1024:.1f} KB)")
+        else:
+            print(f"  FAILED to capture {service['name']}")
+    finally:
+        process.terminate()
+        try:
+            process.wait(timeout=15)
+        except subprocess.TimeoutExpired:
+            process.kill()
+
 
 def find_browser():
     for candidate in BROWSERS:
@@ -215,6 +294,8 @@ def main():
             print(f"{capture['name']:24} {capture['display']}")
         for shot in SCREENSHOTS:
             print(f"{shot['name']:24} screenshot {shot['width']}x{shot['height']}")
+        for service in SERVICES:
+            print(f"{service['name']:24} live API surface ({service['repo']})")
         return 0
 
     ASSETS.mkdir(parents=True, exist_ok=True)
@@ -254,6 +335,12 @@ def main():
                   f"{path.stat().st_size / 1024:.1f} KB)")
         else:
             print(f"  FAILED to capture {shot['name']}")
+
+    for service in SERVICES:
+        if args.only and service["name"] != args.only:
+            continue
+        print(f"capturing {service['name']} ...", flush=True)
+        capture_service(browser, service)
     return 0
 
 
