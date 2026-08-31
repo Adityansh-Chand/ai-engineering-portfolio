@@ -197,6 +197,39 @@ def run_scenario():
     return acts, before, after
 
 
+def run_degraded_act(processes):
+    """Kill a dependency, then decide anyway.
+
+    Deliberately runs AFTER the trace is collected. Killing the incident service
+    first means its events can no longer be read, and the trace silently drops to
+    four services -- which happened, and looked like a smaller system rather than
+    a stopped process.
+    """
+    incident_process = processes[list(REPOS).index("incident")]
+    incident_process.terminate()
+    try:
+        incident_process.wait(timeout=15)
+    except subprocess.TimeoutExpired:
+        incident_process.kill()
+    time.sleep(1)
+
+    degraded, error = call("POST", base("ops") + "/v1/decide", {
+        "message": "my checkout payment keeps failing and I want my money back",
+        "customer_id": CUSTOMER, "service": "checkout",
+    })
+    return {
+        "n": 6,
+        "title": "A dependency dies -- the decision is still made",
+        "services": ["ops"],
+        "detail": "The incident platform was stopped before this call. Operations "
+                  "records the failed enrichment in its trace and decides anyway; "
+                  "it does not wait, retry forever, or return an error.",
+        "result": degraded or {"error": error},
+        "keys": ["policy", "action", "enrichment"],
+    }
+
+
+
 def collect_trace():
     hops = []
     for service in REPOS:
@@ -407,7 +440,8 @@ def main():
         wait_for_all()
         print("five services up")
         acts, before, after = run_scenario()
-        hops = collect_trace()
+        hops = collect_trace()          # all five alive, so all five answer
+        acts.append(run_degraded_act(processes))
         print(f"scenario complete: {len(hops)} hops across "
               f"{len({h['service'] for h in hops})} services")
         OUTPUT.parent.mkdir(parents=True, exist_ok=True)

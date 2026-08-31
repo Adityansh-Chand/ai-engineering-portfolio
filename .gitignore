@@ -1,0 +1,8 @@
+# Python bytecode. The capture scripts import each other, so running them leaves
+# __pycache__ behind and every capture run would otherwise dirty the tree.
+__pycache__/
+*.py[cod]
+
+# Service event stores written by the capture and demo scripts.
+*.sqlite3
+data/
