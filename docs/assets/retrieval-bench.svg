@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="416"
-     viewBox="0 0 1220 416" role="img"
+<svg xmlns="http://www.w3.org/2000/svg" width="598" height="264"
+     viewBox="0 0 598 264" role="img"
      aria-label="Retrieval compared on BEIR/NFCorpus (human relevance judgments)">
   <rect width="100%" height="100%" rx="8" fill="#20242c"/>
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
@@ -7,20 +7,12 @@
     <text x="18" y="31" fill="#6f7787" font-size="12">Retrieval compared on BEIR/NFCorpus (human relevance judgments)</text>
     <text x="18" y="56" fill="#8fbcbb">$ python evaluation/harness.py --beir nfcorpus</text>
     <text x="18" y="75" fill="#d8dee9">=== BEIR / nfcorpus  (3633 docs, 323 queries, human qrels) ===</text>
-    <text x="18" y="94" fill="#d8dee9">retriever                 nDCG@10  Recall@10   MRR@10   idx(s)    q(ms)</text>
-    <text x="18" y="113" fill="#d8dee9">-----------------------------------------------------------------------</text>
-    <text x="18" y="132" fill="#d8dee9">bm25                       0.2831     0.1326   0.4881      0.5      3.1</text>
-    <text x="18" y="151" fill="#d8dee9">lsa                        0.2613     0.1277   0.4244      1.9      8.8</text>
-    <text x="18" y="170" fill="#d8dee9">dense                      0.3727     0.1784   0.5662      0.0    115.4</text>
-    <text x="18" y="189" fill="#d8dee9">hybrid(bm25+dense)         0.3423     0.1637   0.5627      0.7     86.0</text>
-    <text x="18" y="208" fill="#d8dee9"></text>
-    <text x="18" y="227" fill="#d8dee9">results -&gt; evaluation/results.json</text>
-    <text x="18" y="246" fill="#d8dee9">Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.</text>
-    <text x="18" y="265" fill="#d8dee9"></text>
-    <text x="18" y="284" fill="#d8dee9">Loading weights:   0%|          | 0/199 [00:00&lt;?, ?it/s]</text>
-    <text x="18" y="303" fill="#d8dee9">Loading weights: 100%|##########| 199/199 [00:00&lt;00:00, 2731.89it/s]</text>
-    <text x="18" y="322" fill="#d8dee9"></text>
-    <text x="18" y="341" fill="#d8dee9">Loading weights:   0%|          | 0/199 [00:00&lt;?, ?it/s]</text>
-    <text x="18" y="360" fill="#d8dee9">Loading weights: 100%|##########| 199/199 [00:00&lt;00:00, 3584.51it/s]</text>
+    <text x="18" y="94" fill="#d8dee9">retriever                 nDCG@10  Recall@10   MRR@10</text>
+    <text x="18" y="113" fill="#d8dee9">----------------------------------------------------</text>
+    <text x="18" y="132" fill="#d8dee9">bm25                       0.2831     0.1326   0.4881</text>
+    <text x="18" y="151" fill="#d8dee9">lsa                        0.2613     0.1277   0.4244</text>
+    <text x="18" y="170" fill="#d8dee9">dense                      0.3727     0.1784   0.5662</text>
+    <text x="18" y="189" fill="#d8dee9">hybrid(bm25+dense)         0.3423     0.1637   0.5627</text>
+    <text x="18" y="208" fill="#d8dee9">results -&gt; evaluation/results.json</text>
   </g>
 </svg>
