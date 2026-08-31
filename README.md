@@ -88,6 +88,32 @@ This is a webhook fan-out with the failure handling that makes push usable. It i
 **not a broker** -- no durable log, no partitioning, no consumer groups, and the
 outbox is lost on restart. The README of the incident repo says so too.
 
+### Following one request across five services
+
+Every service records the request id alongside each event, and `/v1/events`
+accepts a `request_id` filter. `scripts/trace.py` asks all five the same question
+and merges the answers into one ordered timeline:
+
+```bash
+python scripts/trace.py demo-1a2b3c4d
+```
+
+```
+ 1. 2026-08-31 06:43:21  incident  incident_lookup      service=checkout
+ 2. 2026-08-31 06:43:21  ops       customer_decision    policy=refund_review
+ 3. 2026-08-31 06:43:21  rag       rag_query            groundedness=1.0
+ 4. 2026-08-31 06:43:21  sales     sales_account_lookup segment=medium_propensity
+```
+
+The id already crossed service boundaries; what was missing was storing it next
+to the event, so there was something to join on. A service that cannot be reached
+is **named in the output** rather than omitted — an incomplete trace that looks
+complete is worse than no trace.
+
+This is a script, not a tracing backend, deliberately. At five services on one
+host, OpenTelemetry and a collector would be more operational surface than the
+problem justifies; the missing piece was the join, not the infrastructure.
+
 ### Contract checks
 
 Five services and five edges means a provider can change a response field, keep
@@ -375,10 +401,6 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
   measured no improvement.
 - Improve owner extraction in the meeting service (recall 0.3484 — misses full
   names, titles and team references).
-- Aggregated observability. Request IDs propagate correctly across every service
-  boundary, but nothing collects them: reconstructing one decision's path means
-  querying five separate `/events` endpoints and joining by hand. The identifier
-  is the hard half and it is done; the collector is not.
 - Drift detection and retraining triggers; no service monitors its live score
   distribution. The incident service's real-data track makes the case concretely:
   configured for a 3% alert budget, it fires on 21%, 6% and 52% of points across
