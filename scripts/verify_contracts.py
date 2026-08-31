@@ -27,6 +27,10 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
 CONTRACTS = ROOT / "contracts" / "contracts.json"
 
+# Contracts are verified against the stack as it actually runs, which is
+# authenticated. A demo key, not a secret -- see demo_end_to_end.py.
+API_KEY = os.getenv("PORTFOLIO_API_KEY", "portfolio-demo-key")
+
 PORTS = {"rag": 8001, "sales": 8002, "incident": 8003, "ops": 8004, "meeting": 8005}
 REPO_TO_SERVICE = {
     "enterprise-rag-knowledge-system": "rag",
@@ -59,7 +63,10 @@ def resolve(payload, dotted):
 def call(method, url, body=None, timeout=30):
     data = None if body is None else json.dumps(body).encode()
     request = urllib.request.Request(
-        url, data=data, headers={"Content-Type": "application/json"}, method=method
+        url,
+        data=data,
+        headers={"Content-Type": "application/json", "X-API-Key": API_KEY},
+        method=method,
     )
     with urllib.request.urlopen(request, timeout=timeout) as response:
         return json.loads(response.read().decode())
@@ -91,7 +98,9 @@ def start_local():
         if not path.exists():
             print(f"missing repo: {path}")
             sys.exit(1)
+        # Both halves: demand the key as a provider, send it as a consumer.
         env = {**os.environ, **env_for[service],
+               "API_KEY": API_KEY, "INTEGRATION_API_KEY": API_KEY,
                "APP_DB_PATH": str(path / "data" / "contracts.sqlite3")}
         processes.append(subprocess.Popen(
             [sys.executable, "-m", "uvicorn", "api.server:app", "--host", "127.0.0.1",
