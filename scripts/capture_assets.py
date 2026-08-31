@@ -15,12 +15,17 @@ a pipeline produces a given result that does not matter; for a UI demo it would.
 Output is captured from **real runs**. Nothing here is typed by hand, which is the
 entire point: an asset that can be hand-edited is not evidence.
 
-    python scripts/capture_assets.py            # all cards
+The landing site is captured as a real PNG instead, because there a screenshot IS
+the evidence -- layout, type and spacing are the thing being shown, and rendering
+them as text would be a description rather than a capture.
+
+    python scripts/capture_assets.py            # cards and screenshots
     python scripts/capture_assets.py --list     # what would be captured
 """
 import argparse
 import html
 import re
+import shutil
 import subprocess
 import sys
 import uuid
@@ -99,6 +104,59 @@ def render(title, command, output, path):
     return len(lines)
 
 
+# Headless Chrome or Edge, whichever the machine has. Both accept the same flags.
+BROWSERS = [
+    r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+    r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+    "google-chrome", "chromium", "chromium-browser",
+]
+
+# Desktop only, deliberately.
+#
+# A phone-width capture was attempted and dropped. Headless Chrome's
+# `--window-size` sets the window but does not apply mobile viewport emulation, so
+# it lays the page out at desktop width and crops -- producing an image of a
+# broken-looking site. The site is not broken: driven through a real browser at
+# 375px the page reports `scrollWidth == clientWidth`, no horizontal overflow, and
+# the only elements extending past the viewport are table cells inside their
+# `overflow-x: auto` container, which is the intended behaviour.
+#
+# Publishing that image would have been worse than publishing none. Proper mobile
+# capture needs device emulation over the DevTools protocol, which is a dependency
+# this script does not justify for one asset.
+SCREENSHOTS = [
+    {"name": "landing-site", "width": 1280, "height": 900,
+     "title": "The static landing site"},
+]
+
+
+def find_browser():
+    for candidate in BROWSERS:
+        path = Path(candidate)
+        if path.exists():
+            return str(path)
+        found = shutil.which(candidate)
+        if found:
+            return found
+    return None
+
+
+def screenshot(browser, url, path, width, height):
+    """Render a page to PNG. Returns False rather than raising when it cannot.
+
+    --virtual-time-budget waits for fonts and layout to settle; without it the
+    capture can land mid-render and show unstyled text, which looks like a broken
+    site rather than a timing artefact.
+    """
+    result = subprocess.run(
+        [browser, "--headless", "--disable-gpu", "--hide-scrollbars",
+         "--virtual-time-budget=6000", f"--window-size={width},{height}",
+         f"--screenshot={path}", url],
+        capture_output=True, text=True, timeout=180,
+    )
+    return path.exists() and path.stat().st_size > 0
+
+
 def run(command, cwd, timeout=900, env=None):
     result = subprocess.run(
         command, cwd=str(cwd), capture_output=True, text=True,
@@ -155,6 +213,8 @@ def main():
     if args.list:
         for capture in CAPTURES:
             print(f"{capture['name']:24} {capture['display']}")
+        for shot in SCREENSHOTS:
+            print(f"{shot['name']:24} screenshot {shot['width']}x{shot['height']}")
         return 0
 
     ASSETS.mkdir(parents=True, exist_ok=True)
@@ -171,6 +231,29 @@ def main():
         lines = render(capture["title"], capture["display"], output, path)
         print(f"  {path.relative_to(ROOT)}  ({lines} lines, "
               f"{path.stat().st_size / 1024:.1f} KB)")
+
+    browser = find_browser()
+    if browser is None:
+        # Said out loud: a missing screenshot must not look like a page that
+        # failed to render.
+        print("no Chrome or Edge found; screenshots SKIPPED (the SVG cards above "
+              "are unaffected)")
+        return 0
+
+    # The local file, not the deployed site: this captures the repository as it
+    # stands, so the image cannot be newer or older than the code beside it.
+    url = (ROOT / "index.html").resolve().as_uri()
+    for shot in SCREENSHOTS:
+        if args.only and shot["name"] != args.only:
+            continue
+        path = ASSETS / f"{shot['name']}.png"
+        print(f"capturing {shot['name']} ...", flush=True)
+        if screenshot(browser, url, path, shot["width"], shot["height"]):
+            print(f"  {path.relative_to(ROOT)}  "
+                  f"({shot['width']}x{shot['height']}, "
+                  f"{path.stat().st_size / 1024:.1f} KB)")
+        else:
+            print(f"  FAILED to capture {shot['name']}")
     return 0
 
 

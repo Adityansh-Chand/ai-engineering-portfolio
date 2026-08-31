@@ -193,9 +193,16 @@ PORTFOLIO_API_KEY=$(openssl rand -hex 24) docker compose up --build
 
 ## Captured evidence
 
-Real output from real runs, rendered to SVG by `scripts/capture_assets.py`.
-Nothing below was typed by hand — an asset that can be hand-edited is not
-evidence.
+Everything below is produced by `scripts/capture_assets.py` from real runs.
+Nothing is typed by hand — an asset that can be hand-edited is not evidence.
+
+### The landing site
+
+![landing site](docs/assets/landing-site.png)
+
+A real screenshot, because here the layout *is* the thing being shown; rendering
+it as text would be a description rather than a capture. The command output below
+is the opposite case, and gets SVG.
 
 ### Five services, one request id, six acts
 
@@ -221,12 +228,20 @@ evidence.
 python scripts/capture_assets.py
 ```
 
-**Why SVG rather than the GIFs the capture guide asked for.** An SVG is text, so
-it diffs in review and a reader can see the output was not edited; it regenerates
-from the commands, so it cannot drift from what the code prints — a stale GIF is
-indistinguishable from a current one; and it is a few KB rather than a few MB.
-The trade is that a still cannot show timing or interactivity, which matters for a
-UI demo and not for evidence that a pipeline produces a given result.
+**Why SVG for terminal output, PNG for the page.** An SVG is text, so it diffs in
+review and a reader can see the output was not edited; it regenerates from the
+commands, so it cannot drift from what the code prints — a stale GIF is
+indistinguishable from a current one; and it is a few KB rather than a few MB. A
+rendered page is the opposite: the pixels are the evidence, so it gets a real
+screenshot.
+
+**No phone-width capture, on purpose.** One was produced and discarded: headless
+Chrome's `--window-size` does not apply mobile viewport emulation, so it lays the
+page out at desktop width and crops, making a working site look broken. Driven
+through a real browser at 375px the page reports no horizontal overflow, and the
+only elements past the viewport are table cells inside their `overflow-x: auto`
+container. Publishing the misleading image would have been worse than publishing
+none.
 
 Volatile values — request ids, timestamps, absolute paths — are normalised, so a
 capture changes only when the *output* changes.
