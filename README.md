@@ -28,6 +28,19 @@ Manual repository setup is required once: GitHub Pages must be enabled in the
 repository settings and configured to use GitHub Actions as the source. The
 workflow does not require secrets or credentials.
 
+**The page is generated, not hand-edited.** Every claim it makes lives in
+[`scripts/site_facts.json`](scripts/site_facts.json); `scripts/render_site.py`
+renders it and CI re-renders to confirm the committed HTML still matches. It had
+drifted for months against hand-typed numbers — five services each claiming
+"accuracy 1.0", which were the circular evaluations this portfolio was rebuilt to
+remove — because the only thing CI asserted about it was that `README.md` was
+non-empty. Editing `index.html` directly now fails the build.
+
+```bash
+python scripts/render_site.py --refresh   # re-count tests and ADRs from the repos
+python scripts/render_site.py             # regenerate index.html
+```
+
 ## System Map
 
 The five Python services run **independently** and also compose into one system.

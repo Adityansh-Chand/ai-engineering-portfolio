@@ -9,8 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
       - name: Verify portfolio README
         run: test -s README.md
+
+      # The landing page is generated from scripts/site_facts.json. It is the
+      # first thing a reviewer sees and it was the last thing anyone checked --
+      # it drifted for months against hand-typed numbers, including five
+      # "accuracy 1.0" figures left over from evaluations that had been removed,
+      # because the only assertion here was that README.md was non-empty.
+      - name: Landing page matches the facts it is generated from
+        run: python scripts/render_site.py --check
 
   compose-config:
     name: Multi-service compose is valid
