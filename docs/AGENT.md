@@ -163,11 +163,20 @@ about what a token costs.
 
 **What it cost instead was time.** The 1.5B runs in bfloat16 because float32
 would need 6.2 GB and this machine has 7.9 GB, and this CPU has no native
-bfloat16 support — so the effective rate is **0.41 tokens/second** against the
-0.5B's 2.84, and a full run takes **2.4 hours** against 23 minutes. Six times
-the wall-clock for three times the parameters. That is the real price of the
-safety improvement here, and it is the reason the harness takes `--model` rather
-than defaulting to the larger one.
+bfloat16 support. The 0.5B run took 23 minutes; the 1.5B run took **2.4 hours**.
+That is the reason the harness takes `--model` rather than defaulting to the
+larger one.
+
+**Read the wall-clock as an upper bound, not a measurement.** Both figures are
+end-to-end rates that include prefill, and prefill dominates here — 39,610
+prompt tokens against 3,462 generated. Against idle-machine generation
+benchmarks the 0.5B run achieved 90% of its rate and the 1.5B run only 28% of
+its own, and that asymmetry has two candidate causes that this run cannot
+separate: bfloat16 prefill being disproportionately slow without hardware
+support, and other work running on the same four cores during part of the 1.5B
+run. **The quality metrics are unaffected either way** — decoding is greedy and
+the token counts are reproducible — but no scaling claim should be read off
+these timings.
 
 ## What was iterated, and what that costs the result
 
