@@ -1,0 +1,15 @@
+# The agent's dependencies. The rest of this repository is an index and a set of
+# scripts that run on the standard library alone, which is why there is no
+# requirements file at the root -- only this one, for the part that needs more.
+
+# The MCP server and the client that checks it. Pinned to 2.x: FastMCP was
+# renamed to MCPServer in 2.0 and the Tool model moved to snake_case field names
+# (`input_schema`, not `inputSchema`), so 1.x code does not run here.
+mcp>=2.0,<3.0
+
+# The local model. Already required by enterprise-rag-knowledge-system for dense
+# retrieval embeddings, so a machine that can run that stack can run this.
+# Needed only for `agent/eval/run.py --systems agent`; the MCP server, the
+# keyword baseline and every check run without them.
+torch>=2.0
+transformers>=5.0

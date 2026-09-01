@@ -48,3 +48,13 @@ jobs:
       # no model and no running services.
       - name: Agent tasks, tools and parsers are well-formed
         run: python scripts/check_agent_wellformed.py
+
+      # Starts the MCP server as a subprocess and connects a real client to it
+      # over stdio. Needs no running services and no model -- listing tools is a
+      # protocol operation. Catches the tool registry and the advertised surface
+      # drifting apart, and catches the agent's prompt changing underneath
+      # committed evaluation numbers.
+      - name: MCP server advertises what the registry says
+        run: |
+          pip install "mcp>=2.0,<3.0"
+          python scripts/check_mcp_server.py

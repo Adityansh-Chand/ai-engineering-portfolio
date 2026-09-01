@@ -32,6 +32,14 @@ their public API.
 the tool is called, the result comes back, and the model decides whether it can
 answer or needs another call. Three steps maximum.
 
+`agent/mcp_server.py` serves the same five tools over the Model Context
+Protocol, reading the same registry, so any MCP client — Claude Desktop, Claude
+Code, anything else — can drive these services without this repository's agent.
+The evaluation loop deliberately does *not* route through it: at three tokens
+per second the cost of a tool call is generating it, not dispatching it, and
+adding a subprocess and a JSON-RPC round trip to that path would be protocol for
+its own sake ([ADR-013](adr/013-mcp-for-external-tool-access.md)).
+
 `agent/baseline.py` does the same job by keyword. It routes, calls the same
 tools with the same arguments, and renders an answer from a template. It is a
 complete system, not a strawman, and it is what the model has to beat.

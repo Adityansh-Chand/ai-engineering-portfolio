@@ -26,6 +26,7 @@ usually the more useful half.
 | [010](010-local-model-so-llm-metrics-are-reproducible.md) | Run the language model locally, so its numbers are reproducible | Accepted |
 | [011](011-agent-evaluated-on-refusal-and-fabrication.md) | Score the agent on refusal and fabrication, not just task success | Accepted |
 | [012](012-ship-the-event-store-fix.md) | Ship the event store fix | Accepted |
+| [013](013-mcp-for-external-tool-access.md) | Expose the services over MCP, but do not route the agent through it | Accepted |
 
 ## Decisions recorded elsewhere
 
