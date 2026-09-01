@@ -21,9 +21,9 @@
           "child_processes": 0,
           "peak": {
             "concurrency": 4,
-            "p50_ms": 70.4,
-            "p95_ms": 196.6,
-            "throughput_rps": 50.2,
+            "p50_ms": 20.0,
+            "p95_ms": 61.9,
+            "throughput_rps": 152.5,
             "errors": 0,
             "error_kinds": []
           },
@@ -40,9 +40,9 @@
           "child_processes": 2,
           "peak": {
             "concurrency": 8,
-            "p50_ms": 46.4,
-            "p95_ms": 313.7,
-            "throughput_rps": 64.2,
+            "p50_ms": 19.6,
+            "p95_ms": 133.2,
+            "throughput_rps": 178.5,
             "errors": 0,
             "error_kinds": []
           },
@@ -51,17 +51,17 @@
             8,
             16
           ],
-          "speedup": 1.279,
-          "efficiency": 0.639
+          "speedup": 1.17,
+          "efficiency": 0.585
         },
         {
           "workers": 4,
           "child_processes": 4,
           "peak": {
-            "concurrency": 8,
-            "p50_ms": 49.2,
-            "p95_ms": 373.2,
-            "throughput_rps": 59.0,
+            "concurrency": 4,
+            "p50_ms": 14.8,
+            "p95_ms": 46.8,
+            "throughput_rps": 222.6,
             "errors": 0,
             "error_kinds": []
           },
@@ -70,17 +70,17 @@
             8,
             16
           ],
-          "speedup": 1.175,
-          "efficiency": 0.294
+          "speedup": 1.46,
+          "efficiency": 0.365
         },
         {
           "workers": 8,
           "child_processes": 8,
           "peak": {
             "concurrency": 8,
-            "p50_ms": 27.9,
-            "p95_ms": 289.8,
-            "throughput_rps": 77.5,
+            "p50_ms": 9.3,
+            "p95_ms": 208.4,
+            "throughput_rps": 182.7,
             "errors": 0,
             "error_kinds": []
           },
@@ -89,8 +89,8 @@
             8,
             16
           ],
-          "speedup": 1.544,
-          "efficiency": 0.193
+          "speedup": 1.198,
+          "efficiency": 0.15
         }
       ]
     },
@@ -101,10 +101,10 @@
           "workers": 1,
           "child_processes": 0,
           "peak": {
-            "concurrency": 8,
-            "p50_ms": 84.5,
-            "p95_ms": 369.0,
-            "throughput_rps": 56.1,
+            "concurrency": 16,
+            "p50_ms": 94.9,
+            "p95_ms": 118.0,
+            "throughput_rps": 144.7,
             "errors": 0,
             "error_kinds": []
           },
@@ -120,10 +120,10 @@
           "workers": 2,
           "child_processes": 2,
           "peak": {
-            "concurrency": 4,
-            "p50_ms": 37.2,
-            "p95_ms": 130.9,
-            "throughput_rps": 79.8,
+            "concurrency": 8,
+            "p50_ms": 36.0,
+            "p95_ms": 144.1,
+            "throughput_rps": 138.0,
             "errors": 0,
             "error_kinds": []
           },
@@ -132,17 +132,17 @@
             8,
             16
           ],
-          "speedup": 1.422,
-          "efficiency": 0.711
+          "speedup": 0.954,
+          "efficiency": 0.477
         },
         {
           "workers": 4,
           "child_processes": 4,
           "peak": {
             "concurrency": 4,
-            "p50_ms": 16.6,
-            "p95_ms": 99.0,
-            "throughput_rps": 104.2,
+            "p50_ms": 11.2,
+            "p95_ms": 42.8,
+            "throughput_rps": 215.2,
             "errors": 0,
             "error_kinds": []
           },
@@ -151,17 +151,17 @@
             8,
             16
           ],
-          "speedup": 1.857,
-          "efficiency": 0.464
+          "speedup": 1.487,
+          "efficiency": 0.372
         },
         {
           "workers": 8,
           "child_processes": 8,
           "peak": {
             "concurrency": 4,
-            "p50_ms": 35.3,
-            "p95_ms": 229.8,
-            "throughput_rps": 49.4,
+            "p50_ms": 10.7,
+            "p95_ms": 50.2,
+            "throughput_rps": 230.3,
             "errors": 0,
             "error_kinds": []
           },
@@ -170,8 +170,8 @@
             8,
             16
           ],
-          "speedup": 0.881,
-          "efficiency": 0.11
+          "speedup": 1.592,
+          "efficiency": 0.199
         }
       ]
     },
@@ -183,9 +183,9 @@
           "child_processes": 0,
           "peak": {
             "concurrency": 8,
-            "p50_ms": 159.0,
-            "p95_ms": 261.5,
-            "throughput_rps": 46.3,
+            "p50_ms": 121.6,
+            "p95_ms": 196.1,
+            "throughput_rps": 59.0,
             "errors": 0,
             "error_kinds": []
           },
@@ -202,9 +202,9 @@
           "child_processes": 2,
           "peak": {
             "concurrency": 8,
-            "p50_ms": 204.5,
-            "p95_ms": 319.0,
-            "throughput_rps": 34.6,
+            "p50_ms": 87.5,
+            "p95_ms": 131.5,
+            "throughput_rps": 82.6,
             "errors": 0,
             "error_kinds": []
           },
@@ -213,17 +213,17 @@
             8,
             16
           ],
-          "speedup": 0.747,
-          "efficiency": 0.373
+          "speedup": 1.4,
+          "efficiency": 0.7
         },
         {
           "workers": 4,
           "child_processes": 4,
           "peak": {
             "concurrency": 16,
-            "p50_ms": 267.8,
-            "p95_ms": 600.0,
-            "throughput_rps": 30.8,
+            "p50_ms": 168.7,
+            "p95_ms": 263.1,
+            "throughput_rps": 86.7,
             "errors": 0,
             "error_kinds": []
           },
@@ -232,17 +232,17 @@
             8,
             16
           ],
-          "speedup": 0.665,
-          "efficiency": 0.166
+          "speedup": 1.469,
+          "efficiency": 0.367
         },
         {
           "workers": 8,
           "child_processes": 8,
           "peak": {
             "concurrency": 8,
-            "p50_ms": 228.1,
-            "p95_ms": 442.5,
-            "throughput_rps": 27.4,
+            "p50_ms": 79.5,
+            "p95_ms": 130.3,
+            "throughput_rps": 89.2,
             "errors": 0,
             "error_kinds": []
           },
@@ -251,8 +251,8 @@
             8,
             16
           ],
-          "speedup": 0.592,
-          "efficiency": 0.074
+          "speedup": 1.512,
+          "efficiency": 0.189
         }
       ]
     }
@@ -261,125 +261,109 @@
     {
       "processes": 1,
       "writes_per_second": {
-        "shared": 194.6,
-        "shared_wal": 107.7,
-        "reuse": 351.2,
-        "reuse_wal": 1602.0,
-        "isolated": 170.9
+        "legacy": 186.2,
+        "legacy_wal": 157.5,
+        "shipped": 900.6,
+        "isolated": 861.8
       },
-      "relative_to_shipped": {
-        "shared": 1.0,
-        "shared_wal": 0.553,
-        "reuse": 1.805,
-        "reuse_wal": 8.232,
-        "isolated": 0.878
+      "relative_to_legacy": {
+        "legacy": 1.0,
+        "legacy_wal": 0.846,
+        "shipped": 4.837,
+        "isolated": 4.628
       },
       "writes_lost_to_lock_timeout": {
-        "shared": 0,
-        "shared_wal": 0,
-        "reuse": 0,
-        "reuse_wal": 0,
+        "legacy": 0,
+        "legacy_wal": 0,
+        "shipped": 0,
         "isolated": 0
       },
       "range_across_repeats": {
-        "shared": 15.2,
-        "shared_wal": 13.1,
-        "reuse": 162.2,
-        "reuse_wal": 272.1,
-        "isolated": 1.5
+        "legacy": 13.5,
+        "legacy_wal": 2.8,
+        "shipped": 96.3,
+        "isolated": 106.9
       }
     },
     {
       "processes": 2,
       "writes_per_second": {
-        "shared": 168.5,
-        "shared_wal": 134.6,
-        "reuse": 356.0,
-        "reuse_wal": 1391.1,
-        "isolated": 352.5
+        "legacy": 172.9,
+        "legacy_wal": 77.0,
+        "shipped": 881.3,
+        "isolated": 1626.4
       },
-      "relative_to_shipped": {
-        "shared": 1.0,
-        "shared_wal": 0.799,
-        "reuse": 2.113,
-        "reuse_wal": 8.256,
-        "isolated": 2.092
+      "relative_to_legacy": {
+        "legacy": 1.0,
+        "legacy_wal": 0.445,
+        "shipped": 5.097,
+        "isolated": 9.407
       },
       "writes_lost_to_lock_timeout": {
-        "shared": 0,
-        "shared_wal": 0,
-        "reuse": 0,
-        "reuse_wal": 0,
+        "legacy": 0,
+        "legacy_wal": 0,
+        "shipped": 0,
         "isolated": 0
       },
       "range_across_repeats": {
-        "shared": 8.8,
-        "shared_wal": 6.9,
-        "reuse": 33.9,
-        "reuse_wal": 512.4,
-        "isolated": 49.0
+        "legacy": 8.7,
+        "legacy_wal": 5.1,
+        "shipped": 129.8,
+        "isolated": 316.1
       }
     },
     {
       "processes": 4,
       "writes_per_second": {
-        "shared": 116.0,
-        "shared_wal": 67.3,
-        "reuse": 247.1,
-        "reuse_wal": 1100.2,
-        "isolated": 406.9
+        "legacy": 168.5,
+        "legacy_wal": 116.3,
+        "shipped": 848.0,
+        "isolated": 2776.4
       },
-      "relative_to_shipped": {
-        "shared": 1.0,
-        "shared_wal": 0.58,
-        "reuse": 2.13,
-        "reuse_wal": 9.484,
-        "isolated": 3.508
+      "relative_to_legacy": {
+        "legacy": 1.0,
+        "legacy_wal": 0.69,
+        "shipped": 5.033,
+        "isolated": 16.477
       },
       "writes_lost_to_lock_timeout": {
-        "shared": 0,
-        "shared_wal": 0,
-        "reuse": 0,
-        "reuse_wal": 0,
+        "legacy": 0,
+        "legacy_wal": 0,
+        "shipped": 0,
         "isolated": 0
       },
       "range_across_repeats": {
-        "shared": 42.8,
-        "shared_wal": 79.1,
-        "reuse": 14.7,
-        "reuse_wal": 154.6,
-        "isolated": 151.8
+        "legacy": 9.2,
+        "legacy_wal": 6.5,
+        "shipped": 61.9,
+        "isolated": 322.4
       }
     },
     {
       "processes": 8,
       "writes_per_second": {
-        "shared": 109.3,
-        "shared_wal": 87.8,
-        "reuse": 254.1,
-        "reuse_wal": 969.1,
-        "isolated": 467.4
+        "legacy": 168.3,
+        "legacy_wal": 141.3,
+        "shipped": 893.6,
+        "isolated": 3200.3
       },
-      "relative_to_shipped": {
-        "shared": 1.0,
-        "shared_wal": 0.803,
-        "reuse": 2.325,
-        "reuse_wal": 8.866,
-        "isolated": 4.276
+      "relative_to_legacy": {
+        "legacy": 1.0,
+        "legacy_wal": 0.84,
+        "shipped": 5.31,
+        "isolated": 19.015
       },
       "writes_lost_to_lock_timeout": {
-        "shared": 1,
-        "shared_wal": 0,
-        "reuse": 2,
-        "reuse_wal": 0,
+        "legacy": 0,
+        "legacy_wal": 0,
+        "shipped": 0,
         "isolated": 0
       },
       "range_across_repeats": {
-        "shared": 6.0,
-        "shared_wal": 63.1,
-        "reuse": 99.7,
-        "reuse_wal": 233.2,
-        "isolated": 114.4
+        "legacy": 4.2,
+        "legacy_wal": 1.9,
+        "shipped": 45.0,
+        "isolated": 182.3
       }
     }
   ]

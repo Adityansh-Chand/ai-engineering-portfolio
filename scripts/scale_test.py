@@ -23,12 +23,19 @@ at one worker. Scaling only the front door is a common first instinct and the
 measurement says what it buys.
 
 **The event store, isolated.** Every request writes an event to SQLite through
-`utils/storage.save_event`, which opens a connection per write in the default
-rollback-journal mode. That is invisible with one process and serialising with
-several, so it is the prime suspect for any ceiling found above. Suspecting is
-not measuring, so `probe_event_store` runs the real `save_event` from W
-processes against one shared database and against W separate ones. The ratio is
-the contention cost with the model, the HTTP stack and the scheduler removed.
+`utils/storage.save_event`, which is invisible with one process and serialising
+with several, so it was the prime suspect for the ceiling found above.
+Suspecting is not measuring, so `probe_event_store` runs it from W processes
+against one shared database with the model, the HTTP stack and the scheduler
+removed.
+
+It was the ceiling, and `utils/storage.py` was changed as a result (ADR-009).
+The probe therefore compares four strategies rather than one: `legacy`
+reproduces the connection-per-write version that shipped before, `legacy_wal`
+is the one-line change that measured *worse* than doing nothing, `shipped` is
+the current reuse-plus-WAL path, and `isolated` is the no-sharing upper bound.
+The old behaviour is reproduced here rather than remembered, so the before and
+after stay comparable on the machine running them.
 
     python scripts/scale_test.py
     python scripts/scale_test.py --quick
@@ -78,11 +85,14 @@ SCALED = ("sales_score", "rag_query", "ops_decide")
 
 PROBE_EVENTS_PER_PROCESS = 250
 PROBE_REPEATS = 3
-# A ladder, not a menu. `shared` is what the services ship today; each later
-# entry changes exactly one thing; `isolated` removes sharing altogether and is
-# the upper bound rather than a proposal -- five services cannot each keep their
-# own copy of a shared event log and still have it be one.
-PROBE_MODES = ("shared", "shared_wal", "reuse", "reuse_wal", "isolated")
+# A ladder, not a menu. `legacy` reproduces the connection-per-write version
+# that shipped before ADR-009 and is the baseline every column is quoted
+# against; `legacy_wal` is the one-line change that turned out to be *worse*;
+# `shipped` is what `utils/storage.py` does now -- reuse plus WAL; `isolated`
+# removes sharing altogether and is the upper bound rather than a proposal,
+# since five services cannot each keep a private copy of one event log and still
+# have it be one.
+PROBE_MODES = ("legacy", "legacy_wal", "shipped", "isolated")
 
 
 def count_descendants(pid):
@@ -159,31 +169,36 @@ def measure_scenario(name, scenario, worker_counts, sweep, requests):
 INSERT = "INSERT INTO events (event_type, payload, request_id) VALUES (?, ?, ?)"
 
 
-def _reusing_writer(database_path, use_wal):
-    """The proposed change: one connection per process, held open.
+def _legacy_writer(database_path):
+    """What `save_event` did before ADR-009: a connection opened per write.
 
-    Deliberately not `save_event` -- this is a variant of it, written to find
-    out whether connection reuse is what the shipped path is missing. Kept
-    byte-identical in schema and statement so the only difference measured is
-    when the connection is opened.
+    Kept so the before/after stays reproducible now that the shipped path has
+    changed. Without it the comparison would survive only in a commit message,
+    and this table would quietly become several measurements of the same thing.
+
+    Identical in schema and statement to the version it reproduces, so the only
+    difference measured is when the connection is opened.
     """
     import json as _json
     import sqlite3 as _sqlite3
 
-    connection = _sqlite3.connect(database_path)
-    connection.execute(
-        "CREATE TABLE IF NOT EXISTS events ("
-        "id INTEGER PRIMARY KEY AUTOINCREMENT, event_type TEXT NOT NULL, "
-        "payload TEXT NOT NULL, request_id TEXT, "
-        "created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"
-    )
-    if use_wal:
-        connection.execute("PRAGMA journal_mode=WAL")
-    connection.commit()
-
     def write(event_type, payload):
-        connection.execute(INSERT, (event_type, _json.dumps(payload), None))
-        connection.commit()
+        connection = _sqlite3.connect(database_path)
+        connection.execute(
+            "CREATE TABLE IF NOT EXISTS events ("
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, event_type TEXT NOT NULL, "
+            "payload TEXT NOT NULL, request_id TEXT, "
+            "created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"
+        )
+        columns = {row[1] for row in connection.execute("PRAGMA table_info(events)")}
+        if "request_id" not in columns:
+            connection.execute("ALTER TABLE events ADD COLUMN request_id TEXT")
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS events_request_id ON events (request_id)"
+        )
+        with connection:
+            connection.execute(INSERT, (event_type, _json.dumps(payload), None))
+        connection.close()
 
     return write
 
@@ -207,8 +222,8 @@ def _probe_worker(database_path, count, ready, start_at, outbox, mode="shared"):
     import sqlite3
 
     os.environ["APP_DB_PATH"] = database_path
-    if mode.startswith("reuse"):
-        save_event = _reusing_writer(database_path, use_wal=mode.endswith("wal"))
+    if mode.startswith("legacy"):
+        save_event = _legacy_writer(database_path)
     else:
         from utils.storage import save_event
 
@@ -262,7 +277,7 @@ def probe_event_store(worker_counts, events_per_process=PROBE_EVENTS_PER_PROCESS
                          for index in range(count)]
             else:
                 paths = [str(scratch / "shared.sqlite3")] * count
-            if mode == "shared_wal":
+            if mode == "legacy_wal":
                 # Write-ahead logging is a property of the database file, not of
                 # the connection, so it survives being set here and applies to
                 # the shipped `save_event` unchanged. That is the point: this
@@ -308,12 +323,12 @@ def probe_event_store(worker_counts, events_per_process=PROBE_EVENTS_PER_PROCESS
             mode: round(max(values) - min(values), 1)
             for mode, values in samples.items()
         }
-        # Every strategy is quoted against the shipped one, because the decision
-        # this table informs is "change `save_event` to do what?" and an
+        # Every strategy is quoted against the legacy one, because the question
+        # this table answers is what changing `save_event` bought, and an
         # absolute writes/second on this laptop does not answer that.
         relative = {
-            mode: (round(measured[mode] / measured["shared"], 3)
-                   if measured["shared"] else 0.0)
+            mode: (round(measured[mode] / measured["legacy"], 3)
+                   if measured["legacy"] else 0.0)
             for mode in PROBE_MODES
         }
         print(f"{count:>6}"
@@ -322,7 +337,7 @@ def probe_event_store(worker_counts, events_per_process=PROBE_EVENTS_PER_PROCESS
         results.append({
             "processes": count,
             "writes_per_second": measured,
-            "relative_to_shipped": relative,
+            "relative_to_legacy": relative,
             "writes_lost_to_lock_timeout": dropped,
             "range_across_repeats": spread,
         })

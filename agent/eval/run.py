@@ -291,6 +291,13 @@ def main():
     parser.add_argument("--format", dest="output_format", default="json",
                         choices=("json", "lines"))
     parser.add_argument("--model", default=DEFAULT_MODEL)
+    # 1.5B in float32 is 6.2 GB and does not fit in this machine's 7.9 GB.
+    parser.add_argument("--dtype", default="float32")
+    # So a second model lands beside the first instead of on top of it. Two
+    # models on the same forty tasks is a capacity curve; one model overwriting
+    # the other is a replaced number with no way to see what changed.
+    parser.add_argument("--label", default=None)
+    parser.add_argument("--merge", action="store_true")
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--no-save", action="store_true")
     args = parser.parse_args()
@@ -298,12 +305,12 @@ def main():
     tasks = TASKS[:args.limit] if args.limit else TASKS
     systems = [name.strip() for name in args.systems.split(",") if name.strip()]
 
-    results = {
-        "model": args.model,
-        "output_format": args.output_format,
-        "task_count": len(tasks),
-        "systems": {},
-    }
+    results = {"task_count": len(tasks), "systems": {}}
+    if args.merge and RESULTS_PATH.exists():
+        results = json.loads(RESULTS_PATH.read_text(encoding="utf-8"))
+        results["task_count"] = len(tasks)
+        results.pop("model", None)
+        results.pop("output_format", None)
 
     for system in systems:
         # A fresh stack per system: the previous one kills services, and a run
@@ -315,13 +322,17 @@ def main():
             if system == "baseline":
                 rows = run_system("keyword baseline", _baseline_runner, tasks,
                                   processes, "baseline")
-                usage = None
+                usage, model_id = None, None
             else:
-                model = LocalModel(model_id=args.model)
+                model = LocalModel(model_id=args.model, dtype=args.dtype)
                 rows = run_system(f"local {args.model}", _agent_runner, tasks,
                                   processes, args.output_format, model=model)
-                usage = model.usage()
-            results["systems"][system] = {
+                usage, model_id = model.usage(), args.model
+            key = args.label if (args.label and system != "baseline") else system
+            results["systems"][key] = {
+                "model": model_id,
+                "output_format": (args.output_format if system != "baseline"
+                                  else "baseline"),
                 "summary": aggregate(rows),
                 "usage": usage,
                 "cost": project_cost(usage),
