@@ -162,6 +162,7 @@ TOOLS = {
             "clauses, and any how-to or what-is question."
         ),
         "parameters": {"query": "the search text"},
+        "required": ("query",),
         "invoke": _knowledge_search,
     },
     "account_score": {
@@ -171,6 +172,7 @@ TOOLS = {
             "account id such as acct_00001."
         ),
         "parameters": {"customer_id": "the account id"},
+        "required": ("customer_id",),
         "invoke": _account_score,
     },
     "active_incidents": {
@@ -181,6 +183,9 @@ TOOLS = {
             "status, never for looking up what an error code means."
         ),
         "parameters": {"service": "service name, or empty for all"},
+        # Nothing required: omitting `service` asks for the count across all of
+        # them, which is a different question rather than a missing argument.
+        "required": (),
         "invoke": _active_incidents,
     },
     "customer_decision": {
@@ -194,6 +199,7 @@ TOOLS = {
             "customer_id": "the account id",
             "service": "the service they mention",
         },
+        "required": ("message",),
         "invoke": _customer_decision,
     },
     "meeting_extract": {
@@ -203,9 +209,30 @@ TOOLS = {
             "transcript supplied in the question."
         ),
         "parameters": {"transcript": "the transcript text"},
+        "required": ("transcript",),
         "invoke": _meeting_extract,
     },
 }
+
+
+def json_schema(name):
+    """The tool's arguments as a JSON Schema, for MCP's `inputSchema`.
+
+    Derived from the same `parameters` and `required` entries the local agent's
+    prompt is built from, rather than written twice. A hand-maintained schema
+    beside a hand-maintained prompt is two descriptions of one tool that drift
+    the first time an argument is renamed.
+    """
+    tool = TOOLS[name]
+    return {
+        "type": "object",
+        "properties": {
+            argument: {"type": "string", "description": description}
+            for argument, description in tool["parameters"].items()
+        },
+        "required": list(tool.get("required", ())),
+        "additionalProperties": False,
+    }
 
 
 def describe_tools():
