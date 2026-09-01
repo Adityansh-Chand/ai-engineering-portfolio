@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="750" height="625"
-     viewBox="0 0 750 625" role="img"
+<svg xmlns="http://www.w3.org/2000/svg" width="624" height="625"
+     viewBox="0 0 624 625" role="img"
      aria-label="Horizontal scaling on one machine, and the ceiling it finds">
   <rect width="100%" height="100%" rx="8" fill="#20242c"/>
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
@@ -8,30 +8,30 @@
     <text x="18" y="56" fill="#8fbcbb">$ python scripts/scale_test.py</text>
     <text x="18" y="75" fill="#d8dee9">sales /v1/score (model inference)</text>
     <text x="18" y="94" fill="#d8dee9"> workers  peak req/s   speedup  efficiency</text>
-    <text x="18" y="113" fill="#d8dee9">       1        50.2      1.00        1.00</text>
-    <text x="18" y="132" fill="#d8dee9">       2        64.2      1.28        0.64</text>
-    <text x="18" y="151" fill="#d8dee9">       4        59.0      1.18        0.29</text>
-    <text x="18" y="170" fill="#d8dee9">       8        77.5      1.54        0.19</text>
+    <text x="18" y="113" fill="#d8dee9">       1       152.5      1.00        1.00</text>
+    <text x="18" y="132" fill="#d8dee9">       2       178.5      1.17        0.58</text>
+    <text x="18" y="151" fill="#d8dee9">       4       222.6      1.46        0.36</text>
+    <text x="18" y="170" fill="#d8dee9">       8       182.7      1.20        0.15</text>
     <text x="18" y="189" fill="#d8dee9"></text>
     <text x="18" y="208" fill="#d8dee9">rag /v1/query (retrieval, CPU-bound)</text>
     <text x="18" y="227" fill="#d8dee9"> workers  peak req/s   speedup  efficiency</text>
-    <text x="18" y="246" fill="#d8dee9">       1        56.1      1.00        1.00</text>
-    <text x="18" y="265" fill="#d8dee9">       2        79.8      1.42        0.71</text>
-    <text x="18" y="284" fill="#d8dee9">       4       104.2      1.86        0.46</text>
-    <text x="18" y="303" fill="#d8dee9">       8        49.4      0.88        0.11</text>
+    <text x="18" y="246" fill="#d8dee9">       1       144.7      1.00        1.00</text>
+    <text x="18" y="265" fill="#d8dee9">       2       138.0      0.95        0.48</text>
+    <text x="18" y="284" fill="#d8dee9">       4       215.2      1.49        0.37</text>
+    <text x="18" y="303" fill="#d8dee9">       8       230.3      1.59        0.20</text>
     <text x="18" y="322" fill="#d8dee9"></text>
     <text x="18" y="341" fill="#d8dee9">ops /v1/decide (fans out to sales, incident, rag)</text>
     <text x="18" y="360" fill="#d8dee9"> workers  peak req/s   speedup  efficiency</text>
-    <text x="18" y="379" fill="#d8dee9">       1        46.3      1.00        1.00</text>
-    <text x="18" y="398" fill="#d8dee9">       2        34.6      0.75        0.37</text>
-    <text x="18" y="417" fill="#d8dee9">       4        30.8      0.67        0.17</text>
-    <text x="18" y="436" fill="#d8dee9">       8        27.4      0.59        0.07</text>
+    <text x="18" y="379" fill="#d8dee9">       1        59.0      1.00        1.00</text>
+    <text x="18" y="398" fill="#d8dee9">       2        82.6      1.40        0.70</text>
+    <text x="18" y="417" fill="#d8dee9">       4        86.7      1.47        0.37</text>
+    <text x="18" y="436" fill="#d8dee9">       8        89.2      1.51        0.19</text>
     <text x="18" y="455" fill="#d8dee9"></text>
     <text x="18" y="474" fill="#d8dee9">event store writes/second -- same schema, same statement</text>
-    <text x="18" y="493" fill="#d8dee9"> procs         shared     shared_wal          reuse      reuse_wal       isolated</text>
-    <text x="18" y="512" fill="#d8dee9">     1          194.6          107.7          351.2         1602.0          170.9</text>
-    <text x="18" y="531" fill="#d8dee9">     2          168.5          134.6          356.0         1391.1          352.5</text>
-    <text x="18" y="550" fill="#d8dee9">     4          116.0           67.3          247.1         1100.2          406.9</text>
-    <text x="18" y="569" fill="#d8dee9">     8          109.3           87.8          254.1          969.1          467.4</text>
+    <text x="18" y="493" fill="#d8dee9"> procs         legacy     legacy_wal        shipped       isolated</text>
+    <text x="18" y="512" fill="#d8dee9">     1          186.2          157.5          900.6          861.8</text>
+    <text x="18" y="531" fill="#d8dee9">     2          172.9           77.0          881.3         1626.4</text>
+    <text x="18" y="550" fill="#d8dee9">     4          168.5          116.3          848.0         2776.4</text>
+    <text x="18" y="569" fill="#d8dee9">     8          168.3          141.3          893.6         3200.3</text>
   </g>
 </svg>

@@ -1,6 +1,11 @@
 # ADR-009 — Keep the shared SQLite event store, and record its ceiling
 
-**Status:** Accepted · **Date:** 2026-08
+**Status:** Superseded by [ADR-012](012-ship-the-event-store-fix.md) · **Date:** 2026-08
+
+> The measurement below stands. The decision not to act on it does not:
+> ADR-012 made the change. This record is kept because its reasoning for
+> waiting, and its reading of the fan-out result, both turned out to be worth
+> revisiting.
 
 ## Context
 

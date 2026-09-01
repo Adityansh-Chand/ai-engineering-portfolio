@@ -83,7 +83,13 @@ def start(store_name, services=None, overrides=None, workers=None):
 
         database = path / "data" / f"{store_name}.sqlite3"
         database.parent.mkdir(parents=True, exist_ok=True)
-        database.unlink(missing_ok=True)
+        # The store runs in WAL mode, so committed events can be sitting in the
+        # `-wal` sidecar rather than the database file. Deleting only the
+        # database would leave them to be recovered on the next open, which is
+        # the stale-store bug this delete exists to prevent, arriving through a
+        # file the delete did not know about.
+        for suffix in ("", "-wal", "-shm"):
+            database.with_name(database.name + suffix).unlink(missing_ok=True)
 
         env = {
             **os.environ,
