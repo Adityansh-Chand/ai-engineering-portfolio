@@ -22,6 +22,9 @@ usually the more useful half.
 | [006](006-versioning-by-mounting-twice.md) | Version the API by mounting one router at two prefixes | Accepted |
 | [007](007-provider-agnostic-llm-seam.md) | One narrow LLM seam, no vendor in the call site | Accepted |
 | [008](008-model-cost-and-load-locally.md) | Model cost and measure load locally instead of deploying | Accepted |
+| [009](009-event-store-is-the-scaling-ceiling.md) | Keep the shared SQLite event store, and record its ceiling | Accepted |
+| [010](010-local-model-so-llm-metrics-are-reproducible.md) | Run the language model locally, so its numbers are reproducible | Accepted |
+| [011](011-agent-evaluated-on-refusal-and-fabrication.md) | Score the agent on refusal and fabrication, not just task success | Accepted |
 
 ## Decisions recorded elsewhere
 

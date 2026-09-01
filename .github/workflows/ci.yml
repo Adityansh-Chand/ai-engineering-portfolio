@@ -40,3 +40,11 @@ jobs:
       # the figures quoted in docs/COST_MODEL.md being recomputed.
       - name: Cost model is reproducible from its inputs
         run: python scripts/cost_model.py --verify
+
+      # The agent evaluation needs a 1 GB model download and about twenty
+      # minutes of CPU, so it runs locally and its results are committed. What
+      # CI can still catch is the references rotting: a tool renamed in
+      # agent/tools.py while agent/eval/tasks.py still names the old one. Needs
+      # no model and no running services.
+      - name: Agent tasks, tools and parsers are well-formed
+        run: python scripts/check_agent_wellformed.py
