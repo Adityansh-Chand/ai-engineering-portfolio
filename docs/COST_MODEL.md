@@ -37,24 +37,29 @@ instance. The token costs do not have this problem — they are per-token and ha
 
 ## Compute
 
-One task per service at 1 vCPU / 2 GB, priced at each endpoint's **peak** throughput —
-not its maximum-concurrency throughput, because both CPU-bound endpoints get *slower in
-aggregate* past their peak, and costing at 32 concurrent requests would price the system at
-its worst point and call it capacity.
+One task per service at 1 vCPU / 2 GB, priced at each endpoint's **peak** throughput. Peak
+rather than maximum-concurrency: `sales` still peaks mid-range, so costing everything at 32
+concurrent requests would price part of the system at its worst point and call it capacity.
 
 | endpoint | peak req/s | at concurrency | USD / million (x86) | USD / million (ARM) |
 |---|---|---|---|---|
-| `ops /v1/decide` | 48.5 | 8 | 0.28 | 0.23 |
-| `rag /v1/query` | 71.8 | 4 | 0.19 | 0.15 |
-| `sales /v1/score` | 77.4 | 4 | 0.18 | 0.14 |
+| `ops /v1/decide` | 80.6 | 32 | 0.17 | 0.14 |
+| `rag /v1/query` | 157.4 | 32 | 0.09 | 0.07 |
+| `sales /v1/score` | 144.8 | 8 | 0.09 | 0.08 |
 
-Serving a million retrieval queries costs about **19 cents** of compute. ARM is ~20%
-cheaper for identical work, which is the least interesting true thing in this document and
-still worth more than most architecture diagrams.
+Serving a million retrieval queries costs about **9 cents** of compute. ARM is ~20% cheaper
+for identical work, which is the least interesting true thing in this document and still
+worth more than most architecture diagrams.
+
+**These figures halved when the event store was fixed.** The first version of this document
+said 19 cents, priced against throughput that the store was throttling
+([ADR-012](adr/012-ship-the-event-store-fix.md)). Nothing about the method changed and the
+conclusion below got *stronger*: cheaper compute makes the generation step a larger multiple
+of it, not a smaller one.
 
 ---
 
-## The headline: the LLM path costs 5,759× the retrieval it sits on
+## The headline: the LLM path costs 12,629× the retrieval it sits on
 
 | model | standard | 50% prompt-cache hits | Batch API |
 |---|---|---|---|
@@ -64,7 +69,7 @@ still worth more than most architecture diagrams.
 
 Per million answers, at 600 input and 100 output tokens per call.
 
-**Retrieval compute: $0.19 per million. The cheapest LLM answer on top of it: $1,100 per
+**Retrieval compute: $0.09 per million. The cheapest LLM answer on top of it: $1,100 per
 million.** Even with batching and caching, the generation step is three to four orders of
 magnitude more expensive than everything underneath it.
 
@@ -72,7 +77,7 @@ This reframes a decision recorded elsewhere on reproducibility grounds. The RAG 
 [excludes the LLM path from every reported metric](https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system/blob/main/docs/adr/004-llm-excluded-from-metrics.md)
 because a number that depends on a vendor and a sampling temperature is not reproducible.
 That argument stands on its own — but it is not the only one. The same decision is the
-difference between $0.19 and $1,100.
+difference between $0.09 and $1,100.
 
 It also changes what the retrieval work is *for*. If generation dominates cost by 5,000×,
 then every improvement that lets you send fewer tokens, or skip the call entirely, is worth
@@ -94,7 +99,7 @@ RAG repository; what this model adds is the price tag next to the quality.
 
 | component | +ms/query | ΔnDCG@10 | +USD / million | × retrieval compute |
 |---|---|---|---|---|
-| cross-encoder rerank | 1116.4 | **+0.0011** | 15.31 | **80.2×** |
+| cross-encoder rerank | 1116.4 | **+0.0011** | 15.31 | **175.8×** |
 | fitted pairwise rerank | 4.5 | −0.0063 | 0.06 | 0.3× |
 
 The cross-encoder buys +0.0011 nDCG@10 — a difference inside the noise of a 323-query
@@ -108,31 +113,31 @@ The fitted reranker is nearly free and actively slightly worse. Cheap is not a r
 
 ## Sensitivity: which assumptions actually matter
 
-Each assumption moved on its own, from a baseline of **$1,100.19 per million** (retrieval
+Each assumption moved on its own, from a baseline of **$1,100.09 per million** (retrieval
 compute on x86 plus Claude Haiku 4.5 generation). These are computed by
 `build_sensitivity()`, not worked out by hand — a first pass at this table by hand had the
-context row at −15%, and it is −20.451%.
+context row at −15%, and it is −20.453%.
 
 | change one assumption | USD / million | effect |
 |---|---|---|
-| ARM instead of x86 | 1,100.15 | **−0.004%** |
-| double the retrieval throughput | 1,100.10 | **−0.009%** |
-| Opus 5 instead of Haiku 4.5 | 5,500.19 | **+399.9%** |
-| Batch API | 550.19 | −49.991% |
-| halve the answer length | 850.19 | −22.723% |
-| halve the retrieved context | 875.19 | −20.451% |
-| **no LLM at all** | **0.19** | **−99.983%** |
+| ARM instead of x86 | 1,100.07 | **−0.002%** |
+| double the retrieval throughput | 1,100.04 | **−0.004%** |
+| Opus 5 instead of Haiku 4.5 | 5,500.09 | **+399.968%** |
+| Batch API | 550.09 | −49.996% |
+| halve the answer length | 850.09 | −22.726% |
+| halve the retrieved context | 875.09 | −20.453% |
+| **no LLM at all** | **0.09** | **−99.992%** |
 
 Every compute-side lever is a rounding error once generation is switched on. Doubling
 retrieval throughput — the thing the load test makes look most urgent — changes the bill by
-nine thousandths of one percent. Choosing a different model changes it by 400%.
+four thousandths of one percent. Choosing a different model changes it by 400%.
 
 This is the practical conclusion of the whole model, and it is not what either measurement
 would have said alone: **the model choice is worth four orders of magnitude more than the
 infrastructure choice.** The load test on its own points squarely at the wrong problem.
 
 The last row is the one to sit with. The system as it actually ships — extractive answers,
-no LLM — costs 19 cents per million where the cheapest generative version costs $1,100. The
+no LLM — costs 9 cents per million where the cheapest generative version costs $1,100. The
 [measured quality gap](https://github.com/Adityansh-Chand/enterprise-rag-knowledge-system#answer-quality--groundedness-is-not-correctness)
 between them is real and the extractive path loses it. But that trade is now a number with
 two sides rather than an assumption that the generative version is obviously better.

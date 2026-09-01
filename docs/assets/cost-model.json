@@ -9,32 +9,32 @@
   "endpoints": {
     "ops_decide": {
       "label": "ops /v1/decide (fans out to sales, incident, rag)",
-      "peak_throughput_rps": 48.5,
-      "at_concurrency": 8,
-      "p95_ms_at_peak": 242.3,
+      "peak_throughput_rps": 80.6,
+      "at_concurrency": 32,
+      "p95_ms_at_peak": 411.7,
       "compute_usd_per_million": {
-        "fargate_linux_x86": 0.2828,
-        "fargate_linux_arm": 0.2262
+        "fargate_linux_x86": 0.1701,
+        "fargate_linux_arm": 0.1361
       }
     },
     "rag_query": {
       "label": "rag /v1/query (retrieval, CPU-bound)",
-      "peak_throughput_rps": 71.8,
-      "at_concurrency": 4,
-      "p95_ms_at_peak": 119.2,
+      "peak_throughput_rps": 157.4,
+      "at_concurrency": 32,
+      "p95_ms_at_peak": 207.9,
       "compute_usd_per_million": {
-        "fargate_linux_x86": 0.191,
-        "fargate_linux_arm": 0.1528
+        "fargate_linux_x86": 0.0871,
+        "fargate_linux_arm": 0.0697
       }
     },
     "sales_score": {
       "label": "sales /v1/score (model inference)",
-      "peak_throughput_rps": 77.4,
-      "at_concurrency": 4,
-      "p95_ms_at_peak": 97.5,
+      "peak_throughput_rps": 144.8,
+      "at_concurrency": 8,
+      "p95_ms_at_peak": 225.4,
       "compute_usd_per_million": {
-        "fargate_linux_x86": 0.1772,
-        "fargate_linux_arm": 0.1418
+        "fargate_linux_x86": 0.0947,
+        "fargate_linux_arm": 0.0758
       }
     }
   },
@@ -44,14 +44,14 @@
       "quality_delta_ndcg10": 0.0011,
       "added_usd_per_million": 15.31,
       "measured_on": "BEIR/NFCorpus, 323 queries",
-      "multiple_of_retrieval_compute": 80.2
+      "multiple_of_retrieval_compute": 175.8
     },
     "fitted_rerank": {
       "added_ms_per_query": 4.5,
       "quality_delta_ndcg10": -0.0063,
       "added_usd_per_million": 0.06,
       "measured_on": "BEIR/NFCorpus, 323 queries",
-      "multiple_of_retrieval_compute": 0.3
+      "multiple_of_retrieval_compute": 0.7
     }
   },
   "llm_generation_usd_per_million": {
@@ -72,42 +72,42 @@
     }
   },
   "sensitivity": {
-    "baseline_usd_per_million": 1100.19,
+    "baseline_usd_per_million": 1100.09,
     "baseline_note": "rag retrieval compute (x86) + Claude Haiku 4.5 generation",
     "variants": {
       "arm_instead_of_x86": {
-        "usd_per_million": 1100.15,
-        "change_pct": -0.0035
+        "usd_per_million": 1100.07,
+        "change_pct": -0.0016
       },
       "double_retrieval_throughput": {
-        "usd_per_million": 1100.1,
-        "change_pct": -0.0087
+        "usd_per_million": 1100.04,
+        "change_pct": -0.004
       },
       "opus_instead_of_haiku": {
-        "usd_per_million": 5500.19,
-        "change_pct": 399.9306
+        "usd_per_million": 5500.09,
+        "change_pct": 399.9683
       },
       "batch_api": {
-        "usd_per_million": 550.19,
-        "change_pct": -49.9913
+        "usd_per_million": 550.09,
+        "change_pct": -49.996
       },
       "halve_answer_length": {
-        "usd_per_million": 850.19,
-        "change_pct": -22.7233
+        "usd_per_million": 850.09,
+        "change_pct": -22.7255
       },
       "halve_retrieved_context": {
-        "usd_per_million": 875.19,
-        "change_pct": -20.451
+        "usd_per_million": 875.09,
+        "change_pct": -20.4529
       },
       "no_llm_at_all": {
-        "usd_per_million": 0.19,
-        "change_pct": -99.9826
+        "usd_per_million": 0.09,
+        "change_pct": -99.9921
       }
     }
   },
   "headline": {
-    "retrieval_compute_usd_per_million": 0.191,
+    "retrieval_compute_usd_per_million": 0.0871,
     "cheapest_llm_usd_per_million": 1100.0,
-    "ratio": 5759.0
+    "ratio": 12629.0
   }
 }
