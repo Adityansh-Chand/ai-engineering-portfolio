@@ -97,11 +97,13 @@ one.
   call to check whether the cached connection is still valid. That is the price
   of the `APP_DB_PATH` safety, it is known, and it is not worth optimising while
   the store sits four times above what the services ask of it.
-- **Committed load and cost figures are now stale in the conservative
-  direction.** `docs/LOAD_TEST.md` and everything derived from it were measured
-  against the slower store, so the cost model overstates compute per request.
-  Not restated here, because re-running them is its own measurement rather than
-  an edit.
+- **Committed load and cost figures were left stale in the conservative
+  direction**, because re-running them is its own measurement rather than an
+  edit. *(2026-09: since re-run. Retrieval throughput more than doubled, compute
+  fell from 19 to 9 cents per million, and the generation multiple rose from
+  5,759x to 12,629x — the conclusion got stronger, not weaker. The earlier
+  "throughput peaks at concurrency 4 and then falls" finding was the store, not
+  the GIL, and `docs/LOAD_TEST.md` now says so.)*
 - WAL adds `-wal` and `-shm` sidecar files. `scripts/service_harness.py` deletes
   them alongside the database, since committed events can sit in the sidecar and
   deleting only the database would resurrect them on the next open — the exact

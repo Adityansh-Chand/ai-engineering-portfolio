@@ -8,36 +8,36 @@
     <text x="18" y="56" fill="#8fbcbb">$ python scripts/load_test.py</text>
     <text x="18" y="75" fill="#d8dee9">ops /v1/decide (fans out to sales, incident, rag)</text>
     <text x="18" y="94" fill="#d8dee9"> conc    p50 ms    p95 ms    req/s</text>
-    <text x="18" y="113" fill="#d8dee9">    1     125.3     141.4      8.3</text>
-    <text x="18" y="132" fill="#d8dee9">    2      91.4     136.3     21.0</text>
-    <text x="18" y="151" fill="#d8dee9">    4      89.8     196.7     37.1</text>
-    <text x="18" y="170" fill="#d8dee9">    8     155.4     242.3     48.5</text>
-    <text x="18" y="189" fill="#d8dee9">   16     212.9    1521.1     35.3</text>
-    <text x="18" y="208" fill="#d8dee9">   32     394.0    2154.1     36.7</text>
+    <text x="18" y="113" fill="#d8dee9">    1      66.9      86.0     14.6</text>
+    <text x="18" y="132" fill="#d8dee9">    2      58.7      93.9     33.0</text>
+    <text x="18" y="151" fill="#d8dee9">    4      60.7     102.4     58.2</text>
+    <text x="18" y="170" fill="#d8dee9">    8      95.2     187.5     73.3</text>
+    <text x="18" y="189" fill="#d8dee9">   16     172.9     313.2     80.0</text>
+    <text x="18" y="208" fill="#d8dee9">   32     364.4     411.7     80.6</text>
     <text x="18" y="227" fill="#d8dee9"></text>
     <text x="18" y="246" fill="#d8dee9">rag /v1/query (retrieval, CPU-bound)</text>
     <text x="18" y="265" fill="#d8dee9"> conc    p50 ms    p95 ms    req/s</text>
-    <text x="18" y="284" fill="#d8dee9">    1      31.2      35.0     36.5</text>
-    <text x="18" y="303" fill="#d8dee9">    2      31.6      45.5     62.4</text>
-    <text x="18" y="322" fill="#d8dee9">    4      44.1     119.2     71.8</text>
-    <text x="18" y="341" fill="#d8dee9">    8      63.7     343.8     66.3</text>
-    <text x="18" y="360" fill="#d8dee9">   16      77.1    1490.1     49.1</text>
-    <text x="18" y="379" fill="#d8dee9">   32     179.4    2304.4     31.7</text>
+    <text x="18" y="284" fill="#d8dee9">    1      16.9      35.5     54.4</text>
+    <text x="18" y="303" fill="#d8dee9">    2      21.1      42.0     85.4</text>
+    <text x="18" y="322" fill="#d8dee9">    4      26.1      60.3    132.3</text>
+    <text x="18" y="341" fill="#d8dee9">    8      36.1     127.5    149.6</text>
+    <text x="18" y="360" fill="#d8dee9">   16      70.6     238.6    119.7</text>
+    <text x="18" y="379" fill="#d8dee9">   32     168.9     207.9    157.4</text>
     <text x="18" y="398" fill="#d8dee9"></text>
     <text x="18" y="417" fill="#d8dee9">sales /v1/score (model inference)</text>
     <text x="18" y="436" fill="#d8dee9"> conc    p50 ms    p95 ms    req/s</text>
-    <text x="18" y="455" fill="#d8dee9">    1      30.9      32.7     36.2</text>
-    <text x="18" y="474" fill="#d8dee9">    2      31.6      43.9     64.9</text>
-    <text x="18" y="493" fill="#d8dee9">    4      41.2      97.5     77.4</text>
-    <text x="18" y="512" fill="#d8dee9">    8      49.2     311.0     70.5</text>
-    <text x="18" y="531" fill="#d8dee9">   16      82.5    1051.4     62.0</text>
-    <text x="18" y="550" fill="#d8dee9">   32     141.4    1573.0     48.5</text>
+    <text x="18" y="455" fill="#d8dee9">    1      16.4      33.3     59.8</text>
+    <text x="18" y="474" fill="#d8dee9">    2      17.0      33.4    103.1</text>
+    <text x="18" y="493" fill="#d8dee9">    4      21.6      69.2    131.3</text>
+    <text x="18" y="512" fill="#d8dee9">    8      21.2     225.4    144.8</text>
+    <text x="18" y="531" fill="#d8dee9">   16      31.2     580.0    106.8</text>
+    <text x="18" y="550" fill="#d8dee9">   32      78.1     344.5    129.6</text>
     <text x="18" y="569" fill="#d8dee9"></text>
     <text x="18" y="588" fill="#d8dee9">circuit breaker -- `sales` killed while ops is under load</text>
     <text x="18" y="607" fill="#d8dee9">phase                                     p50 ms    p95 ms</text>
-    <text x="18" y="626" fill="#d8dee9">healthy                                     85.9     145.3</text>
-    <text x="18" y="645" fill="#d8dee9">dependency_down_breaker_closed              81.8    4243.0</text>
-    <text x="18" y="664" fill="#d8dee9">dependency_down_breaker_open                94.2     145.2</text>
+    <text x="18" y="626" fill="#d8dee9">healthy                                     75.5     126.9</text>
+    <text x="18" y="645" fill="#d8dee9">dependency_down_breaker_closed              64.3    4185.1</text>
+    <text x="18" y="664" fill="#d8dee9">dependency_down_breaker_open                47.9      74.6</text>
     <text x="18" y="683" fill="#d8dee9"></text>
     <text x="18" y="702" fill="#d8dee9">requests still returned 200: True</text>
     <text x="18" y="721" fill="#d8dee9">enrichment outcomes in the response: {&#x27;account&#x27;: &#x27;circuit_open&#x27;, &#x27;incident&#x27;: &#x27;ok&#x27;, &#x27;knowledge&#x27;: &#x27;ok&#x27;}</text>

@@ -266,15 +266,17 @@ output below is the opposite case, and gets SVG.
 
 ![load test](docs/assets/load-test.svg)
 
-Throughput on both CPU-bound endpoints **peaks at concurrency 4 and then falls** — past the
-peak, extra load costs throughput rather than queueing for it. And the median is blind to
-it: at concurrency 16 retrieval's p50 is 77 ms, a figure that would pass any dashboard,
-while its p95 is 1490 ms.
+Throughput now **rises across the whole range tested** and roughly doubles at every level:
+retrieval reaches 157.4 req/s. The first run of this harness found it peaking at concurrency
+4 and then falling, and reported that as a finding about the GIL. It was the event store —
+see below. The median is still less informative than the tail, but far less dramatically: at
+concurrency 16 retrieval's p50 is 70.6 ms against a p95 of 238.6 ms, where the same
+comparison used to be 77.1 ms against **1490 ms**.
 
 The bottom block is the circuit breaker earning its place. With `sales` killed and the
-breaker still closed, p95 is **4243 ms** — every request pays a connection failure plus a
-retry before falling back. Once the breaker opens, p95 is **145.2 ms**, against 145.3 ms
-healthy. Every request returned 200 throughout, and the response body says
+breaker still closed, p95 is **4185 ms** — every request pays a connection failure plus a
+retry before falling back. Once the breaker opens, p95 is **74.6 ms**, against 126.9 ms
+healthy — *below* it, because a skipped call is faster than a successful one. Every request returned 200 throughout, and the response body says
 `account: circuit_open` so a reader can tell the enrichment was skipped rather than absent.
 Full write-up: [`docs/LOAD_TEST.md`](docs/LOAD_TEST.md).
 
@@ -334,12 +336,13 @@ Full write-up: [`docs/AGENT.md`](docs/AGENT.md).
 ![cost model](docs/assets/cost-model.svg)
 
 Cost per million requests, derived from the throughput measured above and from dated prices
-that cite their sources. Serving a million retrieval queries costs about **19 cents** of
+that cite their sources. Serving a million retrieval queries costs about **9 cents** of
 compute; the cheapest LLM answer on top of it costs **$1,100** — the generation step is
-**5,759×** everything underneath it.
+**12,629×** everything underneath it. Fixing the event store halved the compute figure and
+so *doubled* that multiple.
 
 That number reorders the priorities the load test suggests: doubling retrieval throughput
-changes the bill by 0.009%, and changing model tier changes it by 400%. Neither measurement
+changes the bill by 0.004%, and changing model tier changes it by 400%. Neither measurement
 says that on its own. Full write-up: [`docs/COST_MODEL.md`](docs/COST_MODEL.md).
 
 ```bash
@@ -612,12 +615,6 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 Each of these is narrower than what it replaced, and every one came out of a
 measurement rather than a hunch.
 
-- **Committed load and cost figures predate the event store fix.**
-  `docs/LOAD_TEST.md` and the cost model derived from it were measured against a
-  store that was throttling every endpoint, so they understate throughput and
-  overstate compute per request. Re-running them is its own measurement rather
-  than an edit, and until it happens the published figures are conservative in a
-  known direction.
 - **The agent still loses on task success.** 0.6250 at 1.5B against the keyword
   router's 0.8000. Refusal and fabrication were fixed by capacity; getting the
   task *done* was not, and a third model size on the same harness is the way to
