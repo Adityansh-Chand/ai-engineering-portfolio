@@ -693,5 +693,5 @@ that run on one machine.
 
 Adityansh Chand
 
-AI Software Engineer specializing in multi-agent systems, retrieval engineering,
+AI Engineer specializing in multi-agent systems, retrieval engineering,
 LLM architecture, and machine learning pipelines.
