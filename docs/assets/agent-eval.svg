@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="624" height="283"
-     viewBox="0 0 624 283" role="img"
+<svg xmlns="http://www.w3.org/2000/svg" width="624" height="321"
+     viewBox="0 0 624 321" role="img"
      aria-label="An agent over five services, and the keyword router it has to beat">
   <rect width="100%" height="100%" rx="8" fill="#20242c"/>
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
@@ -10,10 +10,12 @@
     <text x="18" y="94" fill="#d8dee9"></text>
     <text x="18" y="113" fill="#d8dee9">system                  success  routing  invalid  s/task</text>
     <text x="18" y="132" fill="#d8dee9">baseline                 0.8000   0.9000   0.0000     0.0</text>
-    <text x="18" y="151" fill="#d8dee9">agent                    0.4250   0.6750   0.0735    34.3</text>
-    <text x="18" y="170" fill="#d8dee9"></text>
-    <text x="18" y="189" fill="#d8dee9">system                   single    chain   refuse  fabricate</text>
-    <text x="18" y="208" fill="#d8dee9">baseline                 0.9048   0.4286   0.7143     0.0000</text>
-    <text x="18" y="227" fill="#d8dee9">agent                    0.5714   0.2857   0.0000     0.4000</text>
+    <text x="18" y="151" fill="#d8dee9">agent-0.5b               0.4250   0.6750   0.0735    34.3</text>
+    <text x="18" y="170" fill="#d8dee9">agent-1.5b               0.6250   0.7750   0.0360   213.2</text>
+    <text x="18" y="189" fill="#d8dee9"></text>
+    <text x="18" y="208" fill="#d8dee9">system                   single    chain   refuse  fabricate</text>
+    <text x="18" y="227" fill="#d8dee9">baseline                 0.9048   0.4286   0.7143     0.0000</text>
+    <text x="18" y="246" fill="#d8dee9">agent-0.5b               0.5714   0.2857   0.0000     0.4000</text>
+    <text x="18" y="265" fill="#d8dee9">agent-1.5b               0.6667   0.1429   0.7143     0.0000</text>
   </g>
 </svg>

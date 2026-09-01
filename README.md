@@ -278,42 +278,55 @@ healthy. Every request returned 200 throughout, and the response body says
 `account: circuit_open` so a reader can tell the enrichment was skipped rather than absent.
 Full write-up: [`docs/LOAD_TEST.md`](docs/LOAD_TEST.md).
 
-### More workers, and the ceiling underneath them
+### More workers, the ceiling underneath them, and the fix
 
 ![scale test](docs/assets/scale-test.svg)
 
-Retrieval scales to **four workers — 56.1 to 104.2 req/s, p95 369 ms to 99 ms** — and then
-falls over: eight workers on four cores is **0.88×**, worse than one. Scaling the *fan-out*
-endpoint makes it monotonically worse (0.59× at eight workers), because adding front-door
-capacity does not add downstream capacity and the extra processes compete with the services
-they are waiting on.
+Retrieval first scaled to **four workers (104.2 req/s)** and then fell over — eight workers
+on four cores was **0.88×**, worse than one. Every request writes an event to SQLite, and
+measured on its own that store did **168 writes/second regardless of process count**. The
+service could not outrun its own event log.
 
-The interesting part is why 104 req/s. Every request writes an event to SQLite through a
-connection opened per write, and measured on its own that store does **116 writes/second
-across four processes** — the same band. The service cannot outrun its own event log.
+The fix that looked obvious was measured and was **wrong**: turning on WAL alone is
+0.45–0.85×, actively worse, because a connection opened per write pays WAL's setup and
+collects none of its benefit. One connection per thread *plus* WAL is **~5×**. Neither half
+is worth making without the other.
 
-Then the fix that looked obvious was measured and was **wrong**: turning on WAL alone is
-0.55–0.80×, actively worse. Connection reuse alone is ~2×. The two together are
-**8.2–9.5×**. Neither change is worth making without the other, which is not visible from
-either one. Full write-up: [`docs/SCALE_TEST.md`](docs/SCALE_TEST.md).
+That shipped to all five services, and the re-measurement changed the story:
 
-### An agent over all five services — and it loses
+| endpoint | 1 worker before → after | best point before → after |
+|---|---|---|
+| `rag /v1/query` | 56.1 → **144.7** | 104.2 → **230.3** |
+| `sales /v1/score` | 50.2 → **152.5** | 77.5 → **222.6** |
+| `ops /v1/decide` | 46.3 → **59.0** | 46.3 → **89.2** |
+
+The fan-out endpoint had been getting *worse* with every added worker, and the tidy
+explanation — front-door capacity is not downstream capacity — was wrong. The downstream
+services were store-bound. It now scales. Both readings are kept in
+[`docs/SCALE_TEST.md`](docs/SCALE_TEST.md), because a plausible architectural story that
+dies to the next measurement is worth having written down.
+
+### An agent over all five services — and what three times the parameters buys
 
 ![agent eval](docs/assets/agent-eval.svg)
 
-A local `Qwen2.5-0.5B` drives the five services as tools, greedy and reproducible, for
-$0.00. A keyword router doing the same job beats it on every metric: task success
-**0.8000 vs 0.4250**, routing **0.9000 vs 0.6750**.
+Local `Qwen2.5` models drive the five services as tools, greedy and reproducible, for
+$0.00. A keyword router doing the same job **beats both on task success**:
 
-The headline is the two categories that a happy-path demo never asks about. On seven
-questions no tool can answer, **the agent refused zero of them** — asked for tomorrow's
-weather it called `account_score` and then invented a forecast. With a dependency killed
-mid-run it fabricated an answer on **2 of 5** tasks, against **0** for the baseline, twice
-stating a live incident status for a service that was dead.
+| | keyword baseline | 0.5B | 1.5B |
+|---|---|---|---|
+| task success | **0.8000** | 0.4250 | 0.6250 |
+| refusal accuracy | 0.7143 | **0.0000** | 0.7143 |
+| fabrication rate | 0.0000 | **0.4000** | 0.0000 |
 
-That second number was 0.20 until the check was fixed: it originally forbade only the
-answer asserting *absence*, so a confident invented "yes" scored as honest. Correcting it
-moved the result in the direction that makes the system look worse.
+The headline never moves — neither model beats the router. What moves is safety. The 0.5B
+refused **zero** of seven unanswerable questions; asked for tomorrow's weather it called
+`account_score` and invented a forecast. With a dependency killed mid-run it fabricated on
+**2 of 5**. At 1.5B both failures are simply gone, and refusal matches the baseline exactly.
+
+So the two capabilities move independently, and the cheap metric tracks the wrong one: a
+team watching task success would have seen 0.4250 → 0.6250 and called it incremental, when
+what actually happened is the system stopped being unsafe.
 Full write-up: [`docs/AGENT.md`](docs/AGENT.md).
 
 ### What it would cost to run
@@ -357,7 +370,7 @@ capture changes only when the *output* changes.
 
 ## Portfolio Documentation
 
-- [**Architecture decision records**](docs/adr/) — the eleven contested choices, each with
+- [**Architecture decision records**](docs/adr/) — the twelve contested choices, each with
   the alternatives that were rejected and what would make it worth revisiting
 - [**Load and degradation**](docs/LOAD_TEST.md) — measured concurrency, and what the
   circuit breaker does when a dependency is killed mid-run
@@ -365,8 +378,8 @@ capture changes only when the *output* changes.
   event store that turns out to be the ceiling
 - [**Cost model**](docs/COST_MODEL.md) — cost per million requests from measured throughput
   and dated prices
-- [**The agent**](docs/AGENT.md) — a local language model driving the five services as
-  tools, scored against the keyword router it has to beat
+- [**The agent**](docs/AGENT.md) — local language models driving the five services as
+  tools, at two sizes, scored against the keyword router they have to beat
 - [Architecture diagrams](docs/ARCHITECTURE.md)
 - [API flow diagrams](docs/API_FLOWS.md)
 - [Demo capture guide](docs/DEMO_CAPTURE.md)
@@ -599,18 +612,20 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 Each of these is narrower than what it replaced, and every one came out of a
 measurement rather than a hunch.
 
-- **The event store caps every service near 100 req/s.** `save_event` opens a
-  connection per write, so adding workers adds contention rather than
-  throughput. The fix is measured and is *two* coupled changes — connection
-  reuse plus WAL, worth 8.2–9.5× together and roughly nothing apart. Not shipped
-  because a held-open connection needs thread-safety and must re-open when
-  `APP_DB_PATH` changes, or tests silently write to the previous database.
-  [ADR-009](docs/adr/009-event-store-is-the-scaling-ceiling.md).
-- **The agent will not say "I don't know".** It refused 0 of 7 unanswerable
-  questions and fabricated on 2 of 5 tasks whose service was killed. At 0.5B
-  this is mostly capacity, so the honest next step is a larger model on the same
-  harness rather than prompt work — but it is the reason the agent is a measured
-  result and not a feature. [`docs/AGENT.md`](docs/AGENT.md).
+- **Committed load and cost figures predate the event store fix.**
+  `docs/LOAD_TEST.md` and the cost model derived from it were measured against a
+  store that was throttling every endpoint, so they understate throughput and
+  overstate compute per request. Re-running them is its own measurement rather
+  than an edit, and until it happens the published figures are conservative in a
+  known direction.
+- **The agent still loses on task success.** 0.6250 at 1.5B against the keyword
+  router's 0.8000. Refusal and fabrication were fixed by capacity; getting the
+  task *done* was not, and a third model size on the same harness is the way to
+  find out whether that also just needs parameters.
+- **Answer checks are lexical, and they punish the better model.** The 1.5B
+  answered a chain task correctly and scored zero for writing "moderate
+  propensity" where the service returns `medium_propensity`. Fixing this
+  properly needs a judge that is not the model under test.
 - **Retraining triggers.** Every service reports drift; nothing acts on it.
   Deciding to retrain stays a human judgement, and automating it without a
   rollback story would be worse than not automating it.
