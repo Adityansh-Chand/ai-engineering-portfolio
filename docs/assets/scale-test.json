@@ -1,0 +1,386 @@
+{
+  "physical_cores": 4,
+  "worker_counts": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "concurrency_sweep": [
+    4,
+    8,
+    16
+  ],
+  "requests_per_point": 60,
+  "scenarios": {
+    "sales_score": {
+      "label": "sales /v1/score (model inference)",
+      "rows": [
+        {
+          "workers": 1,
+          "child_processes": 0,
+          "peak": {
+            "concurrency": 4,
+            "p50_ms": 70.4,
+            "p95_ms": 196.6,
+            "throughput_rps": 50.2,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 1.0,
+          "efficiency": 1.0
+        },
+        {
+          "workers": 2,
+          "child_processes": 2,
+          "peak": {
+            "concurrency": 8,
+            "p50_ms": 46.4,
+            "p95_ms": 313.7,
+            "throughput_rps": 64.2,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 1.279,
+          "efficiency": 0.639
+        },
+        {
+          "workers": 4,
+          "child_processes": 4,
+          "peak": {
+            "concurrency": 8,
+            "p50_ms": 49.2,
+            "p95_ms": 373.2,
+            "throughput_rps": 59.0,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 1.175,
+          "efficiency": 0.294
+        },
+        {
+          "workers": 8,
+          "child_processes": 8,
+          "peak": {
+            "concurrency": 8,
+            "p50_ms": 27.9,
+            "p95_ms": 289.8,
+            "throughput_rps": 77.5,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 1.544,
+          "efficiency": 0.193
+        }
+      ]
+    },
+    "rag_query": {
+      "label": "rag /v1/query (retrieval, CPU-bound)",
+      "rows": [
+        {
+          "workers": 1,
+          "child_processes": 0,
+          "peak": {
+            "concurrency": 8,
+            "p50_ms": 84.5,
+            "p95_ms": 369.0,
+            "throughput_rps": 56.1,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 1.0,
+          "efficiency": 1.0
+        },
+        {
+          "workers": 2,
+          "child_processes": 2,
+          "peak": {
+            "concurrency": 4,
+            "p50_ms": 37.2,
+            "p95_ms": 130.9,
+            "throughput_rps": 79.8,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 1.422,
+          "efficiency": 0.711
+        },
+        {
+          "workers": 4,
+          "child_processes": 4,
+          "peak": {
+            "concurrency": 4,
+            "p50_ms": 16.6,
+            "p95_ms": 99.0,
+            "throughput_rps": 104.2,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 1.857,
+          "efficiency": 0.464
+        },
+        {
+          "workers": 8,
+          "child_processes": 8,
+          "peak": {
+            "concurrency": 4,
+            "p50_ms": 35.3,
+            "p95_ms": 229.8,
+            "throughput_rps": 49.4,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 0.881,
+          "efficiency": 0.11
+        }
+      ]
+    },
+    "ops_decide": {
+      "label": "ops /v1/decide (fans out to sales, incident, rag)",
+      "rows": [
+        {
+          "workers": 1,
+          "child_processes": 0,
+          "peak": {
+            "concurrency": 8,
+            "p50_ms": 159.0,
+            "p95_ms": 261.5,
+            "throughput_rps": 46.3,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 1.0,
+          "efficiency": 1.0
+        },
+        {
+          "workers": 2,
+          "child_processes": 2,
+          "peak": {
+            "concurrency": 8,
+            "p50_ms": 204.5,
+            "p95_ms": 319.0,
+            "throughput_rps": 34.6,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 0.747,
+          "efficiency": 0.373
+        },
+        {
+          "workers": 4,
+          "child_processes": 4,
+          "peak": {
+            "concurrency": 16,
+            "p50_ms": 267.8,
+            "p95_ms": 600.0,
+            "throughput_rps": 30.8,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 0.665,
+          "efficiency": 0.166
+        },
+        {
+          "workers": 8,
+          "child_processes": 8,
+          "peak": {
+            "concurrency": 8,
+            "p50_ms": 228.1,
+            "p95_ms": 442.5,
+            "throughput_rps": 27.4,
+            "errors": 0,
+            "error_kinds": []
+          },
+          "sweep": [
+            4,
+            8,
+            16
+          ],
+          "speedup": 0.592,
+          "efficiency": 0.074
+        }
+      ]
+    }
+  },
+  "event_store": [
+    {
+      "processes": 1,
+      "writes_per_second": {
+        "shared": 194.6,
+        "shared_wal": 107.7,
+        "reuse": 351.2,
+        "reuse_wal": 1602.0,
+        "isolated": 170.9
+      },
+      "relative_to_shipped": {
+        "shared": 1.0,
+        "shared_wal": 0.553,
+        "reuse": 1.805,
+        "reuse_wal": 8.232,
+        "isolated": 0.878
+      },
+      "writes_lost_to_lock_timeout": {
+        "shared": 0,
+        "shared_wal": 0,
+        "reuse": 0,
+        "reuse_wal": 0,
+        "isolated": 0
+      },
+      "range_across_repeats": {
+        "shared": 15.2,
+        "shared_wal": 13.1,
+        "reuse": 162.2,
+        "reuse_wal": 272.1,
+        "isolated": 1.5
+      }
+    },
+    {
+      "processes": 2,
+      "writes_per_second": {
+        "shared": 168.5,
+        "shared_wal": 134.6,
+        "reuse": 356.0,
+        "reuse_wal": 1391.1,
+        "isolated": 352.5
+      },
+      "relative_to_shipped": {
+        "shared": 1.0,
+        "shared_wal": 0.799,
+        "reuse": 2.113,
+        "reuse_wal": 8.256,
+        "isolated": 2.092
+      },
+      "writes_lost_to_lock_timeout": {
+        "shared": 0,
+        "shared_wal": 0,
+        "reuse": 0,
+        "reuse_wal": 0,
+        "isolated": 0
+      },
+      "range_across_repeats": {
+        "shared": 8.8,
+        "shared_wal": 6.9,
+        "reuse": 33.9,
+        "reuse_wal": 512.4,
+        "isolated": 49.0
+      }
+    },
+    {
+      "processes": 4,
+      "writes_per_second": {
+        "shared": 116.0,
+        "shared_wal": 67.3,
+        "reuse": 247.1,
+        "reuse_wal": 1100.2,
+        "isolated": 406.9
+      },
+      "relative_to_shipped": {
+        "shared": 1.0,
+        "shared_wal": 0.58,
+        "reuse": 2.13,
+        "reuse_wal": 9.484,
+        "isolated": 3.508
+      },
+      "writes_lost_to_lock_timeout": {
+        "shared": 0,
+        "shared_wal": 0,
+        "reuse": 0,
+        "reuse_wal": 0,
+        "isolated": 0
+      },
+      "range_across_repeats": {
+        "shared": 42.8,
+        "shared_wal": 79.1,
+        "reuse": 14.7,
+        "reuse_wal": 154.6,
+        "isolated": 151.8
+      }
+    },
+    {
+      "processes": 8,
+      "writes_per_second": {
+        "shared": 109.3,
+        "shared_wal": 87.8,
+        "reuse": 254.1,
+        "reuse_wal": 969.1,
+        "isolated": 467.4
+      },
+      "relative_to_shipped": {
+        "shared": 1.0,
+        "shared_wal": 0.803,
+        "reuse": 2.325,
+        "reuse_wal": 8.866,
+        "isolated": 4.276
+      },
+      "writes_lost_to_lock_timeout": {
+        "shared": 1,
+        "shared_wal": 0,
+        "reuse": 2,
+        "reuse_wal": 0,
+        "isolated": 0
+      },
+      "range_across_repeats": {
+        "shared": 6.0,
+        "shared_wal": 63.1,
+        "reuse": 99.7,
+        "reuse_wal": 233.2,
+        "isolated": 114.4
+      }
+    }
+  ]
+}

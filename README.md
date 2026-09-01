@@ -278,6 +278,44 @@ healthy. Every request returned 200 throughout, and the response body says
 `account: circuit_open` so a reader can tell the enrichment was skipped rather than absent.
 Full write-up: [`docs/LOAD_TEST.md`](docs/LOAD_TEST.md).
 
+### More workers, and the ceiling underneath them
+
+![scale test](docs/assets/scale-test.svg)
+
+Retrieval scales to **four workers — 56.1 to 104.2 req/s, p95 369 ms to 99 ms** — and then
+falls over: eight workers on four cores is **0.88×**, worse than one. Scaling the *fan-out*
+endpoint makes it monotonically worse (0.59× at eight workers), because adding front-door
+capacity does not add downstream capacity and the extra processes compete with the services
+they are waiting on.
+
+The interesting part is why 104 req/s. Every request writes an event to SQLite through a
+connection opened per write, and measured on its own that store does **116 writes/second
+across four processes** — the same band. The service cannot outrun its own event log.
+
+Then the fix that looked obvious was measured and was **wrong**: turning on WAL alone is
+0.55–0.80×, actively worse. Connection reuse alone is ~2×. The two together are
+**8.2–9.5×**. Neither change is worth making without the other, which is not visible from
+either one. Full write-up: [`docs/SCALE_TEST.md`](docs/SCALE_TEST.md).
+
+### An agent over all five services — and it loses
+
+![agent eval](docs/assets/agent-eval.svg)
+
+A local `Qwen2.5-0.5B` drives the five services as tools, greedy and reproducible, for
+$0.00. A keyword router doing the same job beats it on every metric: task success
+**0.8000 vs 0.4250**, routing **0.9000 vs 0.6750**.
+
+The headline is the two categories that a happy-path demo never asks about. On seven
+questions no tool can answer, **the agent refused zero of them** — asked for tomorrow's
+weather it called `account_score` and then invented a forecast. With a dependency killed
+mid-run it fabricated an answer on **2 of 5** tasks, against **0** for the baseline, twice
+stating a live incident status for a service that was dead.
+
+That second number was 0.20 until the check was fixed: it originally forbade only the
+answer asserting *absence*, so a confident invented "yes" scored as honest. Correcting it
+moved the result in the direction that makes the system look worse.
+Full write-up: [`docs/AGENT.md`](docs/AGENT.md).
+
 ### What it would cost to run
 
 ![cost model](docs/assets/cost-model.svg)
@@ -294,7 +332,9 @@ says that on its own. Full write-up: [`docs/COST_MODEL.md`](docs/COST_MODEL.md).
 ```bash
 python scripts/capture_assets.py
 python scripts/load_test.py
+python scripts/scale_test.py
 python scripts/cost_model.py
+python agent/eval/run.py
 ```
 
 **Why SVG for terminal output, PNG for the page.** An SVG is text, so it diffs in
@@ -317,12 +357,16 @@ capture changes only when the *output* changes.
 
 ## Portfolio Documentation
 
-- [**Architecture decision records**](docs/adr/) — the eight contested choices, each with
+- [**Architecture decision records**](docs/adr/) — the eleven contested choices, each with
   the alternatives that were rejected and what would make it worth revisiting
 - [**Load and degradation**](docs/LOAD_TEST.md) — measured concurrency, and what the
   circuit breaker does when a dependency is killed mid-run
+- [**Horizontal scaling**](docs/SCALE_TEST.md) — what more worker processes buy, and the
+  event store that turns out to be the ceiling
 - [**Cost model**](docs/COST_MODEL.md) — cost per million requests from measured throughput
   and dated prices
+- [**The agent**](docs/AGENT.md) — a local language model driving the five services as
+  tools, scored against the keyword router it has to beat
 - [Architecture diagrams](docs/ARCHITECTURE.md)
 - [API flow diagrams](docs/API_FLOWS.md)
 - [Demo capture guide](docs/DEMO_CAPTURE.md)
@@ -555,6 +599,18 @@ https://github.com/Adityansh-Chand/autonomous-meeting-intelligence.git
 Each of these is narrower than what it replaced, and every one came out of a
 measurement rather than a hunch.
 
+- **The event store caps every service near 100 req/s.** `save_event` opens a
+  connection per write, so adding workers adds contention rather than
+  throughput. The fix is measured and is *two* coupled changes — connection
+  reuse plus WAL, worth 8.2–9.5× together and roughly nothing apart. Not shipped
+  because a held-open connection needs thread-safety and must re-open when
+  `APP_DB_PATH` changes, or tests silently write to the previous database.
+  [ADR-009](docs/adr/009-event-store-is-the-scaling-ceiling.md).
+- **The agent will not say "I don't know".** It refused 0 of 7 unanswerable
+  questions and fabricated on 2 of 5 tasks whose service was killed. At 0.5B
+  this is mostly capacity, so the honest next step is a larger model on the same
+  harness rather than prompt work — but it is the reason the agent is a measured
+  result and not a feature. [`docs/AGENT.md`](docs/AGENT.md).
 - **Retraining triggers.** Every service reports drift; nothing acts on it.
   Deciding to retrain stays a human judgement, and automating it without a
   rollback story would be worse than not automating it.
@@ -579,10 +635,13 @@ that run on one machine.
 - **Cloud deployment.** This is a portfolio, not a production system. Static
   config validation and CI image builds are the right level; a live managed
   environment would add cost and operational surface without demonstrating
-  anything the compose stack does not. The two things a deployment was actually
-  wanted for — knowing what this costs and what it does under load — are now
-  [modelled](docs/COST_MODEL.md) and [measured](docs/LOAD_TEST.md) locally instead,
-  with the measured and modelled halves labelled separately.
+  anything the compose stack does not. The three things a deployment was actually
+  wanted for — knowing what this costs, what it does under load, and whether it
+  scales — are now [modelled](docs/COST_MODEL.md), [measured](docs/LOAD_TEST.md)
+  and [measured again across worker processes](docs/SCALE_TEST.md) locally
+  instead, with the measured and modelled halves labelled separately. What stays
+  genuinely untested is a second machine: no network between services, no load
+  balancer, no soak.
 - **A real message broker.** The event bus is an outbox with a delivery worker,
   retries and a dead-letter queue. Kafka or RabbitMQ would replace ~200 readable
   lines with an operational dependency, for one push edge.
