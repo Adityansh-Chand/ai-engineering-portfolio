@@ -331,6 +331,18 @@ team watching task success would have seen 0.4250 → 0.6250 and called it incre
 what actually happened is the system stopped being unsafe.
 Full write-up: [`docs/AGENT.md`](docs/AGENT.md).
 
+The same five tools are also served over the **Model Context Protocol**, so any MCP client
+can drive these services without this repository's agent. The evaluation loop deliberately
+does not route through it — at three tokens per second a tool call costs what it takes to
+*generate*, not to dispatch, so the extra hop would be protocol for its own sake
+([ADR-013](docs/adr/013-mcp-for-external-tool-access.md)). One registry feeds both the
+agent's prompt and the MCP schemas, and CI connects a real client to assert they agree.
+
+```bash
+python agent/mcp_server.py            # stdio, for any MCP client
+python scripts/check_mcp_server.py    # verify the advertised surface
+```
+
 ### What it would cost to run
 
 ![cost model](docs/assets/cost-model.svg)
@@ -373,7 +385,7 @@ capture changes only when the *output* changes.
 
 ## Portfolio Documentation
 
-- [**Architecture decision records**](docs/adr/) — the twelve contested choices, each with
+- [**Architecture decision records**](docs/adr/) — the thirteen contested choices, each with
   the alternatives that were rejected and what would make it worth revisiting
 - [**Load and degradation**](docs/LOAD_TEST.md) — measured concurrency, and what the
   circuit breaker does when a dependency is killed mid-run
