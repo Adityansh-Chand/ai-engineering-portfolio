@@ -63,12 +63,17 @@ def environment_for(name):
     }[name]
 
 
-def start(store_name, services=None, overrides=None):
+def start(store_name, services=None, overrides=None, workers=None):
     """Launch the services and return {name: Popen}.
 
     `store_name` names a per-run SQLite file that is deleted first. Without a
     fresh store a second run appends to the first, and any count read back from
     the event log describes two runs rather than one.
+
+    `workers` is `{service: count}` for the horizontal-scaling test. Only the
+    service under test is scaled; the rest stay at one, so the measurement moves
+    one variable. Above one worker uvicorn forks children, which is why `stop`
+    has to kill a tree rather than a process.
     """
     processes = {}
     for service in services or REPOS:
@@ -88,13 +93,37 @@ def start(store_name, services=None, overrides=None):
             "INTEGRATION_API_KEY": KEY,
             "APP_DB_PATH": str(database),
         }
+        command = [
+            sys.executable, "-m", "uvicorn", "api.server:app", "--host", "127.0.0.1",
+            "--port", str(PORTS[service]), "--log-level", "warning",
+        ]
+        count = (workers or {}).get(service, 1)
+        if count > 1:
+            command += ["--workers", str(count)]
         processes[service] = subprocess.Popen(
-            [sys.executable, "-m", "uvicorn", "api.server:app", "--host", "127.0.0.1",
-             "--port", str(PORTS[service]), "--log-level", "warning"],
-            cwd=str(path), env=env,
+            command, cwd=str(path), env=env,
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
     return processes
+
+
+def kill_tree(process):
+    """Kill a service and any workers it forked.
+
+    `Popen.terminate()` signals only the process we launched. With `--workers`
+    that is the supervisor, and its children survive, keep the port bound, and
+    the next run then measures a stack it did not start -- the same class of bug
+    as a shared event store, arriving through process management instead.
+    """
+    if process.poll() is not None:
+        return
+    if os.name == "nt":
+        subprocess.run(
+            ["taskkill", "/F", "/T", "/PID", str(process.pid)],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False,
+        )
+    else:
+        process.terminate()
 
 
 def wait_for_all(services=None):
@@ -109,9 +138,10 @@ def wait_for_all(services=None):
 
 
 def stop(processes):
-    for process in processes.values() if isinstance(processes, dict) else processes:
-        process.terminate()
-    for process in processes.values() if isinstance(processes, dict) else processes:
+    items = list(processes.values()) if isinstance(processes, dict) else list(processes)
+    for process in items:
+        kill_tree(process)
+    for process in items:
         try:
             process.wait(timeout=10)
         except subprocess.TimeoutExpired:
