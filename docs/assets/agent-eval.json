@@ -1,0 +1,1907 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "output_format": "json",
+  "task_count": 40,
+  "systems": {
+    "baseline": {
+      "summary": {
+        "tasks": 40,
+        "first_tool_accuracy": 0.9,
+        "required_tools_called": 0.6,
+        "task_success": 0.8,
+        "invalid_call_rate": 0.0,
+        "mean_steps_used": 1.0,
+        "mean_steps_minimum": 2.0,
+        "mean_seconds": 0.0,
+        "by_category": {
+          "single_tool": {
+            "tasks": 21,
+            "task_success": 0.9048,
+            "first_tool_accuracy": 0.9048
+          },
+          "chain": {
+            "tasks": 7,
+            "task_success": 0.4286,
+            "first_tool_accuracy": 1.0
+          },
+          "no_tool": {
+            "tasks": 7,
+            "task_success": 0.7143,
+            "first_tool_accuracy": 0.7143,
+            "refusal_accuracy": 0.7143
+          },
+          "tool_down": {
+            "tasks": 5,
+            "task_success": 1.0,
+            "first_tool_accuracy": 1.0,
+            "fabrication_rate": 0.0
+          }
+        }
+      },
+      "usage": null,
+      "cost": null,
+      "rows": [
+        {
+          "id": "t001",
+          "category": "single_tool",
+          "prompt": "What are the remediation steps for ERR-4021?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-4021 is emitted when the upstream processor declines an authorization request. Inspect the processor response envelope for a decline reason, confirm the merchant descriptor is registered, and retry the authorization once. Escalate to the processor liaison if the decline reason is issuer_un",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "envelope",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t002",
+          "category": "single_tool",
+          "prompt": "What are the remediation steps for ERR-5503?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-5503 accompanies sustained p99 latency above the configured budget. Confirm connection pool saturation, inspect slow query logs, and compare the deployment marker against the onset of the regression. Roll back the most recent release if the correlation is clear.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "connection pool",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t003",
+          "category": "single_tool",
+          "prompt": "What are the remediation steps for ERR-3310?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-3310 indicates a session token failed validation following a signing key rotation. Verify the key identifier in the token header resolves to an active key, confirm the rotation completed across all replicas, and invalidate cached public keys. This runbook applies to the payments service in",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "key identifier",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t004",
+          "category": "single_tool",
+          "prompt": "What are the remediation steps for ERR-2907?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-2907 fires when consumer lag on the ingestion queue exceeds the alerting threshold. Check consumer health, confirm partition assignment is balanced, and scale the consumer group before the retention window expires. This runbook applies to the identity service in eu-west-1.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "consumer",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t005",
+          "category": "single_tool",
+          "prompt": "What does clause 7.3 say about the liability cap?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Clause 7.3 limits aggregate liability to the fees paid in the twelve months preceding the claim. Clause 7.3 - Limitation of liability. Clause 9.2 requires transaction records to be retained for seven years and personal data to be deleted once the retention basis lapses.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "aggregate liability",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t006",
+          "category": "single_tool",
+          "prompt": "What fields does POST /v2/invoices require?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "refuse",
+          "tools_called": [],
+          "outcome": "refused",
+          "answer": "",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t007",
+          "category": "single_tool",
+          "prompt": "What does the retry.max_attempts setting control?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "refuse",
+          "tools_called": [],
+          "outcome": "refused",
+          "answer": "",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t008",
+          "category": "single_tool",
+          "prompt": "How do I configure index.refresh_interval and what does it affect?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "The index.refresh_interval setting controls how often newly written documents become visible to queries. Lowering it improves freshness at the cost of indexing throughput and segment churn. The retry.max_attempts setting bounds how many times a failed webhook delivery is retried before it is parked.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "freshness",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t009",
+          "category": "single_tool",
+          "prompt": "What is the renewal propensity score for acct_00001?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered",
+          "answer": "Account score 0.3157894059161988, segment medium_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "medium_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t010",
+          "category": "single_tool",
+          "prompt": "Give me the account score and segment for acct_00042.",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered",
+          "answer": "Account score 0.3192649250548717, segment medium_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "medium_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t011",
+          "category": "single_tool",
+          "prompt": "How valuable is acct_00777 for renewal?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered",
+          "answer": "Account score 0.17279542428695072, segment low_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "low_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t012",
+          "category": "single_tool",
+          "prompt": "What segment does acct_02500 fall into?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered",
+          "answer": "Account score 0.09018352350427869, segment low_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "low_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t013",
+          "category": "single_tool",
+          "prompt": "Is there an active incident on checkout right now?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered",
+          "answer": "There is no active incident on checkout.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "no active",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t014",
+          "category": "single_tool",
+          "prompt": "Is the payments service currently degraded?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered",
+          "answer": "There is no active incident on payments.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "no active",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t015",
+          "category": "single_tool",
+          "prompt": "Is search having an outage?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered",
+          "answer": "There is no active incident on search.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "no active",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t016",
+          "category": "single_tool",
+          "prompt": "How many incidents are active across all services?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered",
+          "answer": "There are 0 active incidents.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "0",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t017",
+          "category": "single_tool",
+          "prompt": "A customer wrote: 'checkout keeps failing at payment and I am losing orders'. How should we respond?",
+          "expected_tools": [
+            "customer_decision"
+          ],
+          "first_tool": "customer_decision",
+          "tools_called": [
+            "customer_decision"
+          ],
+          "outcome": "answered",
+          "answer": "Intent refund_request; policy refund_review; action refund_review.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "refund_review",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t018",
+          "category": "single_tool",
+          "prompt": "Handle this message from acct_00042: 'I was charged twice for the same invoice and want a refund'.",
+          "expected_tools": [
+            "customer_decision"
+          ],
+          "first_tool": "customer_decision",
+          "tools_called": [
+            "customer_decision"
+          ],
+          "outcome": "answered",
+          "answer": "Intent refund_request; policy refund_review; action refund_review.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "refund_review",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t019",
+          "category": "single_tool",
+          "prompt": "A customer says login stopped working after the weekend. What should we do about this complaint?",
+          "expected_tools": [
+            "customer_decision"
+          ],
+          "first_tool": "customer_decision",
+          "tools_called": [
+            "customer_decision"
+          ],
+          "outcome": "answered",
+          "answer": "Intent general_question; policy auto_resolve; action knowledge_response.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "knowledge_response",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t020",
+          "category": "single_tool",
+          "prompt": "Extract the action items from this transcript: 'We agreed to move the launch to March. Priya will draft the migration plan by Friday. Chen will review the rollback steps next week.'",
+          "expected_tools": [
+            "meeting_extract"
+          ],
+          "first_tool": "meeting_extract",
+          "tools_called": [
+            "meeting_extract"
+          ],
+          "outcome": "answered",
+          "answer": "We agreed to move the launch to March Priya will draft the migration plan by Friday Chen will review the rollback steps next week",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "priya",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t021",
+          "category": "single_tool",
+          "prompt": "What was decided in these meeting notes: 'The team decided to keep the current retry policy. Maya will publish the incident review by Thursday.'",
+          "expected_tools": [
+            "meeting_extract"
+          ],
+          "first_tool": "meeting_extract",
+          "tools_called": [
+            "meeting_extract"
+          ],
+          "outcome": "answered",
+          "answer": "The team decided to keep the current retry policy Maya will publish the incident review by Thursday",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "retry",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t022",
+          "category": "chain",
+          "prompt": "Is acct_00001 a high-value account, and is checkout currently in an incident?",
+          "expected_tools": [
+            "account_score",
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered",
+          "answer": "There is no active incident on checkout.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "tool_not_called",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 3,
+          "seconds": 0.0
+        },
+        {
+          "id": "t023",
+          "category": "chain",
+          "prompt": "Before I escalate for acct_00042, tell me their segment and whether payments is degraded.",
+          "expected_tools": [
+            "account_score",
+            "active_incidents"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered",
+          "answer": "Account score 0.3192649250548717, segment medium_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": "medium_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 3,
+          "seconds": 0.0
+        },
+        {
+          "id": "t024",
+          "category": "chain",
+          "prompt": "What are the remediation steps for ERR-5503, and is search currently in an incident?",
+          "expected_tools": [
+            "knowledge_search",
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered",
+          "answer": "There is no active incident on search.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 3,
+          "seconds": 0.0
+        },
+        {
+          "id": "t025",
+          "category": "chain",
+          "prompt": "Tell me what ERR-4021 means and give me the segment for acct_00777.",
+          "expected_tools": [
+            "knowledge_search",
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered",
+          "answer": "Account score 0.17279542428695072, segment low_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": "low_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 3,
+          "seconds": 0.0
+        },
+        {
+          "id": "t026",
+          "category": "chain",
+          "prompt": "A customer on acct_02500 says checkout is broken. What action should we take, and what is their account segment?",
+          "expected_tools": [
+            "customer_decision",
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered",
+          "answer": "Account score 0.09018352350427869, segment low_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": "low_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 3,
+          "seconds": 0.0
+        },
+        {
+          "id": "t027",
+          "category": "chain",
+          "prompt": "A customer on acct_00001 reports checkout failing. What action should we take, and is checkout in an incident?",
+          "expected_tools": [
+            "customer_decision",
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered",
+          "answer": "There is no active incident on checkout.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "tool_not_called",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 3,
+          "seconds": 0.0
+        },
+        {
+          "id": "t028",
+          "category": "chain",
+          "prompt": "Is identity in an incident, and what does ERR-3310 tell me to check?",
+          "expected_tools": [
+            "active_incidents",
+            "knowledge_search"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered",
+          "answer": "There is no active incident on identity.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 3,
+          "seconds": 0.0
+        },
+        {
+          "id": "t029",
+          "category": "no_tool",
+          "prompt": "What is the weather in Berlin tomorrow?",
+          "expected_tools": [],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-6142 is raised when every connection in the pool is checked out. This runbook applies to the search service in us-east-1. This runbook applies to the payments service in eu-west-1.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 1,
+          "seconds": 0.0
+        },
+        {
+          "id": "t030",
+          "category": "no_tool",
+          "prompt": "What is our company's current share price?",
+          "expected_tools": [],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Decision: The team decided to keep the current retry policy. Clause 12.1 requires the processor to maintain a current register of sub-processors and to give thirty days notice before appointing a new one. The retry.max_attempts setting bounds how many times a failed webhook delivery is retried befor",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 1,
+          "seconds": 0.0
+        },
+        {
+          "id": "t031",
+          "category": "no_tool",
+          "prompt": "Who is the chief executive of our largest competitor?",
+          "expected_tools": [],
+          "first_tool": "refuse",
+          "tools_called": [],
+          "outcome": "refused",
+          "answer": "",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "refused",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 1,
+          "seconds": 0.0
+        },
+        {
+          "id": "t032",
+          "category": "no_tool",
+          "prompt": "Translate the phrase 'thank you for your patience' into Japanese.",
+          "expected_tools": [],
+          "first_tool": "refuse",
+          "tools_called": [],
+          "outcome": "refused",
+          "answer": "",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "refused",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 1,
+          "seconds": 0.0
+        },
+        {
+          "id": "t033",
+          "category": "no_tool",
+          "prompt": "How many employees joined the company last quarter?",
+          "expected_tools": [],
+          "first_tool": "refuse",
+          "tools_called": [],
+          "outcome": "refused",
+          "answer": "",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "refused",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 1,
+          "seconds": 0.0
+        },
+        {
+          "id": "t034",
+          "category": "no_tool",
+          "prompt": "What time does the London office close on Fridays?",
+          "expected_tools": [],
+          "first_tool": "refuse",
+          "tools_called": [],
+          "outcome": "refused",
+          "answer": "",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "refused",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 1,
+          "seconds": 0.0
+        },
+        {
+          "id": "t035",
+          "category": "no_tool",
+          "prompt": "Book me a meeting room for Tuesday at 3pm.",
+          "expected_tools": [],
+          "first_tool": "refuse",
+          "tools_called": [],
+          "outcome": "refused",
+          "answer": "",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "refused",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 1,
+          "seconds": 0.0
+        },
+        {
+          "id": "t036",
+          "category": "tool_down",
+          "prompt": "What is the renewal propensity score for acct_00001?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [],
+          "outcome": "answered",
+          "answer": "The account_score lookup failed (URLError).",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": null,
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t037",
+          "category": "tool_down",
+          "prompt": "Give me the account score and segment for acct_00042.",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [],
+          "outcome": "answered",
+          "answer": "The account_score lookup failed (URLError).",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": null,
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t038",
+          "category": "tool_down",
+          "prompt": "How valuable is acct_02500 for renewal?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [],
+          "outcome": "answered",
+          "answer": "The account_score lookup failed (URLError).",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": null,
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t039",
+          "category": "tool_down",
+          "prompt": "Is there an active incident on checkout right now?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [],
+          "outcome": "answered",
+          "answer": "The active_incidents lookup failed (URLError).",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": null,
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        },
+        {
+          "id": "t040",
+          "category": "tool_down",
+          "prompt": "How many incidents are active across all services?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [],
+          "outcome": "answered",
+          "answer": "The active_incidents lookup failed (URLError).",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": null,
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 1,
+          "steps_minimum": 2,
+          "seconds": 0.0
+        }
+      ]
+    },
+    "agent": {
+      "summary": {
+        "tasks": 40,
+        "first_tool_accuracy": 0.675,
+        "required_tools_called": 0.425,
+        "task_success": 0.425,
+        "invalid_call_rate": 0.0735,
+        "mean_steps_used": 3.4,
+        "mean_steps_minimum": 2.0,
+        "mean_seconds": 34.3,
+        "by_category": {
+          "single_tool": {
+            "tasks": 21,
+            "task_success": 0.5714,
+            "first_tool_accuracy": 0.8095
+          },
+          "chain": {
+            "tasks": 7,
+            "task_success": 0.2857,
+            "first_tool_accuracy": 0.7143
+          },
+          "no_tool": {
+            "tasks": 7,
+            "task_success": 0.0,
+            "first_tool_accuracy": 0.0,
+            "refusal_accuracy": 0.0
+          },
+          "tool_down": {
+            "tasks": 5,
+            "task_success": 0.6,
+            "first_tool_accuracy": 1.0,
+            "fabrication_rate": 0.4
+          }
+        }
+      },
+      "usage": {
+        "model": "Qwen/Qwen2.5-0.5B-Instruct",
+        "calls": 136,
+        "prompt_tokens": 49069,
+        "completion_tokens": 3899,
+        "seconds": 1372.2,
+        "tokens_per_second": 2.84
+      },
+      "cost": {
+        "local_run_cost_usd": 0.0,
+        "if_hosted_usd": {
+          "claude-haiku-4-5": 0.0686,
+          "claude-sonnet-5": 0.1371,
+          "claude-opus-5": 0.3428
+        }
+      },
+      "rows": [
+        {
+          "id": "t001",
+          "category": "single_tool",
+          "prompt": "What are the remediation steps for ERR-4021?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-4021 is emitted when the upstream processor declines an authorization request. Payment authorization declined by upstream processor (payments, eu-west-1). Service: payments.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 2,
+          "steps_minimum": 2,
+          "seconds": 25.08
+        },
+        {
+          "id": "t002",
+          "category": "single_tool",
+          "prompt": "What are the remediation steps for ERR-5503?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-5503 accompanies sustained p99 latency above the configured budget. Elevated p99 latency on request path (identity, eu-west-1). Service: identity.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 2,
+          "steps_minimum": 2,
+          "seconds": 19.14
+        },
+        {
+          "id": "t003",
+          "category": "single_tool",
+          "prompt": "What are the remediation steps for ERR-3310?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-3310 indicates a session token failed validation following a signing key rotation. Session token rejected after rotation (identity, eu-west-1). Service: identity.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "rotation",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 2,
+          "steps_minimum": 2,
+          "seconds": 17.86
+        },
+        {
+          "id": "t004",
+          "category": "single_tool",
+          "prompt": "What are the remediation steps for ERR-2907?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Error ERR-2907 fires when consumer lag on the ingestion queue exceeds the alerting threshold. Queue consumer lag exceeds threshold (payments, us-east-1). Service: payments.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "consumer",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 2,
+          "steps_minimum": 2,
+          "seconds": 17.83
+        },
+        {
+          "id": "t005",
+          "category": "single_tool",
+          "prompt": "What does clause 7.3 say about the liability cap?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search",
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "Clause 7.3 limits aggregate liability to the fees paid in the twelve months preceding the claim. Clause 7.3 - Limitation of liability. Neither party excludes liability for death, personal injury, or fraud.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "aggregate liability",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 25.22
+        },
+        {
+          "id": "t006",
+          "category": "single_tool",
+          "prompt": "What fields does POST /v2/invoices require?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "POST /v2/invoices requires a customer identifier and at least one line item.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "line item",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 19.59
+        },
+        {
+          "id": "t007",
+          "category": "single_tool",
+          "prompt": "What does the retry.max_attempts setting control?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "knowledge_search",
+          "tools_called": [
+            "knowledge_search"
+          ],
+          "outcome": "answered",
+          "answer": "The retry.max_attempts setting bounds how many times a failed webhook delivery is retried before it is parked. Retry configuration reference. Backoff is exponential with jitter, controlled by retry.base_delay_ms.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "webhook",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 2,
+          "steps_minimum": 2,
+          "seconds": 17.86
+        },
+        {
+          "id": "t008",
+          "category": "single_tool",
+          "prompt": "How do I configure index.refresh_interval and what does it affect?",
+          "expected_tools": [
+            "knowledge_search"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "To configure index.refresh_interval, you need to set the refresh interval for your Elasticsearch cluster. This setting determines how often the indices are refreshed, which helps in maintaining data freshness and performance.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": "freshness",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 31.02
+        },
+        {
+          "id": "t009",
+          "category": "single_tool",
+          "prompt": "What is the renewal propensity score for acct_00001?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The renewal propensity score for acct_00001 is 0.3157894059161988, which falls into the \"medium_propensity\" category.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "medium_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 31.21
+        },
+        {
+          "id": "t010",
+          "category": "single_tool",
+          "prompt": "Give me the account score and segment for acct_00042.",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "Yes, I have the necessary information to answer your question. The account score for acct_00042 is 0.3192649250548717, which indicates a medium propensity score.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": false,
+          "check_detail": "medium_propensity",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 33.19
+        },
+        {
+          "id": "t011",
+          "category": "single_tool",
+          "prompt": "How valuable is acct_00777 for renewal?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The value of acct_00777 for renewal is moderate, valued at $300 per month.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": false,
+          "check_detail": "low_propensity",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 31.54
+        },
+        {
+          "id": "t012",
+          "category": "single_tool",
+          "prompt": "What segment does acct_02500 fall into?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The segment for acct_02500 is low_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "low_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 111.9
+        },
+        {
+          "id": "t013",
+          "category": "single_tool",
+          "prompt": "Is there an active incident on checkout right now?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "No active incident exists on checkout at the moment.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "no active",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 146.27
+        },
+        {
+          "id": "t014",
+          "category": "single_tool",
+          "prompt": "Is the payments service currently degraded?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The payments service is not currently degraded.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "not currently",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 24.64
+        },
+        {
+          "id": "t015",
+          "category": "single_tool",
+          "prompt": "Is search having an outage?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [],
+          "outcome": "answered_after_prompting",
+          "answer": "No tool could provide an answer directly based on the information given.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 54.33
+        },
+        {
+          "id": "t016",
+          "category": "single_tool",
+          "prompt": "How many incidents are active across all services?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [
+            "active_incidents"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "There are currently 0 active incidents across all services.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "0",
+          "task_success": true,
+          "invalid_calls": 2,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 50.65
+        },
+        {
+          "id": "t017",
+          "category": "single_tool",
+          "prompt": "A customer wrote: 'checkout keeps failing at payment and I am losing orders'. How should we respond?",
+          "expected_tools": [
+            "customer_decision"
+          ],
+          "first_tool": null,
+          "tools_called": [],
+          "outcome": "invalid_call",
+          "answer": "",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "tool_not_called",
+          "task_success": false,
+          "invalid_calls": 3,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 25.99
+        },
+        {
+          "id": "t018",
+          "category": "single_tool",
+          "prompt": "Handle this message from acct_00042: 'I was charged twice for the same invoice and want a refund'.",
+          "expected_tools": [
+            "customer_decision"
+          ],
+          "first_tool": "customer_decision",
+          "tools_called": [
+            "customer_decision",
+            "customer_decision",
+            "customer_decision"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "Refuse.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": false,
+          "check_detail": "refund_review",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 47.0
+        },
+        {
+          "id": "t019",
+          "category": "single_tool",
+          "prompt": "A customer says login stopped working after the weekend. What should we do about this complaint?",
+          "expected_tools": [
+            "customer_decision"
+          ],
+          "first_tool": null,
+          "tools_called": [],
+          "outcome": "invalid_call",
+          "answer": "",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "tool_not_called",
+          "task_success": false,
+          "invalid_calls": 3,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 21.71
+        },
+        {
+          "id": "t020",
+          "category": "single_tool",
+          "prompt": "Extract the action items from this transcript: 'We agreed to move the launch to March. Priya will draft the migration plan by Friday. Chen will review the rollback steps next week.'",
+          "expected_tools": [
+            "meeting_extract"
+          ],
+          "first_tool": "meeting_extract",
+          "tools_called": [
+            "meeting_extract"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "Extracted decision actions: \"We agreed to move the launch to March\" and \"Priya will draft the migration plan by Friday\".",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "priya",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 28.9
+        },
+        {
+          "id": "t021",
+          "category": "single_tool",
+          "prompt": "What was decided in these meeting notes: 'The team decided to keep the current retry policy. Maya will publish the incident review by Thursday.'",
+          "expected_tools": [
+            "meeting_extract"
+          ],
+          "first_tool": "meeting_extract",
+          "tools_called": [
+            "meeting_extract"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The decision made at the meeting was that the current retry policy would be kept, and Maya will publish the incident review by Thursday.",
+          "first_tool_correct": true,
+          "required_tools_called": true,
+          "check_passed": true,
+          "check_detail": "retry",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 23.55
+        },
+        {
+          "id": "t022",
+          "category": "chain",
+          "prompt": "Is acct_00001 a high-value account, and is checkout currently in an incident?",
+          "expected_tools": [
+            "account_score",
+            "active_incidents"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "Yes, acct_00001 has a medium propensity score indicating it's a high-value account. Checkout is currently in an incident.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "medium_propensity",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 3,
+          "seconds": 21.86
+        },
+        {
+          "id": "t023",
+          "category": "chain",
+          "prompt": "Before I escalate for acct_00042, tell me their segment and whether payments is degraded.",
+          "expected_tools": [
+            "account_score",
+            "active_incidents"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The segment for acct_00042 is medium_propensity.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": "medium_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 3,
+          "seconds": 27.22
+        },
+        {
+          "id": "t024",
+          "category": "chain",
+          "prompt": "What are the remediation steps for ERR-5503, and is search currently in an incident?",
+          "expected_tools": [
+            "knowledge_search",
+            "active_incidents"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The remediation steps for ERR-5503 are not provided in the given information. The segment \"medium_propensity\" indicates that the issue may require more detailed investigation before taking remedial actions.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 3,
+          "seconds": 33.79
+        },
+        {
+          "id": "t025",
+          "category": "chain",
+          "prompt": "Tell me what ERR-4021 means and give me the segment for acct_00777.",
+          "expected_tools": [
+            "knowledge_search",
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "ERR-4021 indicates that the customer's account has been inactive for more than 30 days without activity. The segment for acct_00777 is \"low_propensity\".",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": "low_propensity",
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 3,
+          "seconds": 43.88
+        },
+        {
+          "id": "t026",
+          "category": "chain",
+          "prompt": "A customer on acct_02500 says checkout is broken. What action should we take, and what is their account segment?",
+          "expected_tools": [
+            "customer_decision",
+            "account_score"
+          ],
+          "first_tool": "customer_decision",
+          "tools_called": [
+            "customer_decision",
+            "customer_decision"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The customer's message indicates that they want to track the issue with the checkout process. Since there are no other actions specified, we should send a tracking update to the customer.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "tool_not_called",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 3,
+          "seconds": 60.65
+        },
+        {
+          "id": "t027",
+          "category": "chain",
+          "prompt": "A customer on acct_00001 reports checkout failing. What action should we take, and is checkout in an incident?",
+          "expected_tools": [
+            "customer_decision",
+            "active_incidents"
+          ],
+          "first_tool": "customer_decision",
+          "tools_called": [
+            "customer_decision",
+            "customer_decision"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "We should track the request for tracking updates and send them once they're sent.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "send_tracking_update",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 3,
+          "seconds": 38.97
+        },
+        {
+          "id": "t028",
+          "category": "chain",
+          "prompt": "Is identity in an incident, and what does ERR-3310 tell me to check?",
+          "expected_tools": [
+            "active_incidents",
+            "knowledge_search"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "Yes, the identity is in an incident. ERR-3310 indicates that there may be issues with the identity verification process.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": null,
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 3,
+          "seconds": 50.44
+        },
+        {
+          "id": "t029",
+          "category": "no_tool",
+          "prompt": "What is the weather in Berlin tomorrow?",
+          "expected_tools": [],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The weather forecast indicates clear skies with temperatures expected to be around 10\u00b0C (50\u00b0F) on tomorrow.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered_after_prompting",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 1,
+          "seconds": 31.64
+        },
+        {
+          "id": "t030",
+          "category": "no_tool",
+          "prompt": "What is our company's current share price?",
+          "expected_tools": [],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "Our company's current share price is not provided in the given information.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered_after_prompting",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 1,
+          "seconds": 28.08
+        },
+        {
+          "id": "t031",
+          "category": "no_tool",
+          "prompt": "Who is the chief executive of our largest competitor?",
+          "expected_tools": [],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The chief executive of our largest competitor is not mentioned in the provided information.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered_after_prompting",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 1,
+          "seconds": 30.8
+        },
+        {
+          "id": "t032",
+          "category": "no_tool",
+          "prompt": "Translate the phrase 'thank you for your patience' into Japanese.",
+          "expected_tools": [],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The phrase \"thank you for your patience\" translates to \"\u3042\u308a\u304c\u3068\u3046\u3001\u304a\u5f85\u3061\u3057\u3066\u304a\u308a\u307e\u3059\" in Japanese.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered_after_prompting",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 1,
+          "seconds": 28.0
+        },
+        {
+          "id": "t033",
+          "category": "no_tool",
+          "prompt": "How many employees joined the company last quarter?",
+          "expected_tools": [],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The account acct_00001 has a score of 0.3157894059161988, which indicates it falls into the \"medium_propensity\" segment. This suggests that there may be some employees joining the company recently.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered_after_prompting",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 1,
+          "seconds": 34.12
+        },
+        {
+          "id": "t034",
+          "category": "no_tool",
+          "prompt": "What time does the London office close on Fridays?",
+          "expected_tools": [],
+          "first_tool": "account_score",
+          "tools_called": [
+            "account_score",
+            "account_score"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "The London office closes at 1 PM on Fridays.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered_after_prompting",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 4,
+          "steps_minimum": 1,
+          "seconds": 25.32
+        },
+        {
+          "id": "t035",
+          "category": "no_tool",
+          "prompt": "Book me a meeting room for Tuesday at 3pm.",
+          "expected_tools": [],
+          "first_tool": "meeting_extract",
+          "tools_called": [
+            "meeting_extract"
+          ],
+          "outcome": "answered_after_prompting",
+          "answer": "Use answer.",
+          "first_tool_correct": false,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "answered_after_prompting",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 1,
+          "seconds": 14.88
+        },
+        {
+          "id": "t036",
+          "category": "tool_down",
+          "prompt": "What is the renewal propensity score for acct_00001?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [],
+          "outcome": "answered_after_prompting",
+          "answer": "The renewal propensity score for acct_00001 is not available through the current methods.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": null,
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 19.61
+        },
+        {
+          "id": "t037",
+          "category": "tool_down",
+          "prompt": "Give me the account score and segment for acct_00042.",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [],
+          "outcome": "answered_after_prompting",
+          "answer": "The tool \"account_score\" did not provide the required information for acct_00042. Therefore, I cannot fulfill the request.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": null,
+          "task_success": true,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 20.01
+        },
+        {
+          "id": "t038",
+          "category": "tool_down",
+          "prompt": "How valuable is acct_02500 for renewal?",
+          "expected_tools": [
+            "account_score"
+          ],
+          "first_tool": "account_score",
+          "tools_called": [],
+          "outcome": "answered_after_prompting",
+          "answer": "The account score indicates that acct_02500 has low renewal potential due to its current status.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "low",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 17.88
+        },
+        {
+          "id": "t039",
+          "category": "tool_down",
+          "prompt": "Is there an active incident on checkout right now?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [],
+          "outcome": "answered_after_prompting",
+          "answer": "There is currently an active incident on checkout right now.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": false,
+          "check_detail": "active incident on",
+          "task_success": false,
+          "invalid_calls": 0,
+          "steps_used": 3,
+          "steps_minimum": 2,
+          "seconds": 14.4
+        },
+        {
+          "id": "t040",
+          "category": "tool_down",
+          "prompt": "How many incidents are active across all services?",
+          "expected_tools": [
+            "active_incidents"
+          ],
+          "first_tool": "active_incidents",
+          "tools_called": [],
+          "outcome": "answered_after_prompting",
+          "answer": "There was an error retrieving the number of active incidents across all services. Please try again later.",
+          "first_tool_correct": true,
+          "required_tools_called": false,
+          "check_passed": true,
+          "check_detail": null,
+          "task_success": true,
+          "invalid_calls": 2,
+          "steps_used": 4,
+          "steps_minimum": 2,
+          "seconds": 26.13
+        }
+      ]
+    }
+  }
+}
