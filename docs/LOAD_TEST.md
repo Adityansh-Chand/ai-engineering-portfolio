@@ -50,53 +50,60 @@ Both were caught by a number looking impossible rather than by the harness compl
 
 | concurrency | p50 ms | p95 ms | p99 ms | req/s |
 |---|---|---|---|---|
-| 1 | 31.2 | 35.0 | 36.8 | 36.5 |
-| 2 | 31.6 | 45.5 | 64.0 | 62.4 |
-| **4** | 44.1 | 119.2 | 137.5 | **71.8** |
-| 8 | 63.7 | 343.8 | 721.4 | 66.3 |
-| 16 | 77.1 | 1490.1 | 1928.2 | 49.1 |
-| 32 | 179.4 | 2304.4 | 3028.5 | 31.7 |
+| 1 | 16.9 | 35.5 | 44.0 | 54.4 |
+| 2 | 21.1 | 42.0 | 43.7 | 85.4 |
+| 4 | 26.1 | 60.3 | 68.8 | 132.3 |
+| 8 | 36.1 | 127.5 | 251.5 | 149.6 |
+| 16 | 70.6 | 238.6 | 588.0 | 119.7 |
+| **32** | 168.9 | 207.9 | 269.6 | **157.4** |
 
 ### `sales /v1/score` — model inference
 
 | concurrency | p50 ms | p95 ms | p99 ms | req/s |
 |---|---|---|---|---|
-| 1 | 30.9 | 32.7 | 48.0 | 36.2 |
-| 2 | 31.6 | 43.9 | 58.6 | 64.9 |
-| **4** | 41.2 | 97.5 | 125.6 | **77.4** |
-| 8 | 49.2 | 311.0 | 1136.2 | 70.5 |
-| 16 | 82.5 | 1051.4 | 1358.9 | 62.0 |
-| 32 | 141.4 | 1573.0 | 1875.7 | 48.5 |
+| 1 | 16.4 | 33.3 | 33.7 | 59.8 |
+| 2 | 17.0 | 33.4 | 37.1 | 103.1 |
+| 4 | 21.6 | 69.2 | 84.9 | 131.3 |
+| **8** | 21.2 | 225.4 | 453.2 | **144.8** |
+| 16 | 31.2 | 580.0 | 815.4 | 106.8 |
+| 32 | 78.1 | 344.5 | 645.0 | 129.6 |
 
 ### `ops /v1/decide` — fans out to three services
 
 | concurrency | p50 ms | p95 ms | p99 ms | req/s |
 |---|---|---|---|---|
-| 1 | 125.3 | 141.4 | 148.0 | 8.3 |
-| 2 | 91.4 | 136.3 | 151.5 | 21.0 |
-| 4 | 89.8 | 196.7 | 254.3 | 37.1 |
-| **8** | 155.4 | 242.3 | 462.5 | **48.5** |
-| 16 | 212.9 | 1521.1 | 2291.8 | 35.3 |
-| 32 | 394.0 | 2154.1 | 2434.7 | 36.7 |
+| 1 | 66.9 | 86.0 | 100.2 | 14.6 |
+| 2 | 58.7 | 93.9 | 104.5 | 33.0 |
+| 4 | 60.7 | 102.4 | 185.3 | 58.2 |
+| 8 | 95.2 | 187.5 | 234.3 | 73.3 |
+| 16 | 172.9 | 313.2 | 572.1 | 80.0 |
+| **32** | 364.4 | 411.7 | 445.9 | **80.6** |
 
-### Three findings
+### Three findings, one of which replaced an earlier one
 
-**Throughput peaks and then falls.** Both CPU-bound endpoints top out at concurrency 4 and
-get *slower in aggregate* beyond it — rag from 71.8 req/s down to 31.7, sales from 77.4 to
-48.5. Past the peak, additional load does not buy queued throughput; it costs throughput.
-With one worker and a GIL that is expected, and it is the number that says "add workers
-before you add anything else".
+**Throughput no longer peaks and falls — and it used to.** The first run of this harness
+found both CPU-bound endpoints topping out at concurrency 4 and getting *slower in
+aggregate* beyond it: rag from 71.8 req/s down to 31.7. That was reported here as a finding
+about the GIL and a single worker, and it was wrong. It was the event store, which capped
+every endpoint near its own write rate
+([ADR-012](adr/012-ship-the-event-store-fix.md)). With the store fixed, throughput rises
+across the whole range tested and roughly doubles at every level.
 
-**The median is blind to saturation.** At concurrency 16, rag's p50 is 77.1 ms — a figure
-that would pass any dashboard. Its p95 at the same moment is 1490.1 ms, nineteen times
-higher. A service can look healthy at the median while one request in twenty takes a second
-and a half. Reporting p50 alone here would have described a system that was not under strain.
+Single-request latency changed too: rag's p50 at concurrency 1 went from 31.2 ms to 16.9 ms.
+The old figure was a request waiting on a connection being opened and four schema statements
+being re-run, not on retrieval.
 
-**The fan-out endpoint tolerates more concurrency than the services it calls.** `ops` peaks
-at 8 rather than 4, because it spends most of each request waiting on three HTTP calls
-rather than computing. Its own CPU is mostly idle, which is exactly why its p50 at
-concurrency 2 (91.4 ms) is *lower* than at concurrency 1 (125.3 ms) — the second request
-uses the gap the first spends blocked.
+**The median is still blind to saturation, but much less so.** At concurrency 16 rag's p50
+is 70.6 ms against a p95 of 238.6 ms — a 3.4× spread. In the first run the same comparison
+was 77.1 ms against **1490.1 ms**, nineteen times higher. The lesson survives the fix and
+the severity does not: reporting p50 alone would still under-describe the tail, but the tail
+is no longer catastrophic.
+
+**The fan-out endpoint is the one that now saturates first.** `ops /v1/decide` flattens
+around 80 req/s from concurrency 16 onward while the services it calls are still climbing —
+it does three HTTP round trips per request, and that is now the dominant cost rather than
+anything it computes. Its p50 at concurrency 2 (58.7 ms) is still *lower* than at
+concurrency 1 (66.9 ms), because the second request uses the gap the first spends blocked.
 
 **Caveat on p99:** at 100 samples per level, p99 is the second-slowest request. Treat it as
 an indication of tail shape, not as a stable statistic. p95 is the tail figure worth reading.
@@ -112,12 +119,13 @@ behaviour. Here the `sales` process is killed while `ops` is serving traffic.
 
 | phase | p50 ms | p95 ms |
 |---|---|---|
-| healthy | 85.9 | 145.3 |
-| dependency down, breaker still closed | 81.8 | **4243.0** |
-| dependency down, breaker open | 94.2 | **145.2** |
+| healthy | 75.5 | 126.9 |
+| dependency down, breaker still closed | 64.3 | **4185.1** |
+| dependency down, breaker open | 47.9 | **74.6** |
 
-**p95 falls from 4243 ms to 145 ms with the dependency still dead** — a 29× reduction, back
-to the healthy figure. Every request returned 200 throughout.
+**p95 falls from 4185 ms to 75 ms with the dependency still dead** — a 56× reduction, and
+*below* the healthy figure, because a skipped call is faster than a successful one. Every
+request returned 200 throughout.
 
 That middle row is the reason the circuit breaker exists, and it is the row that would be
 missing from a description of the design. While the breaker is closed, each request pays a
